@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import ConversationList from '../ConversationList';
 import MessageList from '../MessageList';
 import './Messenger.css';
-import {Splitter, SplitterSide, Page, SplitterContent, Button, Toolbar, ToolbarButton, Icon} from 'react-onsenui';
+import {Splitter, SplitterSide, Page, SplitterContent, Toolbar, ToolbarButton, Icon} from 'react-onsenui';
 
 export default class Messenger extends Component {
     constructor(props) {
@@ -14,13 +14,11 @@ export default class Messenger extends Component {
         this.backBtn = React.createRef();
         document.addEventListener("openSideMenu", ()=>{
             this.toggle();
-            console.log(this.state);
         });
-        console.log("zero state", this.state);
     }
 
     componentWillUpdate(nextProps, nextState, nextContext) {
-        if (nextState.hidden == false) {
+        if (!nextState.hidden) {
             this.backBtn.current.classList.remove("hidden");
         }
         else {

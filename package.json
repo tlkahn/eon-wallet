@@ -4,10 +4,12 @@
   "private": true,
   "dependencies": {
     "axios": "^0.18.0",
+    "ionicons": "^4.5.8",
     "moment": "^2.24.0",
     "onsenui": "^2.10.8",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-ionicons": "^3.0.1",
     "react-onsenui": "^1.11.2",
     "react-scripts": "3.0.1",
     "shave": "^2.5.3"

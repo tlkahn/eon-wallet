@@ -2,3 +2,7 @@
   padding: 10px;
   padding-bottom: 70px;
 }
+
+.dialog-container {
+  min-height: 0 !important;
+}
