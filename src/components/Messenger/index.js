@@ -2,33 +2,69 @@ import React, { Component } from 'react';
 import ConversationList from '../ConversationList';
 import MessageList from '../MessageList';
 import './Messenger.css';
-import {Splitter, SplitterSide, Page, SplitterContent, Button} from 'react-onsenui';
+import {Splitter, SplitterSide, Page, SplitterContent, Button, Toolbar, ToolbarButton, Icon} from 'react-onsenui';
 
 export default class Messenger extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            isOpen: true,
+            hidden: true
+        };
+        this.backBtn = React.createRef();
+        document.addEventListener("openSideMenu", ()=>{
+            this.toggle();
+            console.log(this.state);
+        });
+        console.log("zero state", this.state);
+    }
+
+    componentWillUpdate(nextProps, nextState, nextContext) {
+        if (nextState.hidden == false) {
+            this.backBtn.current.classList.remove("hidden");
+        }
+        else {
+            this.backBtn.current.classList.add("hidden");
+        }
+    }
+
+    toggle(){
+        this.setState({
+            isOpen: !(this.state.isOpen),
+            hidden: !(this.state.hidden)
+        });
+        this.state.hideStatus = this.state.hidden ? 'hidden' : '';
+    }
     render() {
         return (
-
+            <Page>
+            <Toolbar>
+                <div className='center'>
+                    Messenger
+                </div>
+                <div className="left hidden" ref={this.backBtn}>
+                    <ToolbarButton onClick={()=>this.toggle()}>
+                        <Icon icon='ion-chevron-left' />
+                    </ToolbarButton>
+                </div>
+            </Toolbar>
             <Splitter>
                 <SplitterSide
                     side="left"
                     width={"100%"}
-                    isSwipeable={true}>
-                    <Page>  <ConversationList /> </Page>
+                    // onClose={this.hide.bind(this)}
+                    // onOpen={this.show.bind(this)}
+                    collapse={true}
+                    swipeable={true}
+                    isOpen={this.state.isOpen}
+                >
+                    <Page>  <ConversationList msg={this}/> </Page>
                 </SplitterSide>
                 <SplitterContent>
                     <Page>  <MessageList /> </Page>
                 </SplitterContent>
             </Splitter>
-            // <div className="messenger">
-            //
-            //     <div className="scrollable sidebar">
-            //
-            //     </div>
-            //
-            //     <div className="scrollable content">
-            //
-            //     </div>
-            // </div>
+            </Page>
         );
     }
 }
