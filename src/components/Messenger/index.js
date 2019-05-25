@@ -2,38 +2,33 @@ import React, { Component } from 'react';
 import ConversationList from '../ConversationList';
 import MessageList from '../MessageList';
 import './Messenger.css';
+import {Splitter, SplitterSide, Page, SplitterContent, Button} from 'react-onsenui';
 
 export default class Messenger extends Component {
     render() {
         return (
-            <div className="messenger">
-                {/* <Toolbar
-          title="Messenger"
-          leftItems={[
-            <ToolbarButton key="cog" icon="ion-ios-cog" />
-          ]}
-          rightItems={[
-            <ToolbarButton key="add" icon="ion-ios-add-circle-outline" />
-          ]}
-        /> */}
 
-                {/* <Toolbar
-          title="Conversation Title"
-          rightItems={[
-            <ToolbarButton key="info" icon="ion-ios-information-circle-outline" />,
-            <ToolbarButton key="video" icon="ion-ios-videocam" />,
-            <ToolbarButton key="phone" icon="ion-ios-call" />
-          ]}
-        /> */}
-
-                <div className="scrollable sidebar">
-                    <ConversationList />
-                </div>
-
-                <div className="scrollable content">
-                    <MessageList />
-                </div>
-            </div>
+            <Splitter>
+                <SplitterSide
+                    side="left"
+                    width={"100%"}
+                    isSwipeable={true}>
+                    <Page>  <ConversationList /> </Page>
+                </SplitterSide>
+                <SplitterContent>
+                    <Page>  <MessageList /> </Page>
+                </SplitterContent>
+            </Splitter>
+            // <div className="messenger">
+            //
+            //     <div className="scrollable sidebar">
+            //
+            //     </div>
+            //
+            //     <div className="scrollable content">
+            //
+            //     </div>
+            // </div>
         );
     }
 }
