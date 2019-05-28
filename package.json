@@ -9,10 +9,13 @@
     "onsenui": "^2.10.8",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-horizontal-scroll-container": "^1.0.1",
     "react-ionicons": "^3.0.1",
     "react-onsenui": "^1.11.2",
     "react-scripts": "3.0.1",
-    "shave": "^2.5.3"
+    "react-slick": "^0.24.0",
+    "shave": "^2.5.3",
+    "slick-carousel": "^1.8.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -34,5 +37,14 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+
+  },
+  "BACKEND_URL": {
+    "test":
+    "http://localhost:3001/app_items.json",
+    "production":
+    "TODO"
   }
 }

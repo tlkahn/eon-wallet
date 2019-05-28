@@ -22,7 +22,6 @@ export class SettingContent extends React.Component {
                 <div>
                     <Button onClick={
                         () => {
-                            ons.notification.alert("ok");
                             this.gotoComponent(Detail, "detail");
                         }
                     }>

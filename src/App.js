@@ -1,13 +1,10 @@
 import React, {Component} from 'react';
-import logo from './logo.svg';
 import * as Ons from 'react-onsenui';
-import * as ons from 'onsenui';
 import './App.css';
 import 'onsenui/css/onsenui.css';
 import 'onsenui/css/onsen-css-components.css';
 import Pokemon from './Pokemon';
 import Detail from "./Detail";
-import Setting from "./Setting";
 
 export default class App extends Component {
     constructor() {
@@ -30,7 +27,7 @@ export default class App extends Component {
                                   tab: <Ons.Tab label="Pokemon" icon="md-home" key="pokemon" />
                               },
                               {
-                                  content: <Setting key="setting" />,
+                                  content: <Detail key="detail" />,
                                   tab: <Ons.Tab label="Settings" icon="md-settings" key="setting"/>
                               }]
                           }

@@ -172,7 +172,8 @@ export default class MessageList extends Component {
         <div className="message-list-container">{this.renderMessages()}</div>
 
         <Compose rightItems={[
-          <ToolbarButton key="more" icon="ion-ios-more" MsgLst={this} fn="more" />
+          <ToolbarButton key="more" icon="ion-ios-more" MsgLst={this} fn="more" />,
+          <ToolbarButton key="send" icon="ion-ios-email" />
         ]}/>
 
         <Dialog

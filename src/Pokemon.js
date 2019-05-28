@@ -1,16 +1,8 @@
 import React from 'react';
-
-import ons from 'onsenui';
-
 import {
-    Page,
-    Toolbar,
-    Button,
     Navigator
 } from 'react-onsenui';
 
-// import Messenger from "./components/Messenger";
-import Detail from "./Detail";
 import Messenger from "./components/Messenger";
 
 export default class Pokemon extends React.Component {

@@ -29,9 +29,9 @@ export default class Messenger extends Component {
     toggle(){
         this.setState({
             isOpen: !(this.state.isOpen),
-            hidden: !(this.state.hidden)
+            hidden: !(this.state.hidden),
+            hideStatus: this.state.hidden ? 'hidden' : ''
         });
-        this.state.hideStatus = this.state.hidden ? 'hidden' : '';
     }
     render() {
         return (
