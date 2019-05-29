@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import ConversationList from '../ConversationList';
 import MessageList from '../MessageList';
 import './Messenger.css';
-import {Splitter, SplitterSide, Page, SplitterContent, Toolbar, ToolbarButton, Icon} from 'react-onsenui';
+import {Splitter, SplitterSide, Page, SplitterContent, Toolbar, ToolbarButton} from 'react-onsenui';
 
 export default class Messenger extends Component {
     constructor(props) {
@@ -41,8 +41,7 @@ export default class Messenger extends Component {
                     Messenger
                 </div>
                 <div className="left hidden" ref={this.backBtn}>
-                    <ToolbarButton onClick={()=>this.toggle()}>
-                        <Icon icon='ion-chevron-left' />
+                    <ToolbarButton onClick={()=>this.toggle()} icon="ion-ios-arrow-back">
                     </ToolbarButton>
                 </div>
             </Toolbar>

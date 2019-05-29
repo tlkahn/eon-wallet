@@ -4,7 +4,7 @@ import './App.css';
 import 'onsenui/css/onsenui.css';
 import 'onsenui/css/onsen-css-components.css';
 import Pokemon from './Pokemon';
-import Detail from "./Detail";
+import DappStore from "./components/DappStore";
 
 export default class App extends Component {
     constructor() {
@@ -21,14 +21,14 @@ export default class App extends Component {
             <div className="App">
                   <Ons.Page>
                       <Ons.Tabbar
-                          renderTabs={(activeIndex, tabbar) => [
+                          renderTabs={() => [
                               {
                                   content: <Pokemon key="pokemon"/>,
                                   tab: <Ons.Tab label="Pokemon" icon="md-home" key="pokemon" />
                               },
                               {
-                                  content: <Detail key="detail" />,
-                                  tab: <Ons.Tab label="Settings" icon="md-settings" key="setting"/>
+                                  content: <DappStore key="dappstore" />,
+                                  tab: <Ons.Tab label="DappStore" icon="md-settings" key="dappstore"/>
                               }]
                           }
                       />

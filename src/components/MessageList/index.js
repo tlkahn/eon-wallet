@@ -6,6 +6,7 @@ import Message from '../Message';
 import moment from 'moment';
 import {Dialog} from 'react-onsenui';
 import './MessageList.css';
+import "ionicons/dist/css/ionicons.css";
 
 const MY_USER_ID = 'apple';
 
@@ -161,31 +162,36 @@ export default class MessageList extends Component {
     return(
       <div className="message-list">
         <Toolbar
-          title="Conversation Title"
+          title=""
           rightItems={[
             <ToolbarButton key="info" icon="ion-ios-information-circle-outline" />,
             <ToolbarButton key="video" icon="ion-ios-videocam" />,
-            <ToolbarButton key="phone" icon="ion-ios-call" />
+            <ToolbarButton key="phone" icon="ion-ios-call" />,
+            <ToolbarButton key="phone" icon="ion-ios-pulse" />
           ]}
         />
 
         <div className="message-list-container">{this.renderMessages()}</div>
 
-        <Compose rightItems={[
+        <Compose
+            rightItems={[
+          <ToolbarButton key="send" icon="ion-ios-send" />,
           <ToolbarButton key="more" icon="ion-ios-more" MsgLst={this} fn="more" />,
-          <ToolbarButton key="send" icon="ion-ios-email" />
-        ]}/>
+        ]}
+        />
 
         <Dialog
           isOpen={this.state.dialogOpen}
           onCancel={this.toggleDialog.bind(this)}
           cancelable>
+            <ToolbarButton key="audio" icon="ion-ios-images" />
             <ToolbarButton key="photo" icon="ion-ios-camera" />
-            <ToolbarButton key="image" icon="ion-social-bitcoin" />
-            <ToolbarButton key="audio" icon="ion-ios-mic" />
-            <ToolbarButton key="money" icon="ion-ios-videocam" />
+            <ToolbarButton key="emoji" icon="ion-md-happy" />
             <ToolbarButton key="games" icon="ion-ios-location" />
-            <ToolbarButton key="emoji" icon="ion-happy" />
+            <ToolbarButton key="image" icon="ion-logo-bitcoin" />
+            <ToolbarButton key="image" icon="ion-ios-person" />
+            <ToolbarButton key="image" icon="ion-ios-document" />
+
         </Dialog>
       </div>
 

@@ -9,7 +9,7 @@ export default class ToolbarButton extends Component {
         <Icon
             className="toolbar-button"
             size={{default: 32, material: 40}}
-            icon={{default: `${icon}`, material: `md-${icon}`}}
+            icon={{default: `${icon}`, material: `${icon}`}}
             tappable
             onClick={
                 ()=>{

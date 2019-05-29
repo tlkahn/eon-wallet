@@ -1,0 +1,39 @@
+.img-holder img {
+    width: 80%;
+    display:block;
+    margin:auto;
+}
+
+.app-set-title {
+    text-align: left !important;
+}
+
+.app-set {
+    background-color: white;
+}
+
+.element {
+    width: 85% !important;
+}
+
+.sliderContainer{
+    margin-bottom: 40px !important;
+}
+
+.horizontal-scroller-tool-bar {
+    float:left;
+    width: 100%;
+}
+
+.horizontal-scroller-tool-bar .left {
+    text-align: left;
+    float: left;
+    width: 50%;
+    padding-left: 5%;
+}
+
+.horizontal-scroller-tool-bar .right {
+    text-align: right;
+    float: left;
+    width: 40%;
+}

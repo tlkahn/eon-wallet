@@ -6,3 +6,8 @@
 .dialog-container {
   min-height: 0 !important;
 }
+
+.dialog {
+  width: 90%;
+  text-align: center;
+}
