@@ -8,8 +8,8 @@ import './AppSet.css'
 import DappList from '../DappList';
 
 export default class Appset extends React.Component {
-    gotoComponent(component, key, data, url) {
-        this.props.navigator.pushPage({comp: component, props: { key, data, url, navigator: this.props.navigator }});
+    gotoComponent(component, key, name, url) {
+        this.props.navigator.pushPage({comp: component, props: { key, name, url }});
     }
 
     render() {
@@ -32,7 +32,7 @@ export default class Appset extends React.Component {
                         <HorizontalScroller>
                             {
                                 this.props.data.map((app) => {
-                                    return <AppItem name={app.name} subtitle={app.subtitle} coverimg={app.coverimg} key={app.name}/>
+                                    return <AppItem name={app.name} subtitle={app.subtitle} coverimg={app.coverimg} key={app.name} url={app.url} navigator={this.props.navigator}/>
                                 })
                             }
                         </HorizontalScroller>
