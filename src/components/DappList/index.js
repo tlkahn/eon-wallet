@@ -9,10 +9,11 @@ import {
 } from 'react-onsenui';
 import Setting from '../../Setting';
 import './DappList.css'
+import DappWrapper from '../DappWrapper'
 
 export default class DappList extends React.Component {
-    gotoComponent(component, key) {
-        this.props.navigator.pushPage({comp: Setting, props: { key: "setting" }});
+    gotoComponent(component, key, name, url) {
+        this.props.navigator.pushPage({comp: component, props: { key, name, url }});
     }
     render() {
         return (
@@ -27,7 +28,7 @@ export default class DappList extends React.Component {
                         // renderHeader={() => <ListHeader>Components</ListHeader>}
                         dataSource={this.props.data}
                         renderRow={(row, idx) =>
-                            <ListItem key={"dapp-" + idx} tappable onClick={this.gotoComponent.bind(this)} modifier="chevron">
+                            <ListItem key={"dapp-" + idx} tappable onClick={()=>{this.gotoComponent(DappWrapper, "dapp-wrapper", this.props.data[idx].name, this.props.data[idx].url)}} modifier="chevron">
                                 <div className="left">
                                     <img className="list-item__thumbnail" src={this.props.data[idx].coverimg||""} />
                                 </div>
@@ -41,10 +42,4 @@ export default class DappList extends React.Component {
             </Page>
         )
     }
-    // render() {
-    //     return <Page>
-    //
-    //         <h3>hello</h3>
-    //     </Page>
-    // }
 }

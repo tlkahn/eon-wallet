@@ -44,7 +44,8 @@ export default class DappStoreComponent extends React.Component {
                         name: appset.name,
                         subtitle: appset.subtitle,
                         category_id: appset.category_id,
-                        category_name: appset.category_name
+                        category_name: appset.category_name,
+                        url: appset.url
                     };
                 });
                 let appSetsByCategory = {};

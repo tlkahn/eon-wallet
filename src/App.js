@@ -7,6 +7,7 @@ import Pokemon from './Pokemon';
 import DappStore from "./components/DappStore";
 import Setting from "./Setting"
 import "ionicons/dist/css/ionicons.css";
+import DappWrapper from './components/DappWrapper'
 
 export default class App extends Component {
     constructor() {
@@ -35,6 +36,10 @@ export default class App extends Component {
                               {
                                   content: <Setting key="setting"/>,
                                   tab: <Ons.Tab label="Setting" icon="ion-logo-instagram" key="setting" />
+                              },
+                              {
+                                  content: <DappWrapper key="dapp-wrapper"/>,
+                                  tab: <Ons.Tab label="DappWrapper" icon="ion-person" key="dapp-wrapper" />
                               }
                               ]
                           }

@@ -8,8 +8,8 @@ import './AppSet.css'
 import DappList from '../DappList';
 
 export default class Appset extends React.Component {
-    gotoComponent(component, key, data) {
-        this.props.navigator.pushPage({comp: component, props: { key, data, navigator: this.props.navigator }});
+    gotoComponent(component, key, data, url) {
+        this.props.navigator.pushPage({comp: component, props: { key, data, url, navigator: this.props.navigator }});
     }
 
     render() {
