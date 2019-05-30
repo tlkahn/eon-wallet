@@ -8,8 +8,8 @@ import './AppSet.css'
 import DappList from '../DappList';
 
 export default class Appset extends React.Component {
-    gotoComponent(component, key, name, url) {
-        this.props.navigator.pushPage({comp: component, props: { key, name, url }});
+    gotoComponent(component, key, data) {
+        this.props.navigator.pushPage({comp: component, props: { key, data }});
     }
 
     render() {
@@ -22,7 +22,7 @@ export default class Appset extends React.Component {
                                 <h3>{this.props.category_name}</h3>
                             </div>
                             <div className='right'>
-                                <Button onClick={() => this.gotoComponent(DappList, "dapp-list-" + this.props.index, this.props.data)} modifier="quiet">
+                                <Button onClick={() => {this.gotoComponent(DappList, "dapp-list-" + this.props.index, this.props.data)}} modifier="quiet">
                                 See all
                                 </Button>
                             </div>
