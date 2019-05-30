@@ -5,6 +5,8 @@ import 'onsenui/css/onsenui.css';
 import 'onsenui/css/onsen-css-components.css';
 import Pokemon from './Pokemon';
 import DappStore from "./components/DappStore";
+import Setting from "./Setting"
+import "ionicons/dist/css/ionicons.css";
 
 export default class App extends Component {
     constructor() {
@@ -28,8 +30,13 @@ export default class App extends Component {
                               },
                               {
                                   content: <DappStore key="dappstore" />,
-                                  tab: <Ons.Tab label="DappStore" icon="md-settings" key="dappstore"/>
-                              }]
+                                  tab: <Ons.Tab label="DappStore" icon="md-apps" key="dappstore"/>
+                              },
+                              {
+                                  content: <Setting key="setting"/>,
+                                  tab: <Ons.Tab label="Setting" icon="ion-logo-instagram" key="setting" />
+                              }
+                              ]
                           }
                       />
                   </Ons.Page>

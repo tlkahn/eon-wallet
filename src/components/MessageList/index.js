@@ -167,7 +167,7 @@ export default class MessageList extends Component {
             <ToolbarButton key="info" icon="ion-ios-information-circle-outline" />,
             <ToolbarButton key="video" icon="ion-ios-videocam" />,
             <ToolbarButton key="phone" icon="ion-ios-call" />,
-            <ToolbarButton key="phone" icon="ion-ios-pulse" />
+            <ToolbarButton key="voice" icon="ion-ios-pulse" />
           ]}
         />
 
@@ -189,8 +189,8 @@ export default class MessageList extends Component {
             <ToolbarButton key="emoji" icon="ion-md-happy" />
             <ToolbarButton key="games" icon="ion-ios-location" />
             <ToolbarButton key="image" icon="ion-logo-bitcoin" />
-            <ToolbarButton key="image" icon="ion-ios-person" />
-            <ToolbarButton key="image" icon="ion-ios-document" />
+            <ToolbarButton key="person" icon="ion-ios-person" />
+            <ToolbarButton key="document" icon="ion-ios-document" />
 
         </Dialog>
       </div>
