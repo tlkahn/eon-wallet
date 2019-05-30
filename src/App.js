@@ -38,8 +38,8 @@ export default class App extends Component {
                                   tab: <Ons.Tab label="Setting" icon="ion-logo-instagram" key="setting" />
                               },
                               {
-                                  content: <DappWrapper key="dapp-wrapper"/>,
-                                  tab: <Ons.Tab label="DappWrapper" icon="ion-person" key="dapp-wrapper" />
+                                  content: <Setting key="dapp-wrapper"/>,
+                                  tab: <Ons.Tab label="Tokens" icon="ion-person" key="dapp-wrapper" />
                               }
                               ]
                           }

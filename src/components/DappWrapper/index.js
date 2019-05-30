@@ -2,8 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {
     Page,
-    BackButton
+    BackButton,
+    ToolbarButton,
+    Toolbar
 } from 'react-onsenui';
+import "./DappWrapper.css"
 
 class Frame extends React.Component {
   componentDidMount() {
@@ -29,12 +32,22 @@ export default class DappWrapper extends React.Component {
     render() {
         return (
             <Page>
-                <div>
-                    <BackButton>
-                        Press me
-                    </BackButton>
+                <Toolbar>
+                    <div className='center'>
+                        {this.props.name}
+                    </div>
+                    <div className="left">
+                        <BackButton/>
+                    </div>
+                    <div className="right dapp-wrapper-toolbarbutton-more">
+                        <ToolbarButton key="dapp-wrapper-toolbarbutton-more" icon="ion-ios-more" />
+                    </div>
+                </Toolbar>
+                {/*<iframe src={this.props.url}> */}
+                <div className="frame-wrapper">
+                    <Frame src={this.props.url}>
+                    </Frame>
                 </div>
-                <iframe src={this.props.url} />
             </Page>
         )
     }

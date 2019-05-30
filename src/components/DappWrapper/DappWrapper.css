@@ -1,0 +1,20 @@
+.frame-wrapper {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: calc(100% - 40px);
+    overflow-x: hidden;
+    overflow-y: scroll;
+    margin-top: 40px;
+}
+
+.frame-wrapper iframe {
+    width: 100%;
+    min-height: 100%;
+}
+
+.dapp-wrapper-toolbarbutton-more {
+    width: 27px !important;
+    right: 20px;
+    position: absolute;
+}
