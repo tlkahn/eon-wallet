@@ -11,6 +11,7 @@
 .frame-wrapper iframe {
     width: 100%;
     min-height: 100%;
+    border: none;
 }
 
 .dapp-wrapper-toolbarbutton-more {

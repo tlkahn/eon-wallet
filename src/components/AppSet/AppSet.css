@@ -10,9 +10,15 @@
     border-bottom: 1px solid #eeeef1;
 }
 
+.app-set-container ons-card {
+    min-height: 275px !important;
+}
+
+
 .app-set ons-card {
     margin: 0;
     padding: 0;
+
 }
 
 .app-set ons-card img {
