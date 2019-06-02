@@ -5,6 +5,10 @@ import {
     BackButton
 } from 'react-onsenui';
 
+import LikeButton from './components/LikeButton'
+import CommentBox from "./components/CommentBox";
+import CommentItem from './components/CommentItem'
+
 export default class Setting extends React.Component {
 
     render() {
@@ -14,7 +18,11 @@ export default class Setting extends React.Component {
                     <BackButton>
                         Press me
                     </BackButton>
-                </div>
+                    <LikeButton />
+                    <CommentBox />
+                    <CommentItem username="toeinriver" body="hello world!" deletable={true} onDelete={()=>console.log('deleting item')} modalIsOpen={false}/>
+            </div>
+
             </Page>
 
         )

@@ -8,6 +8,7 @@ import DappStore from "./components/DappStore";
 import Setting from "./Setting"
 import "ionicons/dist/css/ionicons.css";
 import DappWrapper from './components/DappWrapper'
+import Spinner from './components/Spinner'
 
 export default class App extends Component {
     constructor() {
