@@ -11,7 +11,7 @@ import DappStoreComponent from './DappStoreComponent';
 export default class DappStore extends React.Component {
 
 
-  renderPage(route, navigator) {
+  static renderPage(route, navigator) {
     route.props = route.props || {};
     route.props.navigator = navigator;
 
@@ -22,7 +22,7 @@ export default class DappStore extends React.Component {
     return (
             <Navigator
                 initialRoute={{comp: DappStoreComponent, props: { key: 'dapp-store-component' }}}
-                renderPage={this.renderPage}
+                renderPage={DappStore.renderPage}
             />
     );
   }

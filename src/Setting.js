@@ -9,6 +9,7 @@ import LikeButton from './components/LikeButton'
 import CommentBox from "./components/CommentBox";
 import CommentItem from './components/CommentItem'
 import GalleryItem from './components/GalleryItem'
+import ProfileHead from './components/ProfileHead'
 import moment from 'moment'
 
 export default class Setting extends React.Component {
@@ -23,7 +24,7 @@ export default class Setting extends React.Component {
             address: "Shanghai China",
             lat: 0,
             lng: 0,
-            likes_count: 108,
+            likesCount: 108,
             comments_count: 2,
             place_id: 1,
             user: {
@@ -56,24 +57,25 @@ export default class Setting extends React.Component {
         return (
             <Page>
                 <div>
-                    <BackButton>
-                        Press me
-                    </BackButton>
-                    <LikeButton />
-                    <CommentBox />
-                    <CommentItem username="toeinriver" body="hello world!" deletable={true} onDelete={()=>console.log('deleting item')} modalIsOpen={false}/>
-                    <GalleryItem
-                        key="gallery-item-1"
-                        {...this.post}
-                        liked={this.likedPostIds.indexOf(this.post.id) >= 0}
-                        currentUser={this.currentUser}
-                        onCommentSubmit={(commentBody) => this.props.addComment(this.post.id, commentBody)}
-                        onCommentDelete={(commentId) => this.props.deleteComment(this.post.id, commentId)}
-                        onLike={() => this.props.likePost(this.post.id)}
-                        onDislike={() => this.props.dislikePost(this.post.id)}
-                        onFetchMoreComments={() => this.props.fetchMoreComments(this.post.id)}
-                        onLikersClick={() => this.openLikersModal(this.post.id)}
-                    />
+                    {/*<BackButton>*/}
+                    {/*    Press me*/}
+                    {/*</BackButton>*/}
+                    {/*<LikeButton />*/}
+                    {/*<CommentBox />*/}
+                    {/*<CommentItem username="toeinriver" body="hello world!" deletable={true} onDelete={()=>console.log('deleting item')} modalIsOpen={false}/>*/}
+                    {/*<GalleryItem*/}
+                    {/*    key="gallery-item-1"*/}
+                    {/*    {...this.post}*/}
+                    {/*    liked={this.likedPostIds.indexOf(this.post.id) >= 0}*/}
+                    {/*    currentUser={this.currentUser}*/}
+                    {/*    onCommentSubmit={(commentBody) => this.props.addComment(this.post.id, commentBody)}*/}
+                    {/*    onCommentDelete={(commentId) => this.props.deleteComment(this.post.id, commentId)}*/}
+                    {/*    onLike={() => this.props.likePost(this.post.id)}*/}
+                    {/*    onDislike={() => this.props.dislikePost(this.post.id)}*/}
+                    {/*    onFetchMoreComments={() => this.props.fetchMoreComments(this.post.id)}*/}
+                    {/*    onLikersClick={() => this.openLikersModal(this.post.id)}*/}
+                    {/*/>*/}
+                    <ProfileHead user={this.currentUser}/>
             </div>
             </Page>
         )
