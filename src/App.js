@@ -40,7 +40,7 @@ export default class App extends Component {
                                   tab: <Ons.Tab label="Wall" icon="ion-logo-instagram" key="photo-gallery" />
                               },
                               {
-                                  content: <NotificationList key="profile"/>,
+                                  content: <Profile key="profile"/>,
                                   tab: <Ons.Tab label="Profile" icon="ion-ios-person" key="profile" />
                               }
                               ]

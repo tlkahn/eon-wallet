@@ -5,7 +5,8 @@ import {
     ListItem,
     List,
 } from 'react-onsenui';
-import ProfileHead from '../components/ProfileHead'
+import ProfileHead from '../components/ProfileHead';
+import NotificationList from './NotificationList';
 
 class ProfilePage extends React.Component {
     constructor(props) {
@@ -19,6 +20,16 @@ class ProfilePage extends React.Component {
         this.pageItems = ["Notifications", "Addressbook", "Wallet Management", "Settings", "Feedback"];
         this.pageItemsIcons = ["ion-ios-notifications", "ion-ios-contacts", "ion-ios-wallet", "ion-ios-settings", "ion-ios-happy"];
     }
+
+    gotoComponent(component, propsObj) {
+        if (typeof component !== 'undefined') {
+            this.props.navigator.pushPage({comp: component, props: { ...propsObj }});
+        }
+    }
+
+    _getViewArray() {
+        return [NotificationList,];
+    }
     render() {
         return (
             <Page>
@@ -31,7 +42,7 @@ class ProfilePage extends React.Component {
                                 <ons-icon icon={this.pageItemsIcons[idx]} class="list-item__icon"></ons-icon>
                             </div>
                             <div className="center">
-                                <span className="list-item__title">{this.pageItems[idx]||""}</span>
+                                <span className="list-item__title" onClick={()=>{this.gotoComponent(this._getViewArray()[idx], {navigator: this.props.navigator})}}>{this.pageItems[idx]||""}</span>
                             </div>
                         </ListItem>
                     }

@@ -1,0 +1,9 @@
+ons-splitter-side ons-page div.page__content {
+    background-color: white !important;
+}
+
+.right.toolbar__right.notification-menu {
+    position: relative;
+    left: calc(50% - 20px);
+    width: 27%;
+}

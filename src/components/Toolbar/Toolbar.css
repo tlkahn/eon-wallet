@@ -36,6 +36,7 @@
 
 .left-items .toolbar-button {
   margin-right: 20px;
+  z-index: 50000 !important;
 }
 
 .right-items .toolbar-button {

@@ -41,7 +41,7 @@
 .hidden { display:none; }
 
 .toolbar__right {
-  width: 0px !important;
+  width: auto;
 }
 
 .toolbar__title {
