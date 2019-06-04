@@ -61,7 +61,7 @@ export default class DappStoreComponent extends React.Component {
         if (typeof this.state.appSetsByCategory != 'undefined') {
             return <Page>
             <div className="app-set-container">
-                <div className="app-set-title"><h2>Editors' Choice</h2></div>
+                <div className="app-set-title"><h2><b>Editors' Choice</b></h2></div>
                 <div className="app-set">
                     <div className="sliderContainer">
                         <Slider {...this.sliderSettings}>

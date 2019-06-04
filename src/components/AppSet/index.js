@@ -19,7 +19,7 @@ export default class Appset extends React.Component {
                     <div className="horizontal-scroller-tool-bar">
                         <div>
                             <div className="left">
-                                <h3>{this.props.category_name}</h3>
+                                <h3><b>{this.props.category_name}</b></h3>
                             </div>
                             <div className='right'>
                                 <Button onClick={() => {this.gotoComponent(DappList, "dapp-list-" + this.props.index, this.props.data)}} modifier="quiet">

@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import Compose from '../Compose';
 import Toolbar from '../Toolbar';
-import ToolbarButton from '../ToolbarButton';
+// import ToolbarButton from '../ToolbarButton';
 import Message from '../Message';
 import moment from 'moment';
-import {Dialog} from 'react-onsenui';
+import {Dialog, ToolbarButton} from 'react-onsenui';
 import './MessageList.css';
 import "ionicons/dist/css/ionicons.css";
 
+//TODO: mock stub. to be replaced.
 const MY_USER_ID = 'apple';
 
 export default class MessageList extends Component {
@@ -19,10 +20,25 @@ export default class MessageList extends Component {
     };
   }
 
-  componentDidMount() {
-    this.getMessages();
+  postNewComposedContent(composedContents) {
+      let id = this.state.messages.length+1;
+      this.setState({
+        ...this.state,
+        messages: this.state.messages.concat([{
+          id,
+          author: 'apple',
+          message: composedContents,
+          timestamp: new Date().getTime()
+        }])
+      })
   }
 
+  componentDidMount() {
+    this.getMessages();
+    this.messageListContainer.scrollIntoView(false);
+  }
+
+  //TODO: mock stub. to be replaced.
   getMessages = () => {
     this.setState(prevState => {
       return {
@@ -92,6 +108,10 @@ export default class MessageList extends Component {
       };
     });
   };
+
+  componentDidUpdate() {
+    this.messageListContainer.scrollIntoView(false);
+  }
 
   renderMessages() {
     let i = 0;
@@ -171,13 +191,13 @@ export default class MessageList extends Component {
           ]}
         />
 
-        <div className="message-list-container">{this.renderMessages()}</div>
+        <div className="message-list-container" ref={(messageListContainer)=>{
+          this.messageListContainer = messageListContainer;
+        }}>{this.renderMessages()}</div>
 
         <Compose
-            rightItems={[
-          <ToolbarButton key="send" icon="ion-ios-send" />,
-          <ToolbarButton key="more" icon="ion-ios-more" MsgLst={this} fn="more" />,
-        ]}
+            onSubmit={this.postNewComposedContent.bind(this)}
+            more={this.toggleDialog.bind(this)}
         />
 
         <Dialog

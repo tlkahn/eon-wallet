@@ -7,6 +7,8 @@ import {
 } from 'react-onsenui';
 import ProfileHead from '../components/ProfileHead';
 import NotificationList from './NotificationList';
+import AddressBook from './AddressBook';
+import './styles/Profile.css'
 
 class ProfilePage extends React.Component {
     constructor(props) {
@@ -28,7 +30,7 @@ class ProfilePage extends React.Component {
     }
 
     _getViewArray() {
-        return [NotificationList,];
+        return [NotificationList, AddressBook];
     }
     render() {
         return (
@@ -47,6 +49,17 @@ class ProfilePage extends React.Component {
                         </ListItem>
                     }
                 />
+                <div className="splitter"></div>
+                <List>
+                    <ListItem>
+                        <div className="left">
+                            <ons-icon icon="ion-ios-log-out" class="list-item__icon"></ons-icon>
+                        </div>
+                        <div className="center">
+                            Sign out
+                        </div>
+                    </ListItem>
+                </List>
             </Page>
         )
     }
