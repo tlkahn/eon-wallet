@@ -1,34 +1,15 @@
 import { combineReducers } from 'redux';
-import { routerReducer as routing } from 'react-router-redux';
-// import { reducer as form } from 'redux-form';
-// import currentUser, * as fromCurrentUser from '../reducers/currentUser';
-// import posts, * as fromPosts from '../reducers/posts';
-// import publicProfiles, * as fromPublicProfiles from '../reducers/publicProfiles';
-// import followersFollowing, * as fromFollowersFollowing from '../reducers/followersFollowing';
-// import likers, * as fromLikers from '../reducers/likers';
-// import notifications, * as fromNotifications from '../reducers/notifications';
-// import followSuggestions, * as fromSuggestions from '../reducers/followSuggestions';
-import { USER_SIGN_OUT } from '../actions/actionTypes';
+import { GOTO_CONVERSATION } from '../actions/actionTypes';
+import {goToConversation} from '../reducers/goToConversation';
 
 const appReducer = combineReducers({
-  routing,
-  // form,
-  // currentUser,
-  // posts,
-  // publicProfiles,
-  // followersFollowing,
-  // likers,
-  // notifications,
-  // followSuggestions,
+  goToConversation
 });
 
 const rootReducer = (state, action) => {
-  if (action.type === USER_SIGN_OUT) {
-    // Reset redux state to initialState.
-    state = undefined;
-  }
-  console.log("state", state);
-  return appReducer(state, action);
+  let reducedResult = appReducer(state, action);
+  console.log(state);
+  return reducedResult;
 }
 
 export default rootReducer;

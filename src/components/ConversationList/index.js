@@ -11,19 +11,19 @@ export default class ConversationList extends Component {
     this.state = {
       conversations: []
     };
-  }
-
-  componentDidMount() {
+    //TODO: mock stub here
+    this.USERSURL='http://localhost:3001/users.json'
     this.getConversations();
   }
 
   getConversations = () => {
-    axios.get('https://randomuser.me/api/?results=20').then(response => {
+    axios.get(this.USERSURL).then(response => {
       this.setState(prevState => {
-        let conversations = response.data.results.map(result => {
+        let conversations = response.data.map(result => {
           return {
-            photo: result.picture.large,
-            name: `${result.name.first} ${result.name.last}`,
+            photo: result.photo,
+            name: `${result.name}`,
+            id: result.id,
             text: 'Hello world! This is a long message that needs to be truncated.'
           };
         });

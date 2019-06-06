@@ -12,7 +12,7 @@ export default class Messenger extends Component {
             hidden: true
         };
         this.backBtn = React.createRef();
-        document.addEventListener("openSideMenu", ()=>{
+        document.addEventListener("openSideMenu", (ev)=>{
             this.toggle();
         });
     }
@@ -30,7 +30,7 @@ export default class Messenger extends Component {
         this.setState({
             isOpen: !(this.state.isOpen),
             hidden: !(this.state.hidden),
-            hideStatus: this.state.hidden ? 'hidden' : ''
+            hideStatus: this.state.hidden ? 'hidden' : '',
         });
     }
     render() {
@@ -49,8 +49,6 @@ export default class Messenger extends Component {
                 <SplitterSide
                     side="left"
                     width={"100%"}
-                    // onClose={this.hide.bind(this)}
-                    // onOpen={this.show.bind(this)}
                     collapse={true}
                     swipeable={true}
                     isOpen={this.state.isOpen}
@@ -58,7 +56,7 @@ export default class Messenger extends Component {
                     <Page>  <ConversationList msg={this}/> </Page>
                 </SplitterSide>
                 <SplitterContent>
-                    <Page>  <MessageList /> </Page>
+                    <Page>  <MessageList msg={this}/> </Page>
                 </SplitterContent>
             </Splitter>
             </Page>

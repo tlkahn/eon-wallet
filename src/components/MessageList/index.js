@@ -1,22 +1,24 @@
 import React, { Component } from 'react';
 import Compose from '../Compose';
 import Toolbar from '../Toolbar';
-// import ToolbarButton from '../ToolbarButton';
 import Message from '../Message';
 import moment from 'moment';
 import {Dialog, ToolbarButton} from 'react-onsenui';
 import './MessageList.css';
 import "ionicons/dist/css/ionicons.css";
 
+import { connect } from 'react-redux';
+import {getConversationID} from '../../reducers/goToConversation';
+
 //TODO: mock stub. to be replaced.
 const MY_USER_ID = 'apple';
 
-export default class MessageList extends Component {
+class MessageList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       messages: [],
-      dialogOpen: false
+      dialogOpen: false,
     };
   }
 
@@ -34,83 +36,101 @@ export default class MessageList extends Component {
   }
 
   componentDidMount() {
-    this.getMessages();
+      this.getMessages();
     this.messageListContainer.scrollIntoView(false);
   }
 
-  //TODO: mock stub. to be replaced.
-  getMessages = () => {
-    this.setState(prevState => {
-      return {
-        ...prevState,
-        messages: [
+    //TODO: mock stub. to be replaced.
+  getMessages() {
+      //TODO: mock stub. to be replaced by websock connected array.
+      let messages = [
           {
-            id: 1,
-            author: 'apple',
-            message: 'Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.',
-            timestamp: new Date().getTime()
+              id: 1,
+              author: '1',
+              message: 'Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.',
+              timestamp: new Date().getTime()
           },
           {
-            id: 2,
-            author: 'orange',
-            message: 'It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!',
-            timestamp: new Date().getTime()
+              id: 2,
+              author: '2',
+              message: 'It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!',
+              timestamp: new Date().getTime()
           },
           {
-            id: 3,
-            author: 'orange',
-            message: 'Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.',
-            timestamp: new Date().getTime()
+              id: 3,
+              author: '2',
+              message: 'Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.',
+              timestamp: new Date().getTime()
           },
           {
-            id: 4,
-            author: 'apple',
-            message: 'It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!',
-            timestamp: new Date().getTime()
+              id: 4,
+              author: 'apple',
+              message: 'It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!',
+              timestamp: new Date().getTime()
           },
           {
-            id: 5,
-            author: 'apple',
-            message: 'Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.',
-            timestamp: new Date().getTime()
+              id: 5,
+              author: 'apple',
+              message: 'Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.',
+              timestamp: new Date().getTime()
           },
           {
-            id: 6,
-            author: 'apple',
-            message: 'It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!',
-            timestamp: new Date().getTime()
+              id: 6,
+              author: 'apple',
+              message: 'It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!',
+              timestamp: new Date().getTime()
           },
           {
-            id: 7,
-            author: 'orange',
-            message: 'Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.',
-            timestamp: new Date().getTime()
+              id: 7,
+              author: '2',
+              message: 'Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.',
+              timestamp: new Date().getTime()
           },
           {
-            id: 8,
-            author: 'orange',
-            message: 'It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!',
-            timestamp: new Date().getTime()
+              id: 8,
+              author: '3',
+              message: 'It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!',
+              timestamp: new Date().getTime()
           },
           {
-            id: 9,
-            author: 'apple',
-            message: 'Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.',
-            timestamp: new Date().getTime()
+              id: 9,
+              author: 'apple',
+              message: 'Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.',
+              timestamp: new Date().getTime()
           },
           {
-            id: 10,
-            author: 'orange',
-            message: 'It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!',
-            timestamp: new Date().getTime()
+              id: 10,
+              author: '3',
+              message: 'It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!',
+              timestamp: new Date().getTime()
           },
-        ]
+      ];
+      let filterMessages = (messages, filter) => {
+          if (!filter) {
+              return messages;
+          } else {
+              return messages.filter((m) => {
+                  if (m.author == filter) {
+                      return m;
+                  }
+              });
+          }
       };
-    });
-  };
+      let filteredMessages = filterMessages(messages, this.props.conversationId);
+      this.setState(prevState => {
+          return {
+              ...prevState,
+              messages: filteredMessages
+          }
+      });
+  }
 
   componentDidUpdate() {
     this.messageListContainer.scrollIntoView(false);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.getMessages();
   }
 
   renderMessages() {
@@ -219,3 +239,14 @@ export default class MessageList extends Component {
     );
   }
 }
+
+const mapStateToProps = (state, {params}) => {
+    const conversationId = getConversationID(state);
+    return {
+        conversationId
+    }
+};
+
+export default connect(
+  mapStateToProps
+)(MessageList);

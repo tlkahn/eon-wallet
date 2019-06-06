@@ -96,7 +96,9 @@ export default class AddressBook extends React.Component {
                         side="right"
                         width={200}
                         swipeable={true}
-                        collapse={this.state.collapsed}>
+                        collapse={true}
+                        isOpen={!this.state.collapsed}
+                    >
                         <Page>
                             <List
                                 dataSource={this.splitterSideItems}
