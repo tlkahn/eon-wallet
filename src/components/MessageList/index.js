@@ -39,79 +39,96 @@ class MessageList extends Component {
     this.messageListContainer.scrollIntoView(false);
   }
 
-
-
-    //TODO: mock stub. to be replaced.
   getMessages({conversationId}) {
       //TODO: mock stub. to be replaced by websock connected array.
       let messages = [
           {
               id: 1,
               author: '1',
+              recipient: 'apple',
               message: 'Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.',
+              messageForm: 'text',
               timestamp: new Date().getTime()
           },
           {
               id: 2,
               author: '2',
+              recipient: 'apple',
               message: 'It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!',
+              messageForm: 'text',
               timestamp: new Date().getTime()
           },
           {
               id: 3,
               author: '2',
+              recipient: 'apple',
               message: 'Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.',
+              messageForm: 'text',
               timestamp: new Date().getTime()
           },
           {
               id: 4,
               author: 'apple',
+              recipient: '1',
               message: 'It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!',
+              messageForm: 'text',
               timestamp: new Date().getTime()
           },
           {
               id: 5,
               author: 'apple',
+              recipient: '2',
               message: 'Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.',
+              messageForm: 'text',
               timestamp: new Date().getTime()
           },
           {
               id: 6,
               author: 'apple',
+              recipient: '3',
               message: 'It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!',
+              messageForm: 'text',
               timestamp: new Date().getTime()
           },
           {
               id: 7,
               author: '2',
+              recipient: 'apple',
               message: 'Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.',
+              messageForm: 'text',
               timestamp: new Date().getTime()
           },
           {
               id: 8,
               author: '3',
+              recipient: 'apple',
               message: 'It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!',
+              messageForm: 'text',
               timestamp: new Date().getTime()
           },
           {
               id: 9,
               author: 'apple',
+              recipient: '1',
               message: 'Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.',
+              messageForm: 'text',
               timestamp: new Date().getTime()
           },
           {
               id: 10,
               author: '3',
+              recipient: 'apple',
+              messageForm: 'text',
               message: 'It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!',
               timestamp: new Date().getTime()
           },
       ];
-      let filterMessages = (messages, filter) => {
-          if (!filter) {
+      let filterMessages = (messages, f) => {
+          if (!f) {
               return messages;
           } else {
               return messages.filter((m) => {
-                  if (m.author == filter) {
+                  if ((m.author === (f+'') && m.recipient === MY_USER_ID)||(m.recipient === (f+'') && m.author === MY_USER_ID)) {
                       return m;
                   }
               });
