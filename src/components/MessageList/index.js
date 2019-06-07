@@ -36,12 +36,13 @@ class MessageList extends Component {
   }
 
   componentDidMount() {
-      this.getMessages();
     this.messageListContainer.scrollIntoView(false);
   }
 
+
+
     //TODO: mock stub. to be replaced.
-  getMessages() {
+  getMessages({conversationId}) {
       //TODO: mock stub. to be replaced by websock connected array.
       let messages = [
           {
@@ -116,7 +117,7 @@ class MessageList extends Component {
               });
           }
       };
-      let filteredMessages = filterMessages(messages, this.props.conversationId);
+      let filteredMessages = filterMessages(messages, conversationId);
       this.setState(prevState => {
           return {
               ...prevState,
@@ -130,7 +131,9 @@ class MessageList extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.getMessages();
+
+      console.log("nextProps", nextProps);
+      this.getMessages({conversationId: nextProps.conversationId});
   }
 
   renderMessages() {

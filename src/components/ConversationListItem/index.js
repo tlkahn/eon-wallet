@@ -9,8 +9,11 @@ class ConversationListItem extends Component {
     shave('.conversation-snippet', 20);
   }
 
-    gotoMessages(id) {
-        this.props.goToConversation(id);
+    gotoMessages() {
+        let id = this.props.data.id;
+        if (typeof this.props.goToConversation !== 'undefined') {
+            this.props.goToConversation(id);
+        }
         let ev = new CustomEvent("openSideMenu", this.props.data);
         document.dispatchEvent(ev);
 
@@ -18,10 +21,10 @@ class ConversationListItem extends Component {
 
 
   render() {
-    const { photo, name, text, id } = this.props.data;
+    const { photo, name, text } = this.props.data;
 
     return (
-      <div className="conversation-list-item" onClick={(()=>this.gotoMessages(id))}>
+      <div className="conversation-list-item" onClick={this.gotoMessages.bind(this)}>
         <img className="conversation-photo" src={photo} alt="conversation" />
         <div className="conversation-info">
           <h1 className="conversation-title">{ name }</h1>
