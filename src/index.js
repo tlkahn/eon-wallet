@@ -5,6 +5,8 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import configureStore from './stores/configureStore';
 import {Provider} from 'react-redux';
+// import './vendor/Skeleton-2.0.4/css/normalize.css';
+// import './vendor/Skeleton-2.0.4/css/skeleton.css';
 
 const store = configureStore();
 

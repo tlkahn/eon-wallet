@@ -8,8 +8,11 @@ import DappStore from "./components/DappStore";
 import Setting from "./Setting"
 import "ionicons/dist/css/ionicons.css";
 import PhotoGallery from "./containers/PhotoGallery";
-import Profile from './containers/Profile'
-import NotificationList from './containers/NotificationList'
+import Profile from './containers/Profile';
+import NotificationList from './containers/NotificationList';
+import LoginForm from './components/LoginForm';
+import SignUpForm from './components/SignUpForm';
+import UserAuth from './containers/UserAuth';
 
 export default class App extends Component {
     constructor() {
@@ -28,7 +31,7 @@ export default class App extends Component {
                       <Ons.Tabbar
                           renderTabs={() => [
                               {
-                                  content: <Pokemon key="pokemon"/>,
+                                  content: <UserAuth key="pokemon"/>,
                                   tab: <Ons.Tab label="Pokemon" icon="md-home" key="pokemon" />
                               },
                               {
@@ -36,11 +39,11 @@ export default class App extends Component {
                                   tab: <Ons.Tab label="DappStore" icon="md-apps" key="dapp-store"/>
                               },
                               {
-                                  content: <PhotoGallery key="photo-gallery"/>,
+                                  content: <LoginForm key="photo-gallery"/>,
                                   tab: <Ons.Tab label="Wall" icon="ion-logo-instagram" key="photo-gallery" />
                               },
                               {
-                                  content: <Profile key="profile"/>,
+                                  content: <UserAuth key="profile"/>,
                                   tab: <Ons.Tab label="Profile" icon="ion-ios-person" key="profile" />
                               }
                               ]
