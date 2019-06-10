@@ -3,23 +3,49 @@ import Compose from '../Compose';
 import Toolbar from '../Toolbar';
 import Message from '../Message';
 import moment from 'moment';
-import {Dialog, ToolbarButton} from 'react-onsenui';
+import {Dialog, ToolbarButton, List, ListItem} from 'react-onsenui';
 import './MessageList.css';
 import "ionicons/dist/css/ionicons.css";
 
 import { connect } from 'react-redux';
 import {getConversationID} from '../../reducers/goToConversation';
+import {sendCryptos} from '../../actions/actionCreators/sendCryptos';
 
 //TODO: mock stub. to be replaced.
+//TODO: put all mocks into service
 const MY_USER_ID = 'apple';
+const CRYPTO_PORTFOLIO = {
+    'BTC':[
+        {
+            addr: 'btcaddr1',
+            balance: 100
+        },
+        {
+            addr: 'btcaddr2',
+            balance: 200
+        }
+
+    ],
+    'ETH':[
+        {
+            addr: 'ethaddr1',
+            balance: 100
+        },
+        {
+            addr: 'ethaddr2',
+            balance: 200
+        },
+    ]
+};
 
 class MessageList extends Component {
   constructor(props) {
-    super(props);
-    this.state = {
-      messages: [],
-      dialogOpen: false,
-    };
+      super(props);
+      this.state = {
+          messages: [],
+          dialogOpen: false,
+          sendCryptoDialogOpen: false
+      };
   }
 
   postNewComposedContent(composedContents) {
@@ -218,6 +244,27 @@ class MessageList extends Component {
     });
   }
 
+  toggleSendCryptoDialog() {
+      this.setState({
+          ...this.state,
+          dialogOpen: false,
+          sendCryptoDialogOpen: !this.state.sendCryptoDialogOpen
+      })
+  }
+
+  closeSendCryptoDialog() {
+      this.setState({
+          ...this.state,
+          dialogOpen: false,
+          sendCryptoDialogOpen: false
+      })
+  }
+
+  sendCrypto(crypto, account) {
+    this.closeSendCryptoDialog();
+
+  }
+
   render() {
     return(
       <div className="message-list">
@@ -248,11 +295,37 @@ class MessageList extends Component {
             <ToolbarButton key="photo" icon="ion-ios-camera" />
             <ToolbarButton key="emoji" icon="ion-md-happy" />
             <ToolbarButton key="games" icon="ion-ios-location" />
-            <ToolbarButton key="image" icon="ion-logo-bitcoin" />
+            <ToolbarButton key="image" icon="ion-logo-bitcoin" onClick={this.toggleSendCryptoDialog.bind(this)} />
             <ToolbarButton key="person" icon="ion-ios-person" />
             <ToolbarButton key="document" icon="ion-ios-document" />
 
         </Dialog>
+
+          <Dialog isOpen={this.state.sendCryptoDialogOpen} onCancel={this.toggleSendCryptoDialog.bind(this)} cancelable>
+              <ons-list>
+                  {
+                      Object.keys(CRYPTO_PORTFOLIO).map(crypto=>{
+                          return (
+                              <div>
+                              <ons-list-header>{crypto}</ons-list-header>
+                              {CRYPTO_PORTFOLIO[crypto].map(account=>{
+                                  return (
+                                      <ons-list-item onClick={()=>this.props.sendCryptos(crypto, account)}>
+                                          <div className="center">
+                                              {account.addr}
+                                          </div>
+                                          <div className="right">
+                                              {account.balance}
+                                          </div>
+                                      </ons-list-item>
+                                  )
+                              })}
+                              </div>
+                          )
+                      })
+                  }
+              </ons-list>
+          </Dialog>
       </div>
 
 
@@ -268,5 +341,6 @@ const mapStateToProps = (state, {params}) => {
 };
 
 export default connect(
-  mapStateToProps
+    mapStateToProps,
+    {sendCryptos}
 )(MessageList);

@@ -4,10 +4,10 @@ import {
 } from '../actionTypes'
 
 export const goToConversation = (conversationId) => (dispatch, getState) => {
-  dispatch({
-      type: GOTO_CONVERSATION,
-      payload: {
-          id: conversationId
-      }
+    dispatch({
+        type: GOTO_CONVERSATION,
+        payload: {
+            id: conversationId
+        }
     });
 };

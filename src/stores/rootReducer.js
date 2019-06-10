@@ -1,9 +1,11 @@
 import { combineReducers } from 'redux';
 import { GOTO_CONVERSATION } from '../actions/actionTypes';
 import {goToConversation} from '../reducers/goToConversation';
+import {sendCryptos} from '../reducers/sendCrypto';
 
 const appReducer = combineReducers({
-  goToConversation
+  goToConversation,
+  sendCryptos
 });
 
 const rootReducer = (state, action) => {

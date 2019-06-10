@@ -3,6 +3,7 @@ import shave from 'shave';
 import './ConversationListItem.css';
 import { connect } from 'react-redux';
 import {goToConversation} from "../../actions/actionCreators/goToConversation";
+import {sendCryptos} from "../../actions/actionCreators/sendCryptos";
 
 class ConversationListItem extends Component {
   componentDidMount() {
@@ -40,5 +41,6 @@ export default connect(
   null,
   {
     goToConversation,
+      sendCryptos
   }
 )(ConversationListItem);

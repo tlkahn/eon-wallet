@@ -31,7 +31,7 @@ export default class App extends Component {
                       <Ons.Tabbar
                           renderTabs={() => [
                               {
-                                  content: <UserAuth key="pokemon"/>,
+                                  content: <Pokemon key="pokemon"/>,
                                   tab: <Ons.Tab label="Pokemon" icon="md-home" key="pokemon" />
                               },
                               {
