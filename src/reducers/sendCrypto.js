@@ -30,7 +30,11 @@ export default ({
 });
 
 //selectors
-// export const getConversationID = (state) => {
-//   const conversationID = state.goToConversation;
-//   return conversationID;
-// }
+export const getSendCryptoStatus = (state) => {
+  if (state.sendCryptoStarted) {
+      return 'started';
+  }
+  if (state.sendCryptoSuccess) {
+      return 'success'
+  }
+}

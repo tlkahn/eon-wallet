@@ -6,10 +6,18 @@ import moment from 'moment';
 import {Dialog, ToolbarButton, List, ListItem} from 'react-onsenui';
 import './MessageList.css';
 import "ionicons/dist/css/ionicons.css";
+import 'emoji-mart/css/emoji-mart.css';
+import { Picker} from 'emoji-mart'
 
 import { connect } from 'react-redux';
+//selectors
 import {getConversationID} from '../../reducers/goToConversation';
+import {getSendCryptoStatus} from '../../reducers/sendCrypto';
+import {getSelectedEmoji} from '../../reducers/selectEmoji';
+
+//action creators
 import {sendCryptos} from '../../actions/actionCreators/sendCryptos';
+import {selectEmoji} from '../../actions/actionCreators/selectEmoji';
 
 //TODO: mock stub. to be replaced.
 //TODO: put all mocks into service
@@ -44,7 +52,8 @@ class MessageList extends Component {
       this.state = {
           messages: [],
           dialogOpen: false,
-          sendCryptoDialogOpen: false
+          sendCryptoDialogOpen: false,
+          emojiDialogOpen: false
       };
   }
 
@@ -72,7 +81,7 @@ class MessageList extends Component {
               id: 1,
               author: '1',
               recipient: 'apple',
-              message: 'Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.',
+              message: 'hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.',
               messageForm: 'text',
               timestamp: new Date().getTime()
           },
@@ -262,7 +271,19 @@ class MessageList extends Component {
 
   sendCrypto(crypto, account) {
     this.closeSendCryptoDialog();
+    this.props.sendCryptos(crypto, account, this.props.conversationId);
+  }
 
+  toggleEmojiDialog() {
+    this.setState({
+          ...this.state,
+          dialogOpen: false,
+          emojiDialogOpen: !this.state.emojiDialogOpen
+      })
+  }
+
+  selectEmoji(emoji) {
+    this.props.selectEmoji(emoji);
   }
 
   render() {
@@ -285,6 +306,8 @@ class MessageList extends Component {
         <Compose
             onSubmit={this.postNewComposedContent.bind(this)}
             more={this.toggleDialog.bind(this)}
+            receivedEmoji={this.props.selectedEmoji}
+            stopReceivingEmoji={!this.state.emojiDialogOpen}
         />
 
         <Dialog
@@ -293,13 +316,16 @@ class MessageList extends Component {
           cancelable>
             <ToolbarButton key="audio" icon="ion-ios-images" />
             <ToolbarButton key="photo" icon="ion-ios-camera" />
-            <ToolbarButton key="emoji" icon="ion-md-happy" />
+            <ToolbarButton key="emoji" icon="ion-md-happy" onClick={this.toggleEmojiDialog.bind(this)}/>
             <ToolbarButton key="games" icon="ion-ios-location" />
             <ToolbarButton key="image" icon="ion-logo-bitcoin" onClick={this.toggleSendCryptoDialog.bind(this)} />
             <ToolbarButton key="person" icon="ion-ios-person" />
             <ToolbarButton key="document" icon="ion-ios-document" />
-
         </Dialog>
+
+          <Dialog isOpen={this.state.emojiDialogOpen} onCancel={this.toggleEmojiDialog.bind(this)} cancelable >
+              <Picker set='emojione' onSelect={(emoji) => this.selectEmoji.bind(this)(emoji)} />
+          </Dialog>
 
           <Dialog isOpen={this.state.sendCryptoDialogOpen} onCancel={this.toggleSendCryptoDialog.bind(this)} cancelable>
               <ons-list>
@@ -308,9 +334,9 @@ class MessageList extends Component {
                           return (
                               <div>
                               <ons-list-header>{crypto}</ons-list-header>
-                              {CRYPTO_PORTFOLIO[crypto].map(account=>{
+                              {CRYPTO_PORTFOLIO[crypto].map((account, idx)=>{
                                   return (
-                                      <ons-list-item onClick={()=>this.props.sendCryptos(crypto, account)}>
+                                      <ons-list-item key={"send-crypto-"+crypto+idx} onClick={()=>this.props.sendCryptos(crypto, account)}>
                                           <div className="center">
                                               {account.addr}
                                           </div>
@@ -334,13 +360,21 @@ class MessageList extends Component {
 }
 
 const mapStateToProps = (state, {params}) => {
+    console.log("state ", state);
     const conversationId = getConversationID(state);
+    const sendCryptoStatus = getSendCryptoStatus(state);
+    const selectedEmoji = getSelectedEmoji(state);
     return {
-        conversationId
+        conversationId,
+        sendCryptoStatus,
+        selectedEmoji
     }
 };
 
 export default connect(
     mapStateToProps,
-    {sendCryptos}
+    {
+        sendCryptos,
+        selectEmoji,
+    }
 )(MessageList);

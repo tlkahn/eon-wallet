@@ -2,15 +2,16 @@ import { combineReducers } from 'redux';
 import { GOTO_CONVERSATION } from '../actions/actionTypes';
 import {goToConversation} from '../reducers/goToConversation';
 import {sendCryptos} from '../reducers/sendCrypto';
+import {selectEmoji} from '../reducers/selectEmoji';
 
 const appReducer = combineReducers({
   goToConversation,
-  sendCryptos
+  sendCryptos,
+  selectEmoji
 });
 
 const rootReducer = (state, action) => {
   let reducedResult = appReducer(state, action);
-  console.log(state);
   return reducedResult;
 }
 

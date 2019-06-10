@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './Compose.css';
 import {ToolbarButton} from 'react-onsenui';
+import Emoji from 'react-emoji-render';
 
 export default class Compose extends Component {
 
@@ -8,6 +9,7 @@ export default class Compose extends Component {
         super(props);
         this.state = {
             composedContents: '',
+            emojiSelected: false
         };
         this.onCommentChange = (event) => this.setState({ composedContents: event.target.value });
         this.handleKeyDown = this._handleKeyDown.bind(this);
@@ -25,7 +27,16 @@ export default class Compose extends Component {
         this.composedInput.blur();
     }
 
-  render() {
+    componentWillReceiveProps(nextProps, nextContext) {
+        if (typeof nextProps.receivedEmoji !== 'undefined' && typeof nextProps.receivedEmoji.colons !== 'undefined' && !nextProps.stopReceivingEmoji) {
+
+            this.setState({
+                composedContents: this.state.composedContents + nextProps.receivedEmoji.colons
+            });
+        }
+    }
+
+    render() {
     return (
       <div className="compose">
         <input

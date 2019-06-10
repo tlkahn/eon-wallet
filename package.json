@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "axios": "^0.18.0",
+    "emoji-mart": "^2.11.1",
     "ionicons": "^4.5.8",
     "moment": "^2.24.0",
     "onsenui": "^2.10.8",
@@ -11,6 +12,7 @@
     "react": "^16.8.6",
     "react-card-flip": "^0.7.1",
     "react-dom": "^16.8.6",
+    "react-emoji-render": "^0.6.0",
     "react-horizontal-scroll-container": "^1.0.1",
     "react-ionicons": "^3.0.1",
     "react-onsenui": "^1.11.2",

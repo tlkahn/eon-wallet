@@ -39,7 +39,7 @@ export default class App extends Component {
                                   tab: <Ons.Tab label="DappStore" icon="md-apps" key="dapp-store"/>
                               },
                               {
-                                  content: <LoginForm key="photo-gallery"/>,
+                                  content: <PhotoGallery key="photo-gallery"/>,
                                   tab: <Ons.Tab label="Wall" icon="ion-logo-instagram" key="photo-gallery" />
                               },
                               {
