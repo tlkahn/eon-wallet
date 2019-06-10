@@ -55,6 +55,9 @@ class MessageList extends Component {
           sendCryptoDialogOpen: false,
           emojiDialogOpen: false
       };
+      this.emojiPickerEl = {
+          offsetParent: null
+      };
   }
 
   postNewComposedContent(composedContents) {
@@ -63,7 +66,7 @@ class MessageList extends Component {
         ...this.state,
         messages: this.state.messages.concat([{
           id,
-          author: 'apple',
+          author: MY_USER_ID,
           message: composedContents,
           timestamp: new Date().getTime()
         }])
@@ -324,7 +327,7 @@ class MessageList extends Component {
         </Dialog>
 
           <Dialog isOpen={this.state.emojiDialogOpen} onCancel={this.toggleEmojiDialog.bind(this)} cancelable >
-              <Picker set='emojione' onSelect={(emoji) => this.selectEmoji.bind(this)(emoji)} />
+              <Picker set='apple' onClick={(emoji) => this.selectEmoji.bind(this)(emoji)} title='Pick your emoji…' emoji='point_up'/>
           </Dialog>
 
           <Dialog isOpen={this.state.sendCryptoDialogOpen} onCancel={this.toggleSendCryptoDialog.bind(this)} cancelable>

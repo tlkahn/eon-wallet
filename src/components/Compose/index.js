@@ -29,10 +29,11 @@ export default class Compose extends Component {
 
     componentWillReceiveProps(nextProps, nextContext) {
         if (typeof nextProps.receivedEmoji !== 'undefined' && typeof nextProps.receivedEmoji.colons !== 'undefined' && !nextProps.stopReceivingEmoji) {
-
-            this.setState({
+            if (document.querySelector(".emoji-mart") && document.querySelector(".emoji-mart").offsetParent /*TODO: dirty hack. you shouldn't do this.*/) {
+                this.setState({
                 composedContents: this.state.composedContents + nextProps.receivedEmoji.colons
             });
+            }
         }
     }
 

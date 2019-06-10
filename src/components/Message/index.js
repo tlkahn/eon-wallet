@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import './Message.css';
+import Emoji from 'react-emoji-render';
 
 export default class Message extends Component {
   render() {
@@ -29,7 +30,10 @@ export default class Message extends Component {
 
         <div className="bubble-container">
           <div className="bubble" title={friendlyTimestamp}>
-            { data.message }
+            <Emoji
+                text={ data.message }
+            />
+
           </div>
         </div>
       </div>
