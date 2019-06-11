@@ -11,6 +11,9 @@ import CommentItem from './components/CommentItem'
 import GalleryItem from './components/GalleryItem'
 import ProfileHead from './components/ProfileHead'
 import moment from 'moment'
+import getCurrentLocation from './utils/getCurrentLocation'
+import LocationPicker from 'react-location-picker';
+
 
 export default class Setting extends React.Component {
     constructor(props) {
@@ -52,11 +55,40 @@ export default class Setting extends React.Component {
             username: 'toeinriver',
             avatarUrl: 'https://via.placeholder.com/150/'
         };
+        this.defaultPosition = {
+                lat: 0,
+                lng: 0
+            };
+        getCurrentLocation((result=>{
+            this.setState({
+                ...this.state,
+                position:{
+                    lat: result.lat,
+                    lng: result.lon
+                }
+            });
+        }));
+        this.state = {
+            position: this.defaultPosition
+        };
+        window.addEventListener('message', function(event) {
+            var loc = event.data;
+            if (loc && loc.module == 'locationPicker') {
+                console.log('location', loc);
+            }
+        }, false);
+
+
     }
+
+    handleLocationChange ({ position, address, places }) {
+        console.log(position, address, places);
+        this.setState({ position, address, places });
+    }
+
     render() {
         return (
             <Page>
-                <div>
                     {/*<BackButton>*/}
                     {/*    Press me*/}
                     {/*</BackButton>*/}
@@ -75,8 +107,17 @@ export default class Setting extends React.Component {
                     {/*    onFetchMoreComments={() => this.props.fetchMoreComments(this.post.id)}*/}
                     {/*    onLikersClick={() => this.openLikersModal(this.post.id)}*/}
                     {/*/>*/}
-                    <ProfileHead user={this.currentUser}/>
-            </div>
+                    {/*<ProfileHead user={this.currentUser}/>*/}
+                    {/*<h1>{this.state.address}</h1>*/}
+
+                    {/*<LocationPicker*/}
+                    {/*    containerElement={ <div style={ {height: '100%'} } /> }*/}
+                    {/*    mapElement={ <div style={ {height: '400px'} } /> }*/}
+                    {/*    defaultPosition={this.state.position}*/}
+                    {/*    onChange={this.handleLocationChange.bind(this)}*/}
+                    {/*/>*/}
+                    <iframe id="mapPage" width="100%" height="100%" frameborder="0" src="https://apis.map.qq.com/tools/locpicker?search=1&type=1&key=2GTBZ-QOKKD-7GR4W-PTM6I-5D53E-CFBNA&referer=myapp">
+                    </iframe>
             </Page>
         )
     }

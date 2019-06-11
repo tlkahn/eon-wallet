@@ -12,7 +12,7 @@ export default class ConversationList extends Component {
       conversations: []
     };
     //TODO: mock stub here
-    this.USERSURL='http://localhost:3001/users.json'
+    this.USERSURL='http://localhost:3001/users.json';
     this.getConversations();
   }
 

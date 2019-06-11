@@ -23,6 +23,8 @@
   font-size: 14px;
   height: 40px;
   background: none;
+  word-wrap: break-word;
+  word-break: break-all;
 }
 
 .compose-input::placeholder {

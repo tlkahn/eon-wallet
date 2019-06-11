@@ -3,12 +3,14 @@ import Compose from '../Compose';
 import Toolbar from '../Toolbar';
 import Message from '../Message';
 import moment from 'moment';
-import {Dialog, ToolbarButton, List, ListItem} from 'react-onsenui';
+import {Dialog, ToolbarButton, List, ListItem, Button, AlertDialog, AlertDialogButton} from 'react-onsenui';
 import './MessageList.css';
 import "ionicons/dist/css/ionicons.css";
 import 'emoji-mart/css/emoji-mart.css';
-import { Picker} from 'emoji-mart'
+import { Picker} from 'emoji-mart';
+import {MESSAGE_FORM} from "../../config/constants";
 
+//redux
 import { connect } from 'react-redux';
 //selectors
 import {getConversationID} from '../../reducers/goToConversation';
@@ -53,11 +55,26 @@ class MessageList extends Component {
           messages: [],
           dialogOpen: false,
           sendCryptoDialogOpen: false,
-          emojiDialogOpen: false
-      };
+          emojiDialogOpen: false,
+          locationDialogOpen: false,
+          locationPickedP: false,
+          locationPickedObj: {}
+      }
+      ;
       this.emojiPickerEl = {
           offsetParent: null
       };
+      window.addEventListener('message', (event)=> {
+          var loc = event.data;
+          if (loc && loc.module == 'locationPicker') {
+              console.log('location', loc);
+              this.setState({
+                  ...this.state,
+                  locationPickedObj: loc,
+                  locationPickedP: true
+              })
+          }
+      }, false);
   }
 
   postNewComposedContent(composedContents) {
@@ -68,7 +85,8 @@ class MessageList extends Component {
           id,
           author: MY_USER_ID,
           message: composedContents,
-          timestamp: new Date().getTime()
+          timestamp: new Date().getTime(),
+          messageForm: MESSAGE_FORM.text
         }])
       })
   }
@@ -186,8 +204,6 @@ class MessageList extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-
-      console.log("nextProps", nextProps);
       this.getMessages({conversationId: nextProps.conversationId});
   }
 
@@ -289,6 +305,38 @@ class MessageList extends Component {
     this.props.selectEmoji(emoji);
   }
 
+  toggleLocationDialog() {
+      this.setState({
+          ...this.state,
+          locationDialogOpen: !this.state.locationDialogOpen
+      });
+  }
+
+  handleAlertDialogCancel() {
+      this.setState({
+          ...this.state,
+          locationPickedP: !this.state.locationPickedP
+      })
+  }
+
+  handleAlertDialogOk() {
+      let id = this.state.messages.length+1;
+      this.setState({
+          ...this.state,
+          id,
+          locationPickedP: false,
+          locationDialogOpen: false,
+          dialogOpen: false,
+          messages: this.state.messages.concat([{
+              id,
+              author: MY_USER_ID,
+              location: this.state.locationPickedObj,
+              timestamp: new Date().getTime(),
+              messageForm: MESSAGE_FORM.location
+          }])
+      });
+  }
+
   render() {
     return(
       <div className="message-list">
@@ -320,7 +368,7 @@ class MessageList extends Component {
             <ToolbarButton key="audio" icon="ion-ios-images" />
             <ToolbarButton key="photo" icon="ion-ios-camera" />
             <ToolbarButton key="emoji" icon="ion-md-happy" onClick={this.toggleEmojiDialog.bind(this)}/>
-            <ToolbarButton key="games" icon="ion-ios-location" />
+            <ToolbarButton key="location" icon="ion-ios-location" onClick={this.toggleLocationDialog.bind(this)}/>
             <ToolbarButton key="image" icon="ion-logo-bitcoin" onClick={this.toggleSendCryptoDialog.bind(this)} />
             <ToolbarButton key="person" icon="ion-ios-person" />
             <ToolbarButton key="document" icon="ion-ios-document" />
@@ -329,6 +377,28 @@ class MessageList extends Component {
           <Dialog isOpen={this.state.emojiDialogOpen} onCancel={this.toggleEmojiDialog.bind(this)} cancelable >
               <Picker set='apple' onClick={(emoji) => this.selectEmoji.bind(this)(emoji)} title='Pick your emoji…' emoji='point_up'/>
           </Dialog>
+
+          <Dialog isOpen={this.state.locationDialogOpen} onCancel={this.toggleLocationDialog.bind(this)} cancelable >
+              <iframe id="mapPage" width="100%" height="100%" frameBorder="0" src="https://apis.map.qq.com/tools/locpicker?search=1&type=1&key=2GTBZ-QOKKD-7GR4W-PTM6I-5D53E-CFBNA&referer=myapp">
+                    </iframe>
+          </Dialog>
+
+          <AlertDialog isOpen={this.state.locationPickedP} onCancel={this.handleAlertDialogCancel.bind(this)} cancelable>
+              <div className="alert-dialog-title">Confirm</div>
+              <div className="alert-dialog-content">
+                  Send {this.state.locationPickedObj.poiname} to {this.props.conversationId}?
+              </div>
+              <div className="alert-dialog-footer">
+                  <Button onClick={this.handleAlertDialogCancel.bind(this)} className="alert-dialog-button">
+                      Cancel
+                  </Button>
+                  <Button onClick={this.handleAlertDialogOk.bind(this)} className="alert-dialog-button">
+                      Ok
+                  </Button>
+              </div>
+          </AlertDialog>
+
+
 
           <Dialog isOpen={this.state.sendCryptoDialogOpen} onCancel={this.toggleSendCryptoDialog.bind(this)} cancelable>
               <ons-list>
