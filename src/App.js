@@ -48,11 +48,12 @@ class App extends Component {
                 {(()=>{
                     console.log("loggedIn", this.props.loggedIn);
                     return (
+
                         (()=>{
                             if(this.props.loggedIn) {
                                 return (
                                     <Ons.Page>
-                                        <Ons.Tabbar
+                                        <Ons.Tabbar key={"tabbar-logged-in-" + this.props.loggedIn}
                                             renderTabs={() => [
                                                 {
                                                     content: <Pokemon key="pokemon"/>,
@@ -79,7 +80,7 @@ class App extends Component {
                             else {
                                 return (
                                     <Ons.Page>
-                                        <UserAuth />
+                                        <UserAuth key={"user-auth-logged-in-" + this.props.loggedIn}/>
                                     </Ons.Page>
                                 )}})())})()}
             </div>

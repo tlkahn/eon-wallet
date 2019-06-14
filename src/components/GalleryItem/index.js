@@ -3,8 +3,10 @@ import moment from 'moment';
 import LikeButton from '../LikeButton';
 import CommentBox from '../CommentBox';
 import CommentItem from '../CommentItem';
-
+import sha256 from 'sha256';
 import './GalleryItem.css';
+import {MY_USER_NAME} from '../../services/myUserInfo';
+
 
 /*
 GalleryItem is for rending one single gallery item in a cascading form. Example usage:
@@ -46,11 +48,13 @@ class GalleryItem extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      comments: this.props.comments,
+      likesCount: this.props.likesCount
     };
   }
 
   renderLikes() {
-    const { likesCount } = this.props;
+    const {likesCount} = this.state;
     if (likesCount > 0) {
       return (
         <div className="GalleryItem__likes" onClick={this.props.onLikersClick}>
@@ -60,45 +64,83 @@ class GalleryItem extends React.Component {
     }
   }
 
-  renderCaption() {
-    const { caption, user: { username } } = this.props;
-    if (caption) {
-      return (
-        <CommentItem username={username} body={caption} />
-      )
-    }
-  }
+  // renderCaption() {
+  //   const { caption, user: { username } } = this.props;
+  //   if (caption) {
+  //     return (
+  //       <CommentItem username={username} body={caption} />
+  //     )
+  //   }
+  // }
 
-  renderViewMoreComments() {
-    const { nextPage, currentPage } = this.props.commentPagination;
-    if (nextPage !== null) {
-      return (
-        <div
-          className="GalleryItem__fetch-comments-link"
-          onClick={this.props.onFetchMoreComments}>
-          {currentPage === 1
-          ? `View all ${this.props.commentsCount} comments`
-          : 'View more comments'}
-          View more comments
-        </div>
-      );
-    }
-  }
+  // renderViewMoreComments() {
+  //   const { nextPage, currentPage } = this.props.commentPagination;
+  //   if (nextPage !== null) {
+  //     return (
+  //       <div
+  //         className="GalleryItem__fetch-comments-link"
+  //         onClick={this.props.onFetchMoreComments}>
+  //         {currentPage === 1
+  //         ? `View all ${this.props.commentsCount} comments`
+  //         : 'View more comments'}
+  //         View more comments
+  //       </div>
+  //     );
+  //   }
+  // }
 
   renderComments() {
     return (
       <div className="GalleryItem__comments">
-        {this.props.comments.map(comment => (
+        {this.state.comments.map(comment => (
           <CommentItem
             key={comment.id}
             username={comment.username}
             body={comment.body}
-            deletable={this.props.currentUser.username === comment.username}
-            onDelete={() => this.props.onCommentDelete(comment.id)}
+            deletable={MY_USER_NAME === comment.username}
+            onDelete={() => this.onCommentDelete(comment.id)}
           />
         ))}
       </div>
     );
+  }
+
+  onCommentDelete(commentId) {
+    //TODO: call service method for confirmation or rollback
+    this.setState({
+      ...this.state,
+      comments: this.state.comments.filter(comment => commentId !== comment.id)
+    });
+  }
+
+  onCommentSubmit(commentTxt) {
+    //TODO: call service method for confirmation or rollback
+    this.setState({
+      ...this.state,
+      comments: this.state.comments.concat([{
+        id: sha256(commentTxt + '@' + moment.now().toString() ),
+        username: MY_USER_NAME,
+        body: commentTxt
+      }])
+    });
+  }
+
+  onLike(likedObj) {
+    const liked = likedObj.liked;
+    console.log("likedObj", likedObj);
+    if (!liked) {
+      this.setState({
+        ...this.state,
+        likesCount: this.state.likesCount + 1
+      })
+    }
+    else {
+      this.setState({
+        ...this.state,
+        likesCount: this.state.likesCount - 1
+      })
+    }
+
   }
 
   render() {
@@ -112,7 +154,7 @@ class GalleryItem extends React.Component {
         avatarUrl
       }
     } = this.props;
-
+    console.log(this.state);
     return (
       <article className="GalleryItem__root">
         <div className="GalleryItem-header">
@@ -146,19 +188,18 @@ class GalleryItem extends React.Component {
         <div className="GalleryItem__footer">
           {this.renderLikes()}
 
-          {this.renderCaption()}
-          {this.renderViewMoreComments()}
+          {/*{this.renderCaption()}*/}
+          {/*{this.renderViewMoreComments()}*/}
+
           {this.renderComments()}
           <div className="GalleryItem__action-box">
             <div className="GalleryItem__like-button">
               <LikeButton
-                onLike={this.props.onLike}
-                onDislike={this.props.onDislike}
-                liked={this.props.liked}
+                onLike={this.onLike.bind(this)}
               />
             </div>
             <div className="GalleryItem__comment-box">
-              <CommentBox onSubmit={this.props.onCommentSubmit} />
+              <CommentBox onSubmit={this.onCommentSubmit.bind(this)} />
             </div>
           </div>
         </div>

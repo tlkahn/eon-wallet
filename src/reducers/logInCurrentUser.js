@@ -7,7 +7,6 @@ const initialState = {
 };
 
 export const logInCurrentUser = (state = initialState, action) => {
-    debugger
   switch (action.type) {
       case LOG_IN_CURRENT_USER:
         return {

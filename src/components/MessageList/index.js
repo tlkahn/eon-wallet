@@ -22,7 +22,9 @@ import {debounce} from 'lodash';
 
 //TODO: mock stub. to be replaced.
 //TODO: put all mocks into service
-const MY_USER_ID = 'apple';
+
+import {MY_USER_ID} from '../../services/myUserInfo';
+
 const CRYPTO_PORTFOLIO = {
     'BTC':[
         {

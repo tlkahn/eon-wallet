@@ -91,13 +91,6 @@ class PhotoGallery extends React.Component {
                     <GalleryItem
                         key={idx}
                         {...post}
-                        onLike={() => this.props.likePost(post.id)}
-                        onDislike={() => this.props.dislikePost(post.id)}
-                        liked={likedPostIds.indexOf(post.id) >= 0}
-                        onCommentSubmit={(commentBody) => this.props.addComment(post.id, commentBody)}
-                        onCommentDelete={(commentId) => this.props.deleteComment(post.id, commentId)}
-                        currentUser={currentUser}
-                        onFetchMoreComments={() => this.props.fetchMoreComments(post.id)}
                     />
                 ))}
                 {isFetching ? (

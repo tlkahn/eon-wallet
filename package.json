@@ -26,6 +26,7 @@
     "react-slick": "^0.24.0",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
+    "sha256": "^0.2.0",
     "shave": "^2.5.3",
     "slick-carousel": "^1.8.1"
   },
