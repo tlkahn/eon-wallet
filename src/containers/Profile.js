@@ -30,8 +30,8 @@ class ProfilePage extends React.Component {
         }
     }
 
-    _getViewArray() {
-        return [NotificationList, AddressBook, ContactList];
+    static _getViewArray() {
+        return [NotificationList, AddressBook];
     }
     render() {
         return (
@@ -42,19 +42,19 @@ class ProfilePage extends React.Component {
                     renderRow={(row , idx) =>
                         <ListItem key={"prifile-item-" + idx} tappable modifier="chevron">
                             <div className="left">
-                                <ons-icon icon={this.pageItemsIcons[idx]} class="list-item__icon"></ons-icon>
+                                <ons-icon icon={this.pageItemsIcons[idx]} class="list-item__icon"/>
                             </div>
                             <div className="center">
-                                <span className="list-item__title" onClick={()=>{this.gotoComponent(this._getViewArray()[idx], {navigator: this.props.navigator})}}>{this.pageItems[idx]||""}</span>
+                                <span className="list-item__title" onClick={()=>{this.gotoComponent(ProfilePage._getViewArray()[idx], {navigator: this.props.navigator})}}>{this.pageItems[idx]||""}</span>
                             </div>
                         </ListItem>
                     }
                 />
-                <div className="splitter"></div>
+                <div className="splitter"/>
                 <List>
                     <ListItem>
                         <div className="left">
-                            <ons-icon icon="ion-ios-log-out" class="list-item__icon"></ons-icon>
+                            <ons-icon icon="ion-ios-log-out" class="list-item__icon"/>
                         </div>
                         <div className="center">
                             Sign out
