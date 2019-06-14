@@ -11,7 +11,7 @@ import CommentItem from './components/CommentItem'
 import GalleryItem from './components/GalleryItem'
 import ProfileHead from './components/ProfileHead'
 import moment from 'moment'
-import getCurrentLocation from './utils/getCurrentLocation'
+import getCurrentLocation from './services/getCurrentLocation'
 import LocationPicker from 'react-location-picker';
 
 

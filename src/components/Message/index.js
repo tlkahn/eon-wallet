@@ -31,7 +31,12 @@ export default class Message extends Component {
                 {data.location.poiname}
             </div>
         );
-    } else {
+    } else if (data.messageForm === MESSAGE_FORM.image) {
+        this.bubbleContent = (
+            <div>
+                <img src={data.imageUrl} className="message-bubble-thumbnail"/>
+            </div>
+        );
     }
     const friendlyTimestamp = moment(data.timestamp).format('LLLL');
     return (

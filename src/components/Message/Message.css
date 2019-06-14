@@ -63,3 +63,7 @@
   border-top-right-radius: 2px;
   border-bottom-right-radius: 2px;
 }
+
+.message-bubble-thumbnail {
+  width: 100%;
+}

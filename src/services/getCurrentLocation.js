@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from 'axios/index';
 
 let positionOption = { timeout: 500, enableHighAccuracy: true };
 let gpsSuccess = function(currentPosition) {

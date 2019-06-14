@@ -9,17 +9,16 @@ import "ionicons/dist/css/ionicons.css";
 import 'emoji-mart/css/emoji-mart.css';
 import { Picker} from 'emoji-mart';
 import {MESSAGE_FORM} from "../../config/constants";
-
 //redux
 import { connect } from 'react-redux';
 //selectors
 import {getConversationID} from '../../reducers/goToConversation';
 import {getSendCryptoStatus} from '../../reducers/sendCrypto';
 import {getSelectedEmoji} from '../../reducers/selectEmoji';
-
 //action creators
 import {sendCryptos} from '../../actions/actionCreators/sendCryptos';
 import {selectEmoji} from '../../actions/actionCreators/selectEmoji';
+import {debounce} from 'lodash';
 
 //TODO: mock stub. to be replaced.
 //TODO: put all mocks into service
@@ -59,10 +58,6 @@ class MessageList extends Component {
           locationDialogOpen: false,
           locationPickedP: false,
           locationPickedObj: {}
-      }
-      ;
-      this.emojiPickerEl = {
-          offsetParent: null
       };
       window.addEventListener('message', (event)=> {
           var loc = event.data;
@@ -78,18 +73,53 @@ class MessageList extends Component {
   }
 
   postNewComposedContent(composedContents) {
+      if (composedContents.trim().length > 1) {
+          let id = this.state.messages.length+1;
+          this.setState({
+              ...this.state,
+              messages: this.state.messages.concat([{
+                  id,
+                  author: MY_USER_ID,
+                  message: composedContents,
+                  timestamp: new Date().getTime(),
+                  messageForm: MESSAGE_FORM.text
+              }])
+          })
+      }
+  }
+
+  postLocationContent(){
       let id = this.state.messages.length+1;
       this.setState({
-        ...this.state,
-        messages: this.state.messages.concat([{
+          ...this.state,
           id,
-          author: MY_USER_ID,
-          message: composedContents,
-          timestamp: new Date().getTime(),
-          messageForm: MESSAGE_FORM.text
-        }])
-      })
+          locationPickedP: false,
+          locationDialogOpen: false,
+          dialogOpen: false,
+          messages: this.state.messages.concat([{
+              id,
+              author: MY_USER_ID,
+              location: this.state.locationPickedObj,
+              timestamp: new Date().getTime(),
+              messageForm: MESSAGE_FORM.location
+          }])
+      });
   }
+
+  postImageContent = debounce((imageFileUrl) => {
+      let id = this.state.messages.length+1;
+      this.setState({
+          ...this.state,
+          id,
+          dialogOpen: false,
+          messages: this.state.messages.concat([{
+              id,
+              author: MY_USER_ID,
+              imageUrl: imageFileUrl,
+              timestamp: new Date().getTime(),
+              messageForm: MESSAGE_FORM.image
+          }])
+      })});
 
   componentDidMount() {
     this.messageListContainer.scrollIntoView(false);
@@ -320,21 +350,18 @@ class MessageList extends Component {
   }
 
   handleAlertDialogOk() {
-      let id = this.state.messages.length+1;
-      this.setState({
-          ...this.state,
-          id,
-          locationPickedP: false,
-          locationDialogOpen: false,
-          dialogOpen: false,
-          messages: this.state.messages.concat([{
-              id,
-              author: MY_USER_ID,
-              location: this.state.locationPickedObj,
-              timestamp: new Date().getTime(),
-              messageForm: MESSAGE_FORM.location
-          }])
+      this.postLocationContent();
+  }
+
+  openCamera() {
+      this.imageInput = document.querySelector('#camera-input');
+      this.imageInput.addEventListener('change', (ev)=>{
+          ev.preventDefault();
+          let imageFile = ev.target.files[0];
+          console.log(imageFile);
+          this.postImageContent(URL.createObjectURL(imageFile));
       });
+      this.imageInput.click();
   }
 
   render() {
@@ -365,8 +392,9 @@ class MessageList extends Component {
           isOpen={this.state.dialogOpen}
           onCancel={this.toggleDialog.bind(this)}
           cancelable>
-            <ToolbarButton key="audio" icon="ion-ios-images" />
-            <ToolbarButton key="photo" icon="ion-ios-camera" />
+            <ToolbarButton key="photo" icon="ion-ios-camera" onClick={this.openCamera.bind(this)} >
+                <input id="camera-input" type="file" accept="image/*" style={{display:"none"}}/>
+            </ToolbarButton>
             <ToolbarButton key="emoji" icon="ion-md-happy" onClick={this.toggleEmojiDialog.bind(this)}/>
             <ToolbarButton key="location" icon="ion-ios-location" onClick={this.toggleLocationDialog.bind(this)}/>
             <ToolbarButton key="image" icon="ion-logo-bitcoin" onClick={this.toggleSendCryptoDialog.bind(this)} />
@@ -378,7 +406,7 @@ class MessageList extends Component {
               <Picker set='apple' onClick={(emoji) => this.selectEmoji.bind(this)(emoji)} title='Pick your emoji…' emoji='point_up'/>
           </Dialog>
 
-          <Dialog isOpen={this.state.locationDialogOpen} onCancel={this.toggleLocationDialog.bind(this)} cancelable >
+          <Dialog className="sendLocationDialog" isOpen={this.state.locationDialogOpen} onCancel={this.toggleLocationDialog.bind(this)} cancelable >
               <iframe id="mapPage" width="100%" height="100%" frameBorder="0" src="https://apis.map.qq.com/tools/locpicker?search=1&type=1&key=2GTBZ-QOKKD-7GR4W-PTM6I-5D53E-CFBNA&referer=myapp">
                     </iframe>
           </Dialog>
@@ -432,8 +460,8 @@ class MessageList extends Component {
   }
 }
 
-const mapStateToProps = (state, {params}) => {
-    console.log("state ", state);
+const mapStateToProps = (state) => {
+    // console.log("state ", state);
     const conversationId = getConversationID(state);
     const sendCryptoStatus = getSendCryptoStatus(state);
     const selectedEmoji = getSelectedEmoji(state);

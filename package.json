@@ -6,6 +6,7 @@
     "axios": "^0.18.0",
     "emoji-mart": "^2.11.1",
     "ionicons": "^4.5.8",
+    "lodash": "^4.17.11",
     "moment": "^2.24.0",
     "onsenui": "^2.10.8",
     "prop-types": "^15.7.2",

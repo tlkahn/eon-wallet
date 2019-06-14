@@ -11,3 +11,8 @@
   width: 90%;
   text-align: center;
 }
+
+.sendLocationDialog .dialog {
+  height: 85%;
+  width: 100%;
+}
