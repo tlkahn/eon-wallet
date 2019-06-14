@@ -1,3 +1,4 @@
+/*
 import {
     SIGN_OUT_CURRENT_USER
 } from '../actions/actionTypes';
@@ -30,4 +31,4 @@ export const getSignedOutStatus = (state) => {
         signedOut: state.signOutCurrentUser.signedOut,
         loggedIn: state.signOutCurrentUser.loggedIn
     };
-};
+};*/

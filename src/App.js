@@ -46,18 +46,13 @@ class App extends Component {
             <Ons.Page>
             <div className="App">
                 {(()=>{
-                    console.log("signedOut", this.props.signedOut);
                     console.log("loggedIn", this.props.loggedIn);
                     return (
-
                         (()=>{
-                            if(this.props.loggedIn && !this.props.signedOut) {
+                            if(this.props.loggedIn) {
                                 return (
                                     <Ons.Page>
                                         <Ons.Tabbar
-                                            style={{display:
-                                                    this.props.loggedIn && !this.props.signedOut ? 'block' : 'none'
-                                            }}
                                             renderTabs={() => [
                                                 {
                                                     content: <Pokemon key="pokemon"/>,
@@ -84,9 +79,7 @@ class App extends Component {
                             else {
                                 return (
                                     <Ons.Page>
-                                        <UserAuth style={{display:
-                                                !this.state.loggedIn && this.props.signedOut ? 'block' : 'none'
-                                        }}/>
+                                        <UserAuth />
                                     </Ons.Page>
                                 )}})())})()}
             </div>
@@ -96,7 +89,6 @@ class App extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  signedOut: getSignedOutStatus(state).signedOut,
   loggedIn: getLoggedInStatus(state).loggedIn,
 });
 

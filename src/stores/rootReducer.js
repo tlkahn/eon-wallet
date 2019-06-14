@@ -12,7 +12,7 @@ const appReducer = combineReducers({
   sendCryptos,
   selectEmoji,
   searchMessageText,
-  signOutCurrentUser,
+  // signOutCurrentUser,
   logInCurrentUser
 });
 

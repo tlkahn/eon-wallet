@@ -3,8 +3,7 @@ import {
 } from '../actions/actionTypes';
 
 const initialState = {
-    loggedIn: false,
-    signedOut: false
+    loggedIn: false
 };
 
 export const logInCurrentUser = (state = initialState, action) => {
@@ -13,8 +12,7 @@ export const logInCurrentUser = (state = initialState, action) => {
       case LOG_IN_CURRENT_USER:
         return {
             ...state,
-            loggedIn: true,
-            signedOut: false
+            loggedIn: action.payload.loggedIn
         };
     default:
       return state;
@@ -29,6 +27,5 @@ export default ({
 export const getLoggedInStatus = (state) => {
     return {
         loggedIn: state.logInCurrentUser.loggedIn,
-        signedOut: state.logInCurrentUser.signedOut
     };
 };

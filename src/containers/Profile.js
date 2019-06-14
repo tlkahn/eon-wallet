@@ -13,6 +13,7 @@ import ContactList from './ContactList';
 import './styles/Profile.css';
 import { instanceOf } from 'prop-types';
 // import { withCookies, Cookies } from 'react-cookie';
+// import {signOutCurrentUser} from '../actions/actionCreators/signOutCurrentUser';
 import {signOutCurrentUser} from '../actions/actionCreators/signOutCurrentUser';
 
 class ProfilePage extends React.Component {
