@@ -10,10 +10,8 @@ import moment from 'moment'
 
 import './styles/PhotoGallery.css'
 
-class PhotoGallery extends React.Component {
-    constructor(props) {
-        super(props);
-        this.posts = [{
+//TODO: mock stub
+const posts = [{
             photoUrl: "https://via.placeholder.com/150/",
             caption: "text",
             userId: 1,
@@ -75,15 +73,23 @@ class PhotoGallery extends React.Component {
             }
         },
         ];
-        this.likedPostIds = [1,2,3];
-        this.currentUser = {
-            username: 'toeinriver',
-            avatarUrl: 'https://via.placeholder.com/150/'
+
+
+class PhotoGallery extends React.Component {
+    constructor(props) {
+        super(props);
+        //TODO: mock stub
+        this.state = {
+            posts,
+            likedPostIds: [1,2,3],
+            currentUser: {
+                username: 'toeinriver',
+                avatarUrl: 'https://via.placeholder.com/150/'
+            }
         };
-        this.isFetching = true;
     }
     render() {
-        const { posts, isFetching, likedPostIds, currentUser } = this;
+        const { posts, isFetching, likedPostIds, currentUser } = this.state;
         return (
         <Page>
             <div className="PhotoGallery__root">
@@ -93,11 +99,6 @@ class PhotoGallery extends React.Component {
                         {...post}
                     />
                 ))}
-                {isFetching ? (
-                    <div className="PhotoGallery__spinner-container">
-                        <Spinner />
-                    </div>
-                ) : null}
             </div>
         </Page>
         )
@@ -105,15 +106,9 @@ class PhotoGallery extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  // posts: getAllPosts(state),
-  // isFetching: getIsFetchingPosts(state),
-  // likedPostIds: getCurrentUsersLikedPostIds(state),
-  // currentPage: getPostsCurrentPage(state),
-  // totalPages: getPostsTotalPages(state),
-  // currentUser: getCurrentUser(state),
 });
 
 export default connect(
   mapStateToProps,
-  { /*fetchPosts, likePost, dislikePost, addComment, deleteComment, fetchMoreComments*/ }
+  { }
 )(PhotoGallery);

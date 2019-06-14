@@ -127,7 +127,6 @@ class GalleryItem extends React.Component {
 
   onLike(likedObj) {
     const liked = likedObj.liked;
-    console.log("likedObj", likedObj);
     if (!liked) {
       this.setState({
         ...this.state,
