@@ -1,7 +1,18 @@
 import React, { Component } from 'react';
 import './ConversationSearch.css';
+import { connect } from 'react-redux';
+import {searchMessageText} from '../../actions/actionCreators/searchMessageText';
 
-export default class ConversationSearch extends Component {
+class ConversationSearch extends Component {
+
+    constructor(props) {
+        super(props);
+    }
+
+    onSearchTextChange(ev) {
+        this.props.searchMessageText(ev.target.value);
+    }
+
   render() {
     return (
       <div className="conversation-search">
@@ -9,8 +20,14 @@ export default class ConversationSearch extends Component {
           type="search"
           className="conversation-search-input"
           placeholder="Search Messages"
+          onChange={this.onSearchTextChange.bind(this)}
         />
       </div>
     );
   }
 }
+
+export default connect(
+  null,
+  { searchMessageText }
+)(ConversationSearch);

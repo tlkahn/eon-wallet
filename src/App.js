@@ -14,14 +14,30 @@ import LoginForm from './components/LoginForm';
 import SignUpForm from './components/SignUpForm';
 import UserAuth from './containers/UserAuth';
 import ContactList from './containers/ContactList';
+import { instanceOf } from 'prop-types';
+import { withCookies, Cookies } from 'react-cookie';
 
-export default class App extends Component {
-    constructor() {
-        super();
+class App extends Component {
+
+    static propTypes = {
+        cookies: instanceOf(Cookies).isRequired
+    };
+
+    constructor(props) {
+        super(props);
         this.state = {
             index: 0
-        }
+        };
+        const { cookies } = props;
+        // this.state = {
+        //     name: cookies.get('name') || 'Ben'
+        // };
+    }
 
+    componentDidMount() {
+        const { cookies } = this.props;
+        // let name = 'josh';
+        // cookies.set('name', name, { path: '/' });
     }
 
     render() {
@@ -56,3 +72,5 @@ export default class App extends Component {
         );
     }
 }
+
+export default withCookies(App);

@@ -13,6 +13,7 @@
     "react": "^16.8.6",
     "react-alphabet-list": "^0.1.7",
     "react-card-flip": "^0.7.1",
+    "react-cookie": "^4.0.0",
     "react-dom": "^16.8.6",
     "react-emoji-render": "^0.6.0",
     "react-horizontal-scroll-container": "^1.0.1",

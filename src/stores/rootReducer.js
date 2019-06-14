@@ -3,11 +3,13 @@ import { GOTO_CONVERSATION } from '../actions/actionTypes';
 import {goToConversation} from '../reducers/goToConversation';
 import {sendCryptos} from '../reducers/sendCrypto';
 import {selectEmoji} from '../reducers/selectEmoji';
+import {searchMessageText} from '../reducers/searchMessageText';
 
 const appReducer = combineReducers({
   goToConversation,
   sendCryptos,
-  selectEmoji
+  selectEmoji,
+  searchMessageText
 });
 
 const rootReducer = (state, action) => {

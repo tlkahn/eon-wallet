@@ -2,10 +2,13 @@ import React, { Component } from 'react';
 import ConversationSearch from '../ConversationSearch';
 import ConversationListItem from '../ConversationListItem';
 import axios from 'axios';
-
+import { connect } from 'react-redux';
 import './ConversationList.css';
+import {getSearchMessageText} from '../../reducers/searchMessageText';
+import randomWords from 'random-words';
 
-export default class ConversationList extends Component {
+
+class ConversationList extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -16,6 +19,7 @@ export default class ConversationList extends Component {
     this.getConversations();
   }
 
+  //TODO: mock stub
   getConversations = () => {
     axios.get(this.USERSURL).then(response => {
       this.setState(prevState => {
@@ -24,7 +28,7 @@ export default class ConversationList extends Component {
             photo: result.photo,
             name: `${result.name}`,
             id: result.id,
-            text: 'Hello world! This is a long message that needs to be truncated.'
+            text: randomWords(Math.floor(Math.random()*100)).join(" ")
           };
         });
 
@@ -38,7 +42,7 @@ export default class ConversationList extends Component {
       <div className="conversation-list">
         <ConversationSearch />
         {
-          this.state.conversations.map(conversation =>
+          this.state.conversations.filter(conversation=>conversation.text.match(this.props.searchMessageText)).map(conversation =>
             <ConversationListItem
               key={conversation.name}
               data={conversation}
@@ -49,3 +53,18 @@ export default class ConversationList extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => ({
+  // posts: getAllPosts(state),
+  // isFetching: getIsFetchingPosts(state),
+  // likedPostIds: getCurrentUsersLikedPostIds(state),
+  // currentPage: getPostsCurrentPage(state),
+  // totalPages: getPostsTotalPages(state),
+  // currentUser: getCurrentUser(state),
+  searchMessageText: getSearchMessageText(state)
+});
+
+export default connect(
+  mapStateToProps,
+  {}
+)(ConversationList);

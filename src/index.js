@@ -5,15 +5,18 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import configureStore from './stores/configureStore';
 import {Provider} from 'react-redux';
+import { CookiesProvider } from 'react-cookie';
 // import './vendor/Skeleton-2.0.4/css/normalize.css';
 // import './vendor/Skeleton-2.0.4/css/skeleton.css';
 
 const store = configureStore();
 
 ReactDOM.render(
+    <CookiesProvider>
     <Provider store={store}>
         <App />
-    </Provider>,
+    </Provider>
+    </CookiesProvider>,
     document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change

@@ -69,7 +69,8 @@
 }
 
 .GalleryItem__footer {
-  padding: 14px;
+  padding: 12px;
+  padding-bottom: 2px;
 }
 
 .GalleryItem__fetch-comments-link {
@@ -95,7 +96,9 @@
 .GalleryItem__action-box {
   display: flex;
   border-top: 1px solid #efefef;
-  padding-top: 10px;
+  padding-top: 0px;
+  align-items: center;
+  justify-content: center;
 }
 
 .GalleryItem__like-button {
