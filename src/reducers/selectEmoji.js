@@ -10,11 +10,11 @@ export const selectEmoji = (state = initialState, action) => {
   switch (action.type) {
       case SELECT_EMOJI:
         return {
-            ...initialState,
+            ...state,
             selectedEmoji: action.payload.emoji
         };
     default:
-      return initialState;
+      return state;
   }
 };
 

@@ -11,17 +11,17 @@ export const sendCryptos = (state = initialState, action) => {
   switch (action.type) {
       case SEND_CRYPTO_STARTED:
         return {
-            ...initialState,
+            ...state,
             sendCryptoStarted: true
         };
         case SEND_CRYPTO_SUCCESS:
         return {
-            ...initialState,
+            ...state,
             sendCryptoSuccess: true,
             sendCryptoStarted: false
         };
     default:
-      return initialState;
+      return state;
   }
 };
 

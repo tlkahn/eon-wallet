@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import {
     Page,
     Navigator,
@@ -10,6 +11,9 @@ import NotificationList from './NotificationList';
 import AddressBook from './AddressBook';
 import ContactList from './ContactList';
 import './styles/Profile.css';
+import { instanceOf } from 'prop-types';
+// import { withCookies, Cookies } from 'react-cookie';
+import {signOutCurrentUser} from '../actions/actionCreators/signOutCurrentUser';
 
 class ProfilePage extends React.Component {
     constructor(props) {
@@ -24,6 +28,10 @@ class ProfilePage extends React.Component {
         this.pageItemsIcons = ["ion-ios-notifications", "ion-ios-wallet", "ion-ios-settings", "ion-ios-happy"];
     }
 
+    // static propTypes = {
+    //     cookies: instanceOf(Cookies).isRequired
+    // };
+
     gotoComponent(component, propsObj) {
         if (typeof component !== 'undefined') {
             this.props.navigator.pushPage({comp: component, props: { ...propsObj }});
@@ -33,6 +41,13 @@ class ProfilePage extends React.Component {
     static _getViewArray() {
         return [NotificationList, AddressBook];
     }
+
+    onLogOut() {
+        // const { cookies } = this.props;
+        // cookies.remove('userId');
+        this.props.signOutCurrentUser();
+    }
+
     render() {
         return (
             <Page>
@@ -52,7 +67,7 @@ class ProfilePage extends React.Component {
                 />
                 <div className="splitter"/>
                 <List>
-                    <ListItem>
+                    <ListItem onClick={this.onLogOut.bind(this)}>
                         <div className="left">
                             <ons-icon icon="ion-ios-log-out" class="list-item__icon"/>
                         </div>
@@ -66,7 +81,7 @@ class ProfilePage extends React.Component {
     }
 }
 
-export default class Profile extends React.Component {
+class Profile extends React.Component {
 
 
   static renderPage(route, navigator) {
@@ -77,10 +92,16 @@ export default class Profile extends React.Component {
 
   render() {
     return (
-            <Navigator
-                initialRoute={{comp: ProfilePage, props: { key: 'profile-page'}}}
-                renderPage={Profile.renderPage}
-            />
+        <Navigator
+            initialRoute={{comp: connect(
+                    null,
+                    { signOutCurrentUser }
+                )(ProfilePage), props: { key: 'profile-page'}}}
+            renderPage={Profile.renderPage}
+        />
     );
   }
 }
+
+
+export default Profile;

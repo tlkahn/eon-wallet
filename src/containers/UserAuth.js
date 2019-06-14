@@ -20,18 +20,16 @@ export default class UserAuth extends Component {
 
     render() {
         return (
-            <Page>
-                <div>
-                    <ReactCardFlip isFlipped={this.state.isFlipped} flipDirection="vertical">
-                        <div key="front" className="sign-up-form-wrapper">
-                            <SignUpForm key="sign-up-form" toggleSplitterSide={this.handleClick.bind(this)}/>
-                        </div>
-                        <div key="back" className="log-in-form-wrapper">
-                            <LoginForm key="log-in-form" toggleSplitterSide={this.handleClick.bind(this)}/>
-                        </div>
-                    </ReactCardFlip>
-                </div>
-            </Page>
+            <div>
+                <ReactCardFlip isFlipped={this.state.isFlipped} flipDirection="vertical">
+                    <div key="front" className="sign-up-form-wrapper">
+                        <SignUpForm key="sign-up-form" toggleSplitterSide={this.handleClick.bind(this)}/>
+                    </div>
+                    <div key="back" className="log-in-form-wrapper">
+                        <LoginForm key="log-in-form" toggleSplitterSide={this.handleClick.bind(this)}/>
+                    </div>
+                </ReactCardFlip>
+            </div>
         )
     }
 

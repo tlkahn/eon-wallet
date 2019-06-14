@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { connect } from 'react-redux';
 import * as Ons from 'react-onsenui';
 import './App.css';
 import 'onsenui/css/onsenui.css';
@@ -15,62 +16,91 @@ import SignUpForm from './components/SignUpForm';
 import UserAuth from './containers/UserAuth';
 import ContactList from './containers/ContactList';
 import { instanceOf } from 'prop-types';
-import { withCookies, Cookies } from 'react-cookie';
+// import { withCookies, Cookies } from 'react-cookie';
+import {getSignedOutStatus} from './reducers/signOutCurrentUser';
+import {getLoggedInStatus} from "./reducers/logInCurrentUser";
 
 class App extends Component {
 
-    static propTypes = {
-        cookies: instanceOf(Cookies).isRequired
-    };
+    // static propTypes = {
+    //     cookies: instanceOf(Cookies).isRequired
+    // };
 
     constructor(props) {
         super(props);
         this.state = {
-            index: 0
+            index: 0,
         };
-        const { cookies } = props;
-        // this.state = {
-        //     name: cookies.get('name') || 'Ben'
-        // };
     }
 
     componentDidMount() {
-        const { cookies } = this.props;
+        // const { cookies } = this.props;
         // let name = 'josh';
         // cookies.set('name', name, { path: '/' });
+        // if  (cookies.get('userId')) {
+        // }
     }
 
     render() {
         return (
             <Ons.Page>
             <div className="App">
-                  <Ons.Page>
-                      <Ons.Tabbar
-                          renderTabs={() => [
-                              {
-                                  content: <Pokemon key="pokemon"/>,
-                                  tab: <Ons.Tab label="Pokemon" icon="md-home" key="pokemon" />
-                              },
-                              {
-                                  content: <DappStore key="dapp-store" />,
-                                  tab: <Ons.Tab label="DappStore" icon="md-apps" key="dapp-store"/>
-                              },
-                              {
-                                  content: <PhotoGallery key="photo-gallery"/>,
-                                  tab: <Ons.Tab label="Wall" icon="ion-logo-instagram" key="photo-gallery" />
-                              },
-                              {
-                                  content: <Profile key="profile"/>,
-                                  tab: <Ons.Tab label="Profile" icon="ion-ios-person" key="profile" />
-                              }
-                              ]
-                          }
-                      />
-                  </Ons.Page>
+                {(()=>{
+                    console.log("signedOut", this.props.signedOut);
+                    console.log("loggedIn", this.props.loggedIn);
+                    return (
+
+                        (()=>{
+                            if(this.props.loggedIn && !this.props.signedOut) {
+                                return (
+                                    <Ons.Page>
+                                        <Ons.Tabbar
+                                            style={{display:
+                                                    this.props.loggedIn && !this.props.signedOut ? 'block' : 'none'
+                                            }}
+                                            renderTabs={() => [
+                                                {
+                                                    content: <Pokemon key="pokemon"/>,
+                                                    tab: <Ons.Tab label="Pokemon" icon="md-home" key="pokemon" />
+                                                },
+                                                {
+                                                    content: <DappStore key="dapp-store" />,
+                                                    tab: <Ons.Tab label="DappStore" icon="md-apps" key="dapp-store"/>
+                                                },
+                                                {
+                                                    content: <PhotoGallery key="photo-gallery"/>,
+                                                    tab: <Ons.Tab label="Wall" icon="ion-logo-instagram" key="photo-gallery" />
+                                                },
+                                                {
+                                                    content: <Profile key="profile"/>,
+                                                    tab: <Ons.Tab label="Profile" icon="ion-ios-person" key="profile" />
+                                                }
+                                            ]
+                                            }
+                                        />
+                                    </Ons.Page>
+                                )
+                            }
+                            else {
+                                return (
+                                    <Ons.Page>
+                                        <UserAuth style={{display:
+                                                !this.state.loggedIn && this.props.signedOut ? 'block' : 'none'
+                                        }}/>
+                                    </Ons.Page>
+                                )}})())})()}
             </div>
             </Ons.Page>
         );
     }
 }
 
-export default withCookies(App);
+const mapStateToProps = (state) => ({
+  signedOut: getSignedOutStatus(state).signedOut,
+  loggedIn: getLoggedInStatus(state).loggedIn,
+});
+
+export default connect(
+  mapStateToProps,
+  {  }
+)(App);

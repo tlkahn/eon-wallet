@@ -1,15 +1,41 @@
 import React, { Component } from 'react';
 import {Page, Input, Icon, ToolbarButton} from 'react-onsenui';
+import { connect } from 'react-redux';
 import FacebookLoginButton from '../FacebookLoginButton';
 import FormDivider from '../FormDivider';
 import './SignUpForm.css'
+import signUpUser from '../../services/signUpUser';
+import { instanceOf } from 'prop-types';
+// import { withCookies, Cookies } from 'react-cookie';
+import {logInCurrentUser} from '../../actions/actionCreators/logInCurrentUser';
 
-export default class SignUpForm extends Component {
+class SignUpForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            text: ""
+            fname: "",
+            lname: "",
+            email: "",
+            password: ""
         };
+    }
+
+    // static propTypes = {
+    //     cookies: instanceOf(Cookies).isRequired
+    // };
+
+    onSubmit() {
+        // const { cookies } = this.props;
+        let {fname, lname, email, password} = this.state;
+        signUpUser({
+            fname, lname, email, password
+        }).then((result)=>{
+            // const {userId} = result;
+            // cookies.set('userId', userId, { path: '/' });
+            this.props.logInCurrentUser();
+        }, (error)=>{
+            console.log("signed up error", error);
+        });
     }
 
     render() {
@@ -26,16 +52,28 @@ export default class SignUpForm extends Component {
 
                 <div className="formarea">
                     <div className="form-row">
-                        <input type="text" className="text-input--underbar width-half" placeholder="First" value="" />
-                        <input type="text" className="text-input--underbar width-half" placeholder="Last" value="" style={{'border-width-left': '1px'}} />
+                        <input type="text" className="text-input--underbar width-half" placeholder="First" onChange={(ev)=>this.setState({
+                            ...this.state,
+                            fname: ev.target.value
+                        })}/>
+                        <input type="text" className="text-input--underbar width-half" placeholder="Last" style={{'borderWidthLeft': '1px'}} onChange={(ev)=>this.setState({
+                            ...this.state,
+                            lname: ev.target.value
+                        })}/>
                     </div>
 
                     <div className="form-row">
-                        <input type="text" className="text-input--underbar width-full" placeholder="Email" value="" />
+                        <input type="text" className="text-input--underbar width-full" placeholder="Email" onChange={(ev)=>this.setState({
+                            ...this.state,
+                            email: ev.target.value
+                        })}/>
                     </div>
 
                     <div className="form-row">
-                        <input type="password" className="text-input--underbar width-full" placeholder="Password" value="" />
+                        <input type="password" className="text-input--underbar width-full" placeholder="Password" onChange={(ev)=>this.setState({
+                            ...this.state,
+                            password: ev.target.value
+                        })}/>
                     </div>
 
                     <div className="lucent">
@@ -43,7 +81,7 @@ export default class SignUpForm extends Component {
                     </div>
 
                     <div className="vspc form-row">
-                        <ons-button modifier="large">Sign up</ons-button>
+                        <ons-button modifier="large" onClick={this.onSubmit.bind(this)}>Sign up</ons-button>
                     </div>
                 </div>
 
@@ -54,3 +92,7 @@ export default class SignUpForm extends Component {
         );
     }
 }
+
+
+
+export default connect(null, {logInCurrentUser})(SignUpForm);

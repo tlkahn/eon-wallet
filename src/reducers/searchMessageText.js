@@ -10,11 +10,11 @@ export const searchMessageText = (state = initialState, action) => {
   switch (action.type) {
       case SEARCH_MESSAGE_TEXT:
         return {
-            ...initialState,
+            ...state,
             searchMessageText: action.payload.searchText
         };
     default:
-      return initialState;
+      return state;
   }
 };
 
