@@ -12,38 +12,39 @@ import {
     ToolbarButton,
     Icon
 } from 'react-onsenui';
-import './styles/NotificationList.css'
+//TODO: to be removed
+import randomWords from 'random-words';
+import './ContactList.css';
+//redux
+import { connect } from 'react-redux';
+import {goToConversation} from "../../actions/actionCreators/goToConversation";
+import {debounce} from 'lodash';
 
-export default class NotificationList extends React.Component {
+class ContactList extends React.Component {
     constructor(props){
         super(props);
         this.state = {
             collapsed: true,
         };
         //TODO: stub here. to be replaced with real feed (through mapStateToProps).
-        this.notifications = [
-            {category: "transactions", content: "You received 10 BTC."},
-            {category: "transactions", content: "You received 10 BTC."},
-            {category: "transactions", content: "You received 10 BTC."},
-            {category: "transactions", content: "You received 10 BTC."},
-            {category: "transactions", content: "You received 10 BTC."},
-            {category: "system", content: "You are friends with Alice."},
-            {category: "system", content: "You are friends with Bob."},
-            {category: "system", content: "You are friends with Carol."},
-            {category: "system", content: "You are friends with Dylan."},
-        ];
-        this.splitterSideItems = this.notifications.reduce((result, n)=>{
-            if (result.indexOf(n.category) == -1) {
-                result.push(n.category)
+        let firstNames = randomWords(100);
+        let lastNames = randomWords(100);
+        this.names = firstNames.map((fname, idx)=>{
+            return {
+                uid: idx,
+                firstName: fname,
+                lastName: lastNames[idx]
             }
-            return result;
-        }, []);
+        });
+        //TODO: using latin letters. Other lang needs alphabet mapping like below:
+        //const alphabetMapping = {'å':'a', 'ü':u ...}
+        this.splitterSideItems = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s", "t","u","v","w","x","y","z"];
     }
 
     componentDidMount() {
         this.setState({
             ...this.state,
-            notificationCategory: this.notifications[0].category
+            lastNameAlphabet: 'a'
         })
     }
 
@@ -61,17 +62,29 @@ export default class NotificationList extends React.Component {
         })
     }
 
-    getNotificationsByCategory(category) {
-        if (typeof category !== 'undefined') {
-            return this.notifications.filter((obj)=>{
-            if (obj.category === category) {
-                return obj;
+    getContactsByLastNameAlphabet(lastNameAlphabet) {
+        if (typeof lastNameAlphabet !== 'undefined') {
+            return this.names.filter((name)=>{
+            if (name.lastName[0] === lastNameAlphabet) {
+                return name;
             }
-        }).map(obj=>obj.content);
+        });
         }
         return [];
 
     }
+
+
+    toggleConversation(uid) {
+        this.props.goToConversation(uid);
+        if (typeof this.props.navigator !== 'undefined') {
+            this.props.navigator.popPage().then(page=>{
+                let ev = new CustomEvent("openSideMenu", this.props.data);
+                document.dispatchEvent(ev);
+            });
+        }
+
+    };
 
     render() {
         return (
@@ -83,7 +96,7 @@ export default class NotificationList extends React.Component {
                         </BackButton>
                     </div>
                     <div className="center">
-                        Notifications
+                        Last name starts with {this.state.lastNameAlphabet}
                     </div>
                     <div className="right notification-menu">
                         <ToolbarButton onClick={()=>this.toggleSplitterSide()} modifier="quiet">
@@ -97,7 +110,8 @@ export default class NotificationList extends React.Component {
                         width={200}
                         swipeable={true}
                         collapse={true}
-                        isOpen={!this.state.collapsed}>
+                        isOpen={!this.state.collapsed}
+                    >
                         <Page>
                             <List
                                 dataSource={this.splitterSideItems}
@@ -105,7 +119,7 @@ export default class NotificationList extends React.Component {
                                     <ListItem key={"splitter-side-item-" + idx} tappable onClick={()=>{
                                         this.setState({
                                             ...this.state,
-                                            notificationCategory: this.splitterSideItems[idx]
+                                            lastNameAlphabet: this.splitterSideItems[idx]
                                         });
                                     }}>
                                         {this.splitterSideItems[idx]}
@@ -117,10 +131,19 @@ export default class NotificationList extends React.Component {
                     <SplitterContent onClick={this.closeSplitterSide.bind(this)}>
                         <Page>
                             <List
-                                dataSource={this.getNotificationsByCategory(this.state.notificationCategory)}
+                                dataSource={this.getContactsByLastNameAlphabet(this.state.lastNameAlphabet)}
                                 renderRow={(row, idx) =>
-                                    <ListItem key={"splitter-content-item-" + idx} tappable >
-                                        <div key={"splitter-content-item-" + idx + "-div"} className="center list-item__center"> {this.getNotificationsByCategory(this.state.notificationCategory)[idx]}</div>
+                                    <ListItem key={"splitter-content-item-" + idx} tappable onClick={(ev)=>{
+                                        this.toggleConversation(idx);
+                                    }}>
+                                        {
+                                            (()=>{
+                                                let name = this.getContactsByLastNameAlphabet(this.state.lastNameAlphabet)[idx];
+                                                return (
+                                                    <div className="center list-item__center" key={"splitter-content-item-" + idx + "-div"}>{name.firstName} {name.lastName}</div>
+                                                )
+                                            })()
+                                        }
                                     </ListItem>
                                 }
                             />
@@ -131,4 +154,11 @@ export default class NotificationList extends React.Component {
             )
     }
 }
+
+export default connect(
+    null,
+    {
+        goToConversation,
+    }
+)(ContactList);
 

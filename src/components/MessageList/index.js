@@ -364,11 +364,16 @@ class MessageList extends Component {
       this.imageInput.click();
   }
 
+  getUserName(conversationId) {
+      //TODO: use service to fetch username
+      return conversationId;
+  }
+
   render() {
     return(
       <div className="message-list">
         <Toolbar
-          title=""
+          title={this.getUserName(this.props.conversationId)}
           rightItems={[
             <ToolbarButton key="info" icon="ion-ios-information-circle-outline" />,
             <ToolbarButton key="video" icon="ion-ios-videocam" />,
@@ -431,17 +436,17 @@ class MessageList extends Component {
           <Dialog isOpen={this.state.sendCryptoDialogOpen} onCancel={this.toggleSendCryptoDialog.bind(this)} cancelable>
               <ons-list>
                   {
-                      Object.keys(CRYPTO_PORTFOLIO).map(crypto=>{
+                      Object.keys(CRYPTO_PORTFOLIO).map((crypto, idx)=>{
                           return (
-                              <div>
+                              <div key={"crypto-wrapper-"+idx}>
                               <ons-list-header>{crypto}</ons-list-header>
                               {CRYPTO_PORTFOLIO[crypto].map((account, idx)=>{
                                   return (
                                       <ons-list-item key={"send-crypto-"+crypto+idx} onClick={()=>this.props.sendCryptos(crypto, account)}>
-                                          <div className="center">
+                                          <div className="center" key={"send-crypto-"+crypto+idx+"-div-center"}>
                                               {account.addr}
                                           </div>
-                                          <div className="right">
+                                          <div className="right" key={"send-crypto-"+crypto+idx+"-div-right"}>
                                               {account.balance}
                                           </div>
                                       </ons-list-item>

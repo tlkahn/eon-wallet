@@ -8,7 +8,8 @@ import {
 import ProfileHead from '../components/ProfileHead';
 import NotificationList from './NotificationList';
 import AddressBook from './AddressBook';
-import './styles/Profile.css'
+import ContactList from './ContactList';
+import './styles/Profile.css';
 
 class ProfilePage extends React.Component {
     constructor(props) {
@@ -19,8 +20,8 @@ class ProfilePage extends React.Component {
             avatarUrl: 'https://via.placeholder.com/150/'
         };
         //TODO: hard coding. refactor this into config-based or read from db
-        this.pageItems = ["Notifications", "Addressbook", "Wallet Management", "Settings", "Feedback"];
-        this.pageItemsIcons = ["ion-ios-notifications", "ion-ios-contacts", "ion-ios-wallet", "ion-ios-settings", "ion-ios-happy"];
+        this.pageItems = ["Notifications", "Wallet", "Settings", "Feedback"];
+        this.pageItemsIcons = ["ion-ios-notifications", "ion-ios-wallet", "ion-ios-settings", "ion-ios-happy"];
     }
 
     gotoComponent(component, propsObj) {
@@ -30,7 +31,7 @@ class ProfilePage extends React.Component {
     }
 
     _getViewArray() {
-        return [NotificationList, AddressBook];
+        return [NotificationList, AddressBook, ContactList];
     }
     render() {
         return (

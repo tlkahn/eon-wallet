@@ -13,6 +13,7 @@ import NotificationList from './containers/NotificationList';
 import LoginForm from './components/LoginForm';
 import SignUpForm from './components/SignUpForm';
 import UserAuth from './containers/UserAuth';
+import ContactList from './containers/ContactList';
 
 export default class App extends Component {
     constructor() {
@@ -43,7 +44,7 @@ export default class App extends Component {
                                   tab: <Ons.Tab label="Wall" icon="ion-logo-instagram" key="photo-gallery" />
                               },
                               {
-                                  content: <UserAuth key="profile"/>,
+                                  content: <Profile key="profile"/>,
                                   tab: <Ons.Tab label="Profile" icon="ion-ios-person" key="profile" />
                               }
                               ]

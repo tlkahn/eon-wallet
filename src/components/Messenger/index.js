@@ -2,14 +2,16 @@ import React, { Component } from 'react';
 import ConversationList from '../ConversationList';
 import MessageList from '../MessageList';
 import './Messenger.css';
-import {Splitter, SplitterSide, Page, SplitterContent, Toolbar, ToolbarButton} from 'react-onsenui';
+import {Splitter, SplitterSide, Page, SplitterContent, Toolbar, ToolbarButton, Icon, Dialog} from 'react-onsenui';
+import ContactList from '../ContactList';
 
 export default class Messenger extends Component {
     constructor(props) {
         super(props);
         this.state = {
             isOpen: true,
-            hidden: true
+            hidden: true,
+            contactListDialogOpen: false
         };
         this.backBtn = React.createRef();
         document.addEventListener("openSideMenu", (ev)=>{
@@ -33,6 +35,11 @@ export default class Messenger extends Component {
             hideStatus: this.state.hidden ? 'hidden' : '',
         });
     }
+
+    pushContactList() {
+        this.props.navigator.pushPage({comp: ContactList, props: {key: "ContactList", navigator: this.props.navigator}});
+    }
+
     render() {
         return (
             <Page>
@@ -44,7 +51,13 @@ export default class Messenger extends Component {
                     <ToolbarButton onClick={()=>this.toggle()} icon="ion-ios-arrow-back">
                     </ToolbarButton>
                 </div>
+                <div className="right">
+                    <ToolbarButton onClick={this.pushContactList.bind(this)} modifier="quiet">
+                        <Icon icon="ion-ios-contacts" />
+                    </ToolbarButton>
+                </div>
             </Toolbar>
+
             <Splitter>
                 <SplitterSide
                     side="left"

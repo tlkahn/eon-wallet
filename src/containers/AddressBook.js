@@ -121,7 +121,7 @@ export default class AddressBook extends React.Component {
                                 dataSource={this.getNotificationsByCategory(this.state.notificationCategory)}
                                 renderRow={(row, idx) =>
                                     <ListItem key={"splitter-content-item-" + idx} tappable >
-                                        <div className="center list-item__center"> {this.getNotificationsByCategory(this.state.notificationCategory)[idx]}</div>
+                                        <div key={"splitter-content-item-" + idx + "-div"} className="center list-item__center"> {this.getNotificationsByCategory(this.state.notificationCategory)[idx]}</div>
                                     </ListItem>
                                 }
                             />
