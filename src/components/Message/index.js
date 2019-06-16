@@ -40,7 +40,7 @@ export default class Message extends Component {
     } else if (data.messageForm === MESSAGE_FORM.crypto) {
         this.bubbleContent = (
             <div>
-                {data.crypto}
+                You've just sent {data.amount} {data.crypto} to {data.recipient}
             </div>
         );
     }

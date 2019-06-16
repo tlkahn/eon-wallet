@@ -5,12 +5,12 @@ import {
     SEND_CRYPTO_SUCCESS
 } from '../actionTypes'
 
-export const sendCryptos = (crypto, account, recipient) => (dispatch, getState) => {
-    debugger
+export const sendCryptos = (crypto, amount, account, recipient) => (dispatch, getState) => {
     dispatch({
         type: 'SEND_CRYPTO_STARTED',
         payload: {
             crypto,
+            amount,
             account,
             recipient
         }
@@ -21,6 +21,7 @@ export const sendCryptos = (crypto, account, recipient) => (dispatch, getState) 
             type: 'SEND_CRYPTO_SUCCESS',
             payload: {
                 crypto,
+                amount,
                 account,
                 recipient
             }

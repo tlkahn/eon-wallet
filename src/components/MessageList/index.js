@@ -133,15 +133,14 @@ class MessageList extends Component {
 
   postCryptoSending(sendCryptoStatus) {
       let id = this.state.messages.length+1;
+      const {crypto, amount, account, recipient} = sendCryptoStatus;
       this.setState({
           ...this.state,
           id,
           messages: this.state.messages.concat([{
               id,
               author: MY_USER_ID,
-              crypto: sendCryptoStatus.crypto,
-              account: sendCryptoStatus.account,
-              recipient: sendCryptoStatus.recipient,
+              crypto, amount, account, recipient,
               messageForm: MESSAGE_FORM.crypto
           }])
       });
@@ -180,7 +179,7 @@ class MessageList extends Component {
 
   componentWillReceiveProps(nextProps) {
       this.getMessages({conversationId: nextProps.conversationId});
-      if ((typeof nextProps.sendCryptoStatus) !== 'undefined' && nextProps.sendCryptoStatus.success) {
+      if ((typeof nextProps.sendCryptoStatus) !== 'undefined' && nextProps.sendCryptoStatus.status === 'success') {
           this.postCryptoSending(nextProps.sendCryptoStatus);
       }
   }
@@ -428,6 +427,7 @@ class MessageList extends Component {
                       <div>
                           <Button modifier='quiet' onClick={ () => {
                               this.props.sendCryptos(
+                                  this.state.cryptoToBeSentCoinName,
                                   this.state.cryptoToBeSent, {
                                       addr: this.state.cryptoToBeSentFromAddr,
                                       balance: this.state.cryptoToBeSentMax
