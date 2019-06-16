@@ -179,7 +179,10 @@ class MessageList extends Component {
 
   componentWillReceiveProps(nextProps) {
       this.getMessages({conversationId: nextProps.conversationId});
-      if ((typeof nextProps.sendCryptoStatus) !== 'undefined' && nextProps.sendCryptoStatus.status === 'success') {
+      if ((typeof nextProps.sendCryptoStatus)  !== 'undefined' &&
+          (typeof this.props.sendCryptoStatus) !== 'undefined' &&
+            nextProps.sendCryptoStatus.status  !== this.props.sendCryptoStatus.status &&
+            nextProps.sendCryptoStatus.status  === 'success') {
           this.postCryptoSending(nextProps.sendCryptoStatus);
       }
   }
