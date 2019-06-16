@@ -18,5 +18,13 @@
 }
 
 .crypto-span {
-  background-color: #bbbbbb;
+  background-color: #F1F1F1;
+}
+
+.send-crypto-status {
+  color: #007aff;
+}
+
+.send-crypto-status-success {
+  color: forestgreen;
 }

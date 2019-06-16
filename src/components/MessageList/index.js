@@ -22,7 +22,6 @@ import {selectEmoji} from '../../actions/actionCreators/selectEmoji';
 import {debounce, throttle} from 'lodash';
 import {MY_USER_ID} from '../../services/myUserInfo';
 import {fetchMessagesFromUser} from "../../services/fetchMessagesFromUser";
-import {notification} from "onsenui";
 
 //TODO: mock stub. to be replaced.
 //TODO: put all mocks into service
@@ -143,6 +142,8 @@ class MessageList extends Component {
               crypto, amount, account, recipient,
               messageForm: MESSAGE_FORM.crypto
           }])
+      }, ()=>{
+          this.toggleSendCryptoDialog();
       });
   }
 
@@ -256,7 +257,9 @@ class MessageList extends Component {
       this.setState({
           ...this.state,
           dialogOpen: false,
+          sendCryptoDialogFlipped: false,
           sendCryptoDialogOpen: !this.state.sendCryptoDialogOpen,
+          cryptoToBeSent: 0
       })
   }
 
@@ -265,8 +268,9 @@ class MessageList extends Component {
           ...this.state,
           dialogOpen: false,
           sendCryptoDialogOpen: false,
-          sendCryptoDialogFlipped: false
-      })
+          sendCryptoDialogFlipped: false,
+          cryptoToBeSent: 0
+      });
   }
 
   flipSendCryptoDialog(crypto, account) {
@@ -422,13 +426,25 @@ class MessageList extends Component {
                   </div>
                   <div key="back" className="crypto-slider-wrapper">
                       <Range modifier="material"
+                             value={this.state.cryptoToBeSent}
                              onChange={
-                                 debounce((event) => this.setState({cryptoToBeSent: parseInt(event.target.value)}), 300, {trailing: true})
+                                 debounce((event) => {
+                                     this.setState({cryptoToBeSent: parseInt(event.target.value)});
+                                     }, 300, {trailing: true}
+                                 )
                              }
                       />
-                      <div><span className="crypto-span">{this.state.cryptoToBeSent * this.state.cryptoToBeSentMax / 100}</span> {this.state.cryptoToBeSentCoinName} from {this.state.cryptoToBeSentFromAddr} </div>
                       <div>
-                          <Button modifier='quiet' onClick={ () => {
+                          <span className="crypto-span">
+                              {this.state.cryptoToBeSent * this.state.cryptoToBeSentMax / 100}
+                          </span>
+                          <span>
+                              {this.state.cryptoToBeSentCoinName} from {this.state.cryptoToBeSentFromAddr}
+                          </span>
+                      </div>
+                      <div>
+                          <Button style={{display: typeof this.props.sendCryptoStatus === 'undefined' || this.props.sendCryptoStatus.status === 'start' || this.props.sendCryptoStatus.status === 'success'? 'inline-block' : 'none'}}
+                              modifier='quiet' onClick={ () => {
                               this.props.sendCryptos(
                                   this.state.cryptoToBeSentCoinName,
                                   this.state.cryptoToBeSent, {
@@ -440,7 +456,14 @@ class MessageList extends Component {
                               Send
                           </Button>
                       </div>
-                      <div>{typeof this.props.sendCryptoStatus !== 'undefined' ? this.props.sendCryptoStatus.status : ""}</div>
+                      <div className="send-crypto-status">
+                          <div  className="send-crypto-status-start" style={{display: typeof this.props.sendCryptoStatus !== 'undefined' && this.props.sendCryptoStatus.status !== 'success' ? 'inline-block' : 'none'}}>
+                              Loading...
+                              <ons-icon
+                                  icon="ion-ios-refresh" spin />
+                          </div>
+
+                      </div>
                   </div>
               </ReactCardFlip>
           </Dialog>

@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/core": "^10.0.10",
+    "@emotion/styled": "^10.0.12",
     "axios": "^0.18.0",
     "emoji-mart": "^2.11.1",
     "ionicons": "^4.5.8",
@@ -11,7 +13,6 @@
     "onsenui": "^2.10.8",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
-    "react-alphabet-list": "^0.1.7",
     "react-card-flip": "^0.7.1",
     "react-cookie": "^4.0.0",
     "react-dom": "^16.8.6",
@@ -19,12 +20,9 @@
     "react-horizontal-scroll-container": "^1.0.1",
     "react-input-range": "^1.3.0",
     "react-ionicons": "^3.0.1",
-    "react-location-picker": "^1.3.0",
     "react-onsenui": "^1.11.2",
-    "react-rangeslider": "^2.2.0",
     "react-redux": "^7.0.3",
     "react-scripts": "3.0.1",
-    "react-signup-login-component": "^1.2.0",
     "react-slick": "^0.24.0",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
@@ -54,7 +52,8 @@
     ]
   },
   "devDependencies": {
-    "random-words": "^1.1.0"
+    "random-words": "^1.1.0",
+    "react-spinners": "^0.5.4"
   },
   "BACKEND_URL": {
     "test": "http://localhost:3001/app_items.json",
