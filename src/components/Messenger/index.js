@@ -52,7 +52,7 @@ export default class Messenger extends Component {
                     </ToolbarButton>
                 </div>
                 <div className="right">
-                    <ToolbarButton onClick={this.pushContactList.bind(this)} modifier="quiet">
+                    <ToolbarButton onClick={this.pushContactList.bind(this)} modifier="quiet" style={{display: this.state.isOpen ? 'inline-block' : 'none'}}>
                         <Icon icon="ion-ios-contacts" />
                     </ToolbarButton>
                 </div>

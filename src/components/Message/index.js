@@ -37,6 +37,12 @@ export default class Message extends Component {
                 <img src={data.imageUrl} className="message-bubble-thumbnail"/>
             </div>
         );
+    } else if (data.messageForm === MESSAGE_FORM.crypto) {
+        this.bubbleContent = (
+            <div>
+                {data.crypto}
+            </div>
+        );
     }
     const friendlyTimestamp = moment(data.timestamp).format('LLLL');
     return (

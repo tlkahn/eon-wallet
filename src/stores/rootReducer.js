@@ -4,7 +4,6 @@ import {goToConversation} from '../reducers/goToConversation';
 import {sendCryptos} from '../reducers/sendCrypto';
 import {selectEmoji} from '../reducers/selectEmoji';
 import {searchMessageText} from '../reducers/searchMessageText';
-import {signOutCurrentUser} from '../reducers/signOutCurrentUser';
 import {logInCurrentUser} from '../reducers/logInCurrentUser';
 
 const appReducer = combineReducers({
@@ -12,7 +11,6 @@ const appReducer = combineReducers({
   sendCryptos,
   selectEmoji,
   searchMessageText,
-  // signOutCurrentUser,
   logInCurrentUser
 });
 

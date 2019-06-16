@@ -10,6 +10,7 @@ export const WS_URL =  process.env.NODE_ENV === 'production' ?
 export const MESSAGE_FORM = {
     text: "text",
     crypto: "crypto",
-    location: "location"
+    location: "location",
+    image: "image"
 };
 

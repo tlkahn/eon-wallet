@@ -3,12 +3,13 @@ import Compose from '../Compose';
 import Toolbar from '../Toolbar';
 import Message from '../Message';
 import moment from 'moment';
-import {Dialog, ToolbarButton, List, ListItem, Button, AlertDialog, AlertDialogButton} from 'react-onsenui';
+import {Page, Dialog, ToolbarButton, List, ListItem, Button, AlertDialog, AlertDialogButton, Range} from 'react-onsenui';
 import './MessageList.css';
 import "ionicons/dist/css/ionicons.css";
 import 'emoji-mart/css/emoji-mart.css';
 import { Picker} from 'emoji-mart';
 import {MESSAGE_FORM} from "../../config/constants";
+import ReactCardFlip from 'react-card-flip';
 //redux
 import { connect } from 'react-redux';
 //selectors
@@ -18,9 +19,10 @@ import {getSelectedEmoji} from '../../reducers/selectEmoji';
 //action creators
 import {sendCryptos} from '../../actions/actionCreators/sendCryptos';
 import {selectEmoji} from '../../actions/actionCreators/selectEmoji';
-import {debounce} from 'lodash';
+import {debounce, throttle} from 'lodash';
 import {MY_USER_ID} from '../../services/myUserInfo';
 import {fetchMessagesFromUser} from "../../services/fetchMessagesFromUser";
+import {notification} from "onsenui";
 
 //TODO: mock stub. to be replaced.
 //TODO: put all mocks into service
@@ -55,10 +57,17 @@ class MessageList extends Component {
           messages: [],
           dialogOpen: false,
           sendCryptoDialogOpen: false,
+          cryptoRangeDialogOpen: false,
           emojiDialogOpen: false,
           locationDialogOpen: false,
           locationPickedP: false,
-          locationPickedObj: {}
+          locationPickedObj: {},
+          cryptoToBeSentCoinName: 0,
+          cryptoToBeSentFromAddr: 0,
+          cryptoToBeSentMax: 0,
+          cryptoToBeSent: 0,
+          cryptoToBeSentRecipient: null,
+          sendCryptoDialogFlipped: false
       };
       window.addEventListener('message', (event)=> {
           var loc = event.data;
@@ -122,6 +131,22 @@ class MessageList extends Component {
           }])
       })});
 
+  postCryptoSending(sendCryptoStatus) {
+      let id = this.state.messages.length+1;
+      this.setState({
+          ...this.state,
+          id,
+          messages: this.state.messages.concat([{
+              id,
+              author: MY_USER_ID,
+              crypto: sendCryptoStatus.crypto,
+              account: sendCryptoStatus.account,
+              recipient: sendCryptoStatus.recipient,
+              messageForm: MESSAGE_FORM.crypto
+          }])
+      });
+  }
+
   componentDidMount() {
     this.messageListContainer.scrollIntoView(false);
   }
@@ -155,6 +180,9 @@ class MessageList extends Component {
 
   componentWillReceiveProps(nextProps) {
       this.getMessages({conversationId: nextProps.conversationId});
+      if ((typeof nextProps.sendCryptoStatus) !== 'undefined' && nextProps.sendCryptoStatus.success) {
+          this.postCryptoSending(nextProps.sendCryptoStatus);
+      }
   }
 
   renderMessages() {
@@ -226,7 +254,7 @@ class MessageList extends Component {
       this.setState({
           ...this.state,
           dialogOpen: false,
-          sendCryptoDialogOpen: !this.state.sendCryptoDialogOpen
+          sendCryptoDialogOpen: !this.state.sendCryptoDialogOpen,
       })
   }
 
@@ -234,14 +262,25 @@ class MessageList extends Component {
       this.setState({
           ...this.state,
           dialogOpen: false,
-          sendCryptoDialogOpen: false
+          sendCryptoDialogOpen: false,
+          sendCryptoDialogFlipped: false
       })
   }
 
-  sendCrypto(crypto, account) {
-    this.closeSendCryptoDialog();
-    this.props.sendCryptos(crypto, account, this.props.conversationId);
+  flipSendCryptoDialog(crypto, account) {
+      this.setState({
+          ...this.state,
+          sendCryptoDialogFlipped: !this.state.sendCryptoDialogFlipped,
+          cryptoToBeSentMax: account.balance,
+          cryptoToBeSentCoinName: crypto,
+          cryptoToBeSentFromAddr: account.addr,
+      });
   }
+
+  // sendCrypto(crypto, account) {
+  //   this.closeSendCryptoDialog();
+  //   this.props.sendCryptos(crypto, account, this.props.conversationId);
+  // }
 
   toggleEmojiDialog() {
     this.setState({
@@ -284,16 +323,18 @@ class MessageList extends Component {
       this.imageInput.click();
   }
 
-  getUserName(conversationId) {
+  static getUserName(conversationId) {
       //TODO: use service to fetch username
       return conversationId;
   }
 
   render() {
+      {console.log(this.state)}
     return(
+        <Page>
       <div className="message-list">
         <Toolbar
-          title={this.getUserName(this.props.conversationId)}
+          title={MessageList.getUserName(this.props.conversationId)}
           rightItems={[
             <ToolbarButton key="info" icon="ion-ios-information-circle-outline" />,
             <ToolbarButton key="video" icon="ion-ios-videocam" />,
@@ -350,37 +391,58 @@ class MessageList extends Component {
                   </Button>
               </div>
           </AlertDialog>
-
-
-
-          <Dialog isOpen={this.state.sendCryptoDialogOpen} onCancel={this.toggleSendCryptoDialog.bind(this)} cancelable>
-              <ons-list>
-                  {
-                      Object.keys(CRYPTO_PORTFOLIO).map((crypto, idx)=>{
-                          return (
-                              <div key={"crypto-wrapper-"+idx}>
-                              <ons-list-header>{crypto}</ons-list-header>
-                              {CRYPTO_PORTFOLIO[crypto].map((account, idx)=>{
+          <Dialog isOpen={this.state.sendCryptoDialogOpen} onCancel={this.closeSendCryptoDialog.bind(this)} cancelable>
+              <ReactCardFlip isFlipped={this.state.sendCryptoDialogFlipped} flipDirection="vertical">
+                  <div key="front" className="crypto-list-wrapper">
+                      <ons-list>
+                          {
+                              Object.keys(CRYPTO_PORTFOLIO).map((crypto, idx)=>{
                                   return (
-                                      <ons-list-item key={"send-crypto-"+crypto+idx} onClick={()=>this.props.sendCryptos(crypto, account)}>
-                                          <div className="center" key={"send-crypto-"+crypto+idx+"-div-center"}>
-                                              {account.addr}
-                                          </div>
-                                          <div className="right" key={"send-crypto-"+crypto+idx+"-div-right"}>
-                                              {account.balance}
-                                          </div>
-                                      </ons-list-item>
+                                      <div key={"crypto-wrapper-"+idx}>
+                                          <ons-list-header>{crypto}</ons-list-header>
+                                          {CRYPTO_PORTFOLIO[crypto].map((account, idx)=>{
+                                              return (
+                                                  <ons-list-item key={"send-crypto-"+crypto+idx} onClick={()=>this.flipSendCryptoDialog(crypto, account)}>
+                                                      <div className="center" key={"send-crypto-"+crypto+idx+"-div-center"}>
+                                                          {account.addr}
+                                                      </div>
+                                                      <div className="right" key={"send-crypto-"+crypto+idx+"-div-right"}>
+                                                          {account.balance}
+                                                      </div>
+                                                  </ons-list-item>
+                                              )
+                                          })}
+                                      </div>
                                   )
-                              })}
-                              </div>
-                          )
-                      })
-                  }
-              </ons-list>
+                              })
+                          }
+                      </ons-list>
+                  </div>
+                  <div key="back" className="crypto-slider-wrapper">
+                      <Range modifier="material"
+                             onChange={
+                                 debounce((event) => this.setState({cryptoToBeSent: parseInt(event.target.value)}), 300, {trailing: true})
+                             }
+                      />
+                      <div><span className="crypto-span">{this.state.cryptoToBeSent * this.state.cryptoToBeSentMax / 100}</span> {this.state.cryptoToBeSentCoinName} from {this.state.cryptoToBeSentFromAddr} </div>
+                      <div>
+                          <Button modifier='quiet' onClick={ () => {
+                              this.props.sendCryptos(
+                                  this.state.cryptoToBeSent, {
+                                      addr: this.state.cryptoToBeSentFromAddr,
+                                      balance: this.state.cryptoToBeSentMax
+                                  },
+                                  this.props.conversationId);
+                          }}>
+                              Send
+                          </Button>
+                      </div>
+                      <div>{typeof this.props.sendCryptoStatus !== 'undefined' ? this.props.sendCryptoStatus.status : ""}</div>
+                  </div>
+              </ReactCardFlip>
           </Dialog>
       </div>
-
-
+            </Page>
     );
   }
 }

@@ -8,17 +8,24 @@ const initialState = {
 };
 
 export const sendCryptos = (state = initialState, action) => {
+    debugger
   switch (action.type) {
       case SEND_CRYPTO_STARTED:
         return {
             ...state,
-            sendCryptoStarted: true
+            sendCryptoStarted: true,
+            crypto: action.payload.crypto,
+            account: action.payload.account,
+            recipient: action.payload.recipient
         };
         case SEND_CRYPTO_SUCCESS:
         return {
             ...state,
             sendCryptoSuccess: true,
-            sendCryptoStarted: false
+            sendCryptoStarted: false,
+            crypto: action.payload.crypto,
+            account: action.payload.account,
+            recipient: action.payload.recipient
         };
     default:
       return state;
@@ -31,10 +38,17 @@ export default ({
 
 //selectors
 export const getSendCryptoStatus = (state) => {
-  if (state.sendCryptoStarted) {
-      return 'started';
+  const {crypto, account, recipient} = state.sendCryptos;
+  if (state.sendCryptos.sendCryptoStarted) {
+      return {
+          status: 'started',
+          crypto, account, recipient
+      };
   }
-  if (state.sendCryptoSuccess) {
-      return 'success'
+  if (state.sendCryptos.sendCryptoSuccess) {
+      return {
+          status: 'success',
+          crypto, account, recipient
+      }
   }
-}
+};

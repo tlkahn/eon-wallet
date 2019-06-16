@@ -6,6 +6,7 @@ import {
 } from '../actionTypes'
 
 export const sendCryptos = (crypto, account, recipient) => (dispatch, getState) => {
+    debugger
     dispatch({
         type: 'SEND_CRYPTO_STARTED',
         payload: {
@@ -24,5 +25,5 @@ export const sendCryptos = (crypto, account, recipient) => (dispatch, getState) 
                 recipient
             }
         });
-    }, 100);
+    }, 2000);
 }
