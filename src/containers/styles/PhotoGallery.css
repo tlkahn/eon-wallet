@@ -20,6 +20,7 @@ body {
 
 .tabbar {
   position: fixed !important;
+  z-index: 999999;
 }
 
 input[type="color"],
@@ -40,3 +41,9 @@ select:focus,
 textarea {
   font-size: 16px;
 }
+
+body,
+html {
+  position: fixed;
+}
+

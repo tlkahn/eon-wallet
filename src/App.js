@@ -6,18 +6,12 @@ import 'onsenui/css/onsenui.css';
 import 'onsenui/css/onsen-css-components.css';
 import Pokemon from './Pokemon';
 import DappStore from "./components/DappStore";
-import Setting from "./Setting"
 import "ionicons/dist/css/ionicons.css";
 import PhotoGallery from "./containers/PhotoGallery";
 import Profile from './containers/Profile';
-import NotificationList from './containers/NotificationList';
-import LoginForm from './components/LoginForm';
-import SignUpForm from './components/SignUpForm';
 import UserAuth from './containers/UserAuth';
-import ContactList from './containers/ContactList';
 import { instanceOf } from 'prop-types';
 // import { withCookies, Cookies } from 'react-cookie';
-import {getSignedOutStatus} from './reducers/signOutCurrentUser';
 import {getLoggedInStatus} from "./reducers/logInCurrentUser";
 
 class App extends Component {
@@ -31,6 +25,9 @@ class App extends Component {
         this.state = {
             index: 0,
         };
+        document.ontouchmove = function(event){
+            event.preventDefault();
+        }
     }
 
     componentDidMount() {
