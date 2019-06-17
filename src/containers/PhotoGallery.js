@@ -84,7 +84,7 @@ class PhotoGallery extends React.Component {
             likedPostIds: [1,2,3],
             currentUser: {
                 username: 'toeinriver',
-                avatarUrl: 'https://via.placeholder.com/150/'
+                avatarUrl: ''
             }
         };
     }
@@ -92,14 +92,12 @@ class PhotoGallery extends React.Component {
         const { posts, isFetching, likedPostIds, currentUser } = this.state;
         return (
         <Page>
-            <div className="PhotoGallery__root">
-                {posts.map((post, idx) => (
-                    <GalleryItem
-                        key={idx}
-                        {...post}
-                    />
-                ))}
-            </div>
+            {posts.map((post, idx) => (
+                <GalleryItem
+                    key={idx}
+                    {...post}
+                />
+            ))}
         </Page>
         )
     }
