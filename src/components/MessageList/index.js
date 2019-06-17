@@ -10,6 +10,7 @@ import 'emoji-mart/css/emoji-mart.css';
 import { Picker} from 'emoji-mart';
 import {MESSAGE_FORM} from "../../config/constants";
 import ReactCardFlip from 'react-card-flip';
+
 //redux
 import { connect } from 'react-redux';
 //selectors
@@ -339,15 +340,6 @@ class MessageList extends Component {
     return(
         <Page>
       <div className="message-list">
-        <Toolbar
-          title={MessageList.getUserName(this.props.conversationId)}
-          rightItems={[
-            <ToolbarButton key="info" icon="ion-ios-information-circle-outline" />,
-            <ToolbarButton key="video" icon="ion-ios-videocam" />,
-            <ToolbarButton key="phone" icon="ion-ios-call" />,
-            <ToolbarButton key="voice" icon="ion-ios-pulse" />
-          ]}
-        />
 
         <div className="message-list-container" ref={(messageListContainer)=>{
           this.messageListContainer = messageListContainer;
@@ -364,14 +356,42 @@ class MessageList extends Component {
           isOpen={this.state.dialogOpen}
           onCancel={this.toggleDialog.bind(this)}
           cancelable>
-            <ToolbarButton key="photo" icon="ion-ios-camera" onClick={this.openCamera.bind(this)} >
-                <input id="camera-input" type="file" accept="image/*" style={{display:"none"}}/>
-            </ToolbarButton>
-            <ToolbarButton key="emoji" icon="ion-md-happy" onClick={this.toggleEmojiDialog.bind(this)}/>
-            <ToolbarButton key="location" icon="ion-ios-location" onClick={this.toggleLocationDialog.bind(this)}/>
-            <ToolbarButton key="image" icon="ion-logo-bitcoin" onClick={this.toggleSendCryptoDialog.bind(this)} />
-            <ToolbarButton key="person" icon="ion-ios-person" />
-            <ToolbarButton key="document" icon="ion-ios-document" />
+            <ons-row>
+                <ons-col width="20%">
+                    <ToolbarButton key="photo" icon="ion-ios-camera" onClick={this.openCamera.bind(this)} >
+                        <input id="camera-input" type="file" accept="image/*" style={{display:"none"}}/>
+                    </ToolbarButton>
+                </ons-col>
+                <ons-col width="20%">
+                    <ToolbarButton key="emoji" icon="ion-md-happy" onClick={this.toggleEmojiDialog.bind(this)}/>
+                </ons-col>
+                <ons-col width="20%">
+                    <ToolbarButton key="location" icon="ion-ios-location" onClick={this.toggleLocationDialog.bind(this)}/>
+                </ons-col>
+                <ons-col width="20%">
+                    <ToolbarButton key="image" icon="ion-logo-bitcoin" onClick={this.toggleSendCryptoDialog.bind(this)} />
+                </ons-col>
+                <ons-col width="20%">
+                    <ToolbarButton key="person" icon="ion-ios-person" />
+                </ons-col>
+            </ons-row>
+            <ons-row>
+                <ons-col>
+                    <ToolbarButton width="20%" key="document" icon="ion-ios-document" />
+                </ons-col>
+                <ons-col>
+                    <ToolbarButton width="20%" key="info" icon="ion-ios-information-circle-outline" />
+                </ons-col>
+                <ons-col>
+                    <ToolbarButton width="20%" key="video" icon="ion-ios-videocam" />
+                </ons-col>
+                <ons-col>
+                    <ToolbarButton width="20%" key="phone" icon="ion-ios-call" />
+                </ons-col>
+                <ons-col>
+                    <ToolbarButton width="20%" key="voice" icon="ion-ios-pulse" />
+                </ons-col>
+            </ons-row>
         </Dialog>
 
           <Dialog isOpen={this.state.emojiDialogOpen} onCancel={this.toggleEmojiDialog.bind(this)} cancelable >
@@ -379,7 +399,8 @@ class MessageList extends Component {
           </Dialog>
 
           <Dialog className="sendLocationDialog" isOpen={this.state.locationDialogOpen} onCancel={this.toggleLocationDialog.bind(this)} cancelable >
-              <iframe id="mapPage" width="100%" height="100%" frameBorder="0" src="https://apis.map.qq.com/tools/locpicker?search=1&type=1&key=2GTBZ-QOKKD-7GR4W-PTM6I-5D53E-CFBNA&referer=myapp">
+              <iframe id="mapPage" width="100%" height="100%" frameBorder="0"
+                      src="https://apis.map.qq.com/tools/locpicker?search=1&type=1&key=2GTBZ-QOKKD-7GR4W-PTM6I-5D53E-CFBNA&referer=myapp">
                     </iframe>
           </Dialog>
 
@@ -443,7 +464,9 @@ class MessageList extends Component {
                           </span>
                       </div>
                       <div>
-                          <Button style={{display: typeof this.props.sendCryptoStatus === 'undefined' || this.props.sendCryptoStatus.status === 'start' || this.props.sendCryptoStatus.status === 'success'? 'inline-block' : 'none'}}
+                          <Button style={{display: typeof this.props.sendCryptoStatus === 'undefined' ||
+                              this.props.sendCryptoStatus.status === 'start' ||
+                              this.props.sendCryptoStatus.status === 'success'? 'inline-block' : 'none'}}
                               modifier='quiet' onClick={ () => {
                               this.props.sendCryptos(
                                   this.state.cryptoToBeSentCoinName,
@@ -457,7 +480,9 @@ class MessageList extends Component {
                           </Button>
                       </div>
                       <div className="send-crypto-status">
-                          <div  className="send-crypto-status-start" style={{display: typeof this.props.sendCryptoStatus !== 'undefined' && this.props.sendCryptoStatus.status !== 'success' ? 'inline-block' : 'none'}}>
+                          <div  className="send-crypto-status-start"
+                                style={{display: typeof this.props.sendCryptoStatus !== 'undefined' &&
+                                    this.props.sendCryptoStatus.status !== 'success' ? 'inline-block' : 'none'}}>
                               Loading...
                               <ons-icon
                                   icon="ion-ios-refresh" spin />

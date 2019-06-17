@@ -3,7 +3,7 @@ ons-splitter-side ons-page div.page__content {
 }
 
 .right.toolbar__right.notification-menu {
-    position: relative;
-    left: calc(50% - 20px);
-    width: 27%;
+    position: absolute;
+    left: calc(100% - 65px);
+    width: 50px;
 }

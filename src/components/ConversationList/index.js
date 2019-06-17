@@ -40,7 +40,8 @@ class ConversationList extends Component {
   render() {
     return (
       <div className="conversation-list">
-        <ConversationSearch />
+        {/*TODO: make search bar trigger by pull down*/}
+        {/*<ConversationSearch />*/}
         {
           this.state.conversations.filter(conversation=>conversation.text.match(this.props.searchMessageText)).map(conversation =>
             <ConversationListItem

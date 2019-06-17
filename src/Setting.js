@@ -12,8 +12,6 @@ import GalleryItem from './components/GalleryItem'
 import ProfileHead from './components/ProfileHead'
 import moment from 'moment'
 import getCurrentLocation from './services/getCurrentLocation'
-import LocationPicker from 'react-location-picker';
-
 
 export default class Setting extends React.Component {
     constructor(props) {

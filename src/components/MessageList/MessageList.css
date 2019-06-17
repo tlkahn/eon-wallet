@@ -28,3 +28,11 @@
 .send-crypto-status-success {
   color: forestgreen;
 }
+
+h1.conversation-title {
+  margin: 0.2em 0;
+}
+
+.dialog-container ons-toolbar-button > ons-icon[icon*="ion-"] {
+  font-size: 32px;
+}

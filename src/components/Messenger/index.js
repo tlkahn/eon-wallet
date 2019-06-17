@@ -4,7 +4,7 @@ import MessageList from '../MessageList';
 import './Messenger.css';
 import {Splitter, SplitterSide, Page, SplitterContent, Toolbar, ToolbarButton, Icon, Dialog} from 'react-onsenui';
 import ContactList from '../ContactList';
-
+import AddContactsToGroup from '../AddContactsToGroup';
 export default class Messenger extends Component {
     constructor(props) {
         super(props);
@@ -40,6 +40,10 @@ export default class Messenger extends Component {
         this.props.navigator.pushPage({comp: ContactList, props: {key: "ContactList", navigator: this.props.navigator}});
     }
 
+    pushAddContactsToGroup() {
+        this.props.navigator.pushPage({comp: AddContactsToGroup, props: {key: "AddContactsToGroup", navigator: this.props.navigator}});
+    }
+
     render() {
         return (
             <Page>
@@ -47,13 +51,18 @@ export default class Messenger extends Component {
                 <div className='center'>
                     Messenger
                 </div>
-                <div className="left hidden" ref={this.backBtn}>
+                <div className="left hidden messenger-back-btn" ref={this.backBtn}>
                     <ToolbarButton onClick={()=>this.toggle()} icon="ion-ios-arrow-back">
                     </ToolbarButton>
                 </div>
                 <div className="right">
                     <ToolbarButton onClick={this.pushContactList.bind(this)} modifier="quiet" style={{display: this.state.isOpen ? 'inline-block' : 'none'}}>
                         <Icon icon="ion-ios-contacts" />
+                    </ToolbarButton>
+                </div>
+                <div className="right add-group-btn">
+                    <ToolbarButton onClick={this.pushAddContactsToGroup.bind(this)} modifier="quiet" style={{display: !this.state.isOpen ? 'inline-block' : 'none'}}>
+                        <Icon icon="ion-ios-plus" />
                     </ToolbarButton>
                 </div>
             </Toolbar>

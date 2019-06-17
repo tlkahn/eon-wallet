@@ -52,5 +52,16 @@
 }
 
 ons-splitter{
-  top: 44px !important;
+  top: 50px !important;
+}
+
+.add-group-btn {
+  position: relative;
+  left: calc(100% - 50px);
+  width: 50px;
+}
+
+.messenger-back-btn {
+  position: absolute;
+  left: 0;
 }

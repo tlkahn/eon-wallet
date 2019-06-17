@@ -12,19 +12,21 @@ import {
     ToolbarButton,
     Icon
 } from 'react-onsenui';
-//TODO: to be removed
-import randomWords from 'random-words';
-import './ContactList.css';
+import './AddContactsToGroup.css';
 //redux
 import { connect } from 'react-redux';
-import {goToConversation} from "../../actions/actionCreators/goToConversation";
+//lodash
 import {debounce} from 'lodash';
 
-class ContactList extends React.Component {
+//TODO: to be removed
+import randomWords from 'random-words';
+
+export default class AddContactsToGroup extends React.Component {
     constructor(props){
         super(props);
         this.state = {
             collapsed: true,
+            checked: []
         };
         //TODO: stub here. to be replaced with real feed (through mapStateToProps).
         let firstNames = randomWords(100);
@@ -74,29 +76,31 @@ class ContactList extends React.Component {
 
     }
 
-
-    toggleConversation(uid) {
-        this.props.goToConversation(uid);
-        if (typeof this.props.navigator !== 'undefined') {
-            this.props.navigator.popPage().then(page=>{
-                let ev = new CustomEvent("openSideMenu", this.props.data);
-                document.dispatchEvent(ev);
-            });
+    toggleSelectContact(uid) {
+        console.log("uid: ", uid);
+        if (this.state.checked.includes(uid)) {
+            this.state.checked = this.state.checked.filter((a)=>a!==uid);
         }
-
+        else {
+            this.state.checked.push(uid);
+        }
     };
+
+    isCheckMarkVisible(uid) {
+        return this.state.checked.includes(uid);
+    }
 
     render() {
         return (
             <Page>
                 <Toolbar>
                     <div className="left">
-                        <BackButton>
-                            Back
-                        </BackButton>
+                        <BackButton />
                     </div>
-                    <div className="center">
-                        Last name starts with {this.state.lastNameAlphabet}
+                    <div className="center add-group-submit-btn">
+                        <Button modifier="quiet">
+                            <Icon icon="ion-ios-checkmark" />
+                        </Button>
                     </div>
                     <div className="right notification-menu">
                         <ToolbarButton onClick={()=>this.toggleSplitterSide()} modifier="quiet">
@@ -134,14 +138,19 @@ class ContactList extends React.Component {
                                 dataSource={this.getContactsByLastNameAlphabet(this.state.lastNameAlphabet)}
                                 renderRow={(row, idx) =>
                                     <ListItem key={"splitter-content-item-" + idx} tappable onClick={(ev)=>{
-                                        //TODO: mapping between idx and uid required here.
-                                        this.toggleConversation(row.uid);
+                                        this.toggleSelectContact(row.uid);
                                     }}>
                                         {
                                             (()=>{
                                                 let name = this.getContactsByLastNameAlphabet(this.state.lastNameAlphabet)[idx];
                                                 return (
-                                                    <div className="center list-item__center" key={"splitter-content-item-" + idx + "-div"}>{name.firstName} {name.lastName}</div>
+                                                    <div className="center list-item__center list-item-contact-name" key={"splitter-content-item-" + idx + "-div"}>
+                                                        <div className="icon-checkmark-wrapper">
+                                                            <Icon icon="ion-ios-checkmark-circle"
+                                                              style={{display: this.isCheckMarkVisible(row.uid) ? "inline-block" : "none"}}/>
+                                                        </div>
+                                                        <div className="name-wrapper">{name.firstName} {name.lastName}</div>
+                                                    </div>
                                                 )
                                             })()
                                         }
@@ -155,11 +164,4 @@ class ContactList extends React.Component {
             )
     }
 }
-
-export default connect(
-    null,
-    {
-        goToConversation,
-    }
-)(ContactList);
 

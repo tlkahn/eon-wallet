@@ -1,0 +1,24 @@
+.name-wrapper {
+    position: absolute;
+    left: 50px;
+    bottom: 20px;
+}
+
+.list-item-contact-name ons-icon {
+    font-size: 32px;
+    color: #007aff;
+}
+
+.list-item-contact-name {
+    height: 60px !important;
+}
+
+.ion-ios-checkmark-cicle {
+    position: absolute;
+    left: 5px;
+    bottom: 13px;
+}
+
+.add-group-submit-btn ons-icon {
+    font-size: 42px;
+}
