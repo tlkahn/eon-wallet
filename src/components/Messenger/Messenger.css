@@ -51,8 +51,12 @@
   z-index: -1;
 }
 
+.toolbar {
+  height: 60px;
+}
+
 ons-splitter{
-  top: 50px !important;
+  top: 60px !important;
 }
 
 .add-group-btn {

@@ -26,8 +26,8 @@ input[type=email], input[type=password] {
 
 .right.toolbar__right{
     width: 50px;
-    position: relative;
-    left: calc(100% - 110px);
+    position: absolute;
+    right: 10px;
 }
 
 input:-webkit-autofill {

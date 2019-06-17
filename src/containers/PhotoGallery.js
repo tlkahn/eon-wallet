@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {
-    Page,
+    Page, Toolbar, ToolbarButton
 } from 'react-onsenui';
 
 import GalleryItem from '../components/GalleryItem'
