@@ -5,6 +5,7 @@
   "dependencies": {
     "@emotion/core": "^10.0.10",
     "@emotion/styled": "^10.0.12",
+    "@kennethormandy/react-flipcard": "^0.4.3",
     "axios": "^0.18.0",
     "emoji-mart": "^2.11.1",
     "ionicons": "^4.5.8",

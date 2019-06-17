@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
-import ReactCardFlip from 'react-card-flip';
-import {Page, Card} from 'react-onsenui';
+import Flipcard from '@kennethormandy/react-flipcard'
+import '@kennethormandy/react-flipcard/dist/Flipcard.css'
 import LoginForm from '../components/LoginForm';
 import SignUpForm from '../components/SignUpForm';
 import './styles/UserAuth.css'
 
 export default class UserAuth extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             isFlipped: false
         };
@@ -21,16 +21,11 @@ export default class UserAuth extends Component {
     render() {
         return (
             <div>
-                <ReactCardFlip isFlipped={this.state.isFlipped} flipDirection="vertical">
-                    <div key="front" className="sign-up-form-wrapper">
+                <Flipcard flipped={this.state.isFlipped} type="revolving-door">
                         <SignUpForm key="sign-up-form" toggleSplitterSide={this.handleClick.bind(this)}/>
-                    </div>
-                    <div key="back" className="log-in-form-wrapper">
                         <LoginForm key="log-in-form" toggleSplitterSide={this.handleClick.bind(this)}/>
-                    </div>
-                </ReactCardFlip>
+                </Flipcard>
             </div>
         )
     }
-
 }

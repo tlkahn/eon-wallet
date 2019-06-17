@@ -5,3 +5,13 @@
 .log-in-form-wrapper {
     min-height: 450px;
 }
+
+.Flipcard-front {
+    width: 100%;
+    min-height: 500px;
+}
+
+.Flipcard-back {
+    width: 100%;
+    min-height: 500px;
+}
