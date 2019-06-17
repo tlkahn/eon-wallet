@@ -4,18 +4,21 @@
 }
 
 .ons-ios-scroll-fix .page:not(.page--wrapper)[shown] > .page__content {
+  -webkit-transform: translate3d(0,0,0);
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: scroll;
 }
 
 .page__content {
+  -webkit-transform: translate3d(0,0,0);
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: scroll;
 }
 
 body {
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
 }
 
 .tabbar {

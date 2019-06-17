@@ -98,7 +98,7 @@ export default class AddContactsToGroup extends React.Component {
                         <BackButton />
                     </div>
                     <div className="center add-group-submit-btn">
-                        <Button modifier="quiet">
+                        <Button modifier="quiet" onClick={this.goToGroupConversation.bind(this)}>
                             <Icon icon="ion-ios-checkmark" />
                         </Button>
                     </div>
