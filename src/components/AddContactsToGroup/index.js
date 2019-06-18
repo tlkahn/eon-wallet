@@ -16,6 +16,7 @@ import './AddContactsToGroup.css';
 //redux
 import { connect } from 'react-redux';
 import {goToGroupChat} from '../../actions/actionCreators/goToGroupChat';
+import GroupChatMemberPanel from '../GroupChatMemberPanel';
 //lodash
 import {debounce} from 'lodash';
 
@@ -88,6 +89,7 @@ class AddContactsToGroup extends React.Component {
         else {
             this.state.checked.push(uid);
         }
+        this.forceUpdate();
     };
 
     isCheckMarkVisible(uid) {
@@ -149,13 +151,14 @@ class AddContactsToGroup extends React.Component {
                     <SplitterContent onClick={this.closeSplitterSide.bind(this)}>
                         <Page>
                             <div className="selected-uids-wrapper">
-                                {this.state.checked.map(uid=>{
-                                    return (
-                                        <span key={"span-" + uid}>
-                                            {uid}
-                                        </span>
-                                    )
-                                })}
+                                {/*{this.state.checked.map(uid=>{*/}
+                                {/*    return (*/}
+                                {/*        <span key={"span-" + uid}>*/}
+                                {/*            {uid}*/}
+                                {/*        </span>*/}
+                                {/*    )*/}
+                                {/*})}*/}
+                                {!!this.state.checked ?  <GroupChatMemberPanel memberIds={this.state.checked} /> : ""}
                             </div>
                             <List
                                 dataSource={this.getContactsByLastNameAlphabet(this.state.lastNameAlphabet)}

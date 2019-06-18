@@ -1,7 +1,7 @@
 import React from 'react';
 import './GroupChatMemberPanel.css';
 import fetchUsrInfo from '../../services/fetchUsrInfo';
-import {Page} from 'react-onsenui';
+import Spinner from '../Spinner'
 
 export default class GroupChatMemberPanel extends React.Component {
   constructor(props) {
@@ -12,34 +12,31 @@ export default class GroupChatMemberPanel extends React.Component {
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
-      this.getUsrInfo();
+      this.getUsrInfo(nextProps.memberIds);
   }
 
-    getUsrInfo() {
-      ((memberIds)=>{
-          let ps = Promise.all(memberIds.map(mid=>{
-              return fetchUsrInfo(mid);
-          }));
-          ps.then(results=>{
-              this.setState({
-                  usrInfo: results
-              })
+  getUsrInfo(memberIds) {
+      let ps = Promise.all(memberIds.map(mid=>{
+          return fetchUsrInfo(mid);
+      }));
+      ps.then(results=>{
+          this.setState({
+              usrInfo: results
           })
-      })(this.props.memberIds)
+      });
   }
 
     render() {
-        console.log(this.state);
         return (
             <div>
                 {
                     this.state.usrInfo.length > 0 ? this.state.usrInfo.map(obj=>{
                         return (
-                            <span>
+                            <span key={"usr-info-"+obj.id} >
                                 <img className="conversation-photo" src={obj.photo} alt="conversation" />
                             </span>
                         )
-                    }) : ""
+                    }) : <Spinner/>
                 }
             </div>
         )
