@@ -141,7 +141,10 @@ class MessageList extends Component {
 
   postCryptoSending(sendCryptoStatus) {
       let id = this.state.messages.length+1;
-      const {crypto, amount, account, recipient} = sendCryptoStatus;
+      let {crypto, amount, account, recipient} = sendCryptoStatus;
+      if (this.state.conversationType !== CONVERSATION_TYPES.individual) {
+          recipient = this.props.groupChatUsrIds
+      }
       this.setState({
           ...this.state,
           id,
@@ -161,17 +164,16 @@ class MessageList extends Component {
   }
 
   getMessages({conversationId}) {
-      //TODO: mock stub. to be replaced by websock connected array.
-      let messages = fetchMessagesFromUser(conversationId);
+      debugger
+      let messages = JSON.parse(window.localStorage.getItem('messages'));
+      if (!messages || messages.length == 0) {
+        messages = fetchMessagesFromUser(conversationId)
+      }
       let filterMessages = (messages, f) => {
           if (!f) {
               return messages;
           } else {
-              return messages.filter((m) => {
-                  if ((m.author === (f+'') && m.recipient === MY_USER_ID)||(m.recipient === (f+'') && m.author === MY_USER_ID)) {
-                      return m;
-                  }
-              });
+              return messages.filter((m) => m.type === 'update' || (m.author === (f+'') && m.recipient === MY_USER_ID)||(m.recipient === (f+'') && m.author === MY_USER_ID));
           }
       };
       let filteredMessages = filterMessages(messages, conversationId);
@@ -187,10 +189,16 @@ class MessageList extends Component {
     this.messageListContainer.scrollIntoView(false);
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps, nextContext) {
       this.getMessages({conversationId: nextProps.conversationId});
       if (typeof this.props.groupChatUsrIds === 'undefined' && typeof nextProps.groupChatUsrIds !== 'undefined') {
-          this.state.conversationType = CONVERSATION_TYPES.groupChat;
+          this.setState({
+              conversationType: CONVERSATION_TYPES.groupChat,
+              messages: [...this.state.messages, {
+                  type: 'update',
+                  updateText: 'You entered into group chat with ' + nextProps.groupChatUsrIds.join(' ')
+              }]
+          })
       }
       if ((typeof nextProps.sendCryptoStatus)  !== 'undefined' &&
           (typeof this.props.sendCryptoStatus) !== 'undefined' &&
@@ -208,50 +216,58 @@ class MessageList extends Component {
     while (i < messageCount) {
       let previous = this.state.messages[i - 1];
       let current = this.state.messages[i];
-      let next = this.state.messages[i + 1];
-      let isMine = current.author === MY_USER_ID;
-      let currentMoment = moment(current.timestamp);
-      let prevBySameAuthor = false;
-      let nextBySameAuthor = false;
-      let startsSequence = true;
-      let endsSequence = true;
-      let showTimestamp = true;
+      if (typeof current.type == 'undefined') {
+          let next = this.state.messages[i + 1];
+          let isMine = current.author === MY_USER_ID;
+          let currentMoment = moment(current.timestamp);
+          let prevBySameAuthor = false;
+          let nextBySameAuthor = false;
+          let startsSequence = true;
+          let endsSequence = true;
+          let showTimestamp = true;
 
-      if (previous) {
-        let previousMoment = moment(previous.timestamp);
-        let previousDuration = moment.duration(currentMoment.diff(previousMoment));
-        prevBySameAuthor = previous.author === current.author;
-        
-        if (prevBySameAuthor && previousDuration.as('hours') < 1) {
-          startsSequence = false;
-        }
+          if (previous) {
+              let previousMoment = moment(previous.timestamp);
+              let previousDuration = moment.duration(currentMoment.diff(previousMoment));
+              prevBySameAuthor = previous.author === current.author;
 
-        if (previousDuration.as('hours') < 1) {
-          showTimestamp = false;
-        }
+              if (prevBySameAuthor && previousDuration.as('hours') < 1) {
+                  startsSequence = false;
+              }
+
+              if (previousDuration.as('hours') < 1) {
+                  showTimestamp = false;
+              }
+          }
+
+          if (next) {
+              let nextMoment = moment(next.timestamp);
+              let nextDuration = moment.duration(nextMoment.diff(currentMoment));
+              nextBySameAuthor = next.author === current.author;
+
+              if (nextBySameAuthor && nextDuration.as('hours') < 1) {
+                  endsSequence = false;
+              }
+          }
+
+          messages.push(
+              <Message
+                  key={i}
+                  isMine={isMine}
+                  startsSequence={startsSequence}
+                  endsSequence={endsSequence}
+                  showTimestamp={showTimestamp}
+                  data={current}
+              />
+          )
       }
-
-      if (next) {
-        let nextMoment = moment(next.timestamp);
-        let nextDuration = moment.duration(nextMoment.diff(currentMoment));
-        nextBySameAuthor = next.author === current.author;
-
-        if (nextBySameAuthor && nextDuration.as('hours') < 1) {
-          endsSequence = false;
-        }
+      else if (current.type === 'update') {
+          messages.push(
+              <div className="update-text" key={"update-text-" + moment.now()}>
+                  {current.updateText}
+              </div>
+          );
       }
-
-      messages.push(
-        <Message
-          key={i}
-          isMine={isMine}
-          startsSequence={startsSequence}
-          endsSequence={endsSequence}
-          showTimestamp={showTimestamp}
-          data={current}
-        />
-      );
-
       // Proceed to the next message.
       i += 1;
     }
@@ -294,11 +310,6 @@ class MessageList extends Component {
           cryptoToBeSentFromAddr: account.addr,
       });
   }
-
-  // sendCrypto(crypto, account) {
-  //   this.closeSendCryptoDialog();
-  //   this.props.sendCryptos(crypto, account, this.props.conversationId);
-  // }
 
   toggleEmojiDialog() {
     this.setState({
@@ -361,6 +372,7 @@ class MessageList extends Component {
   }
 
   render() {
+      window.localStorage.setItem('messages', JSON.stringify(this.state.messages));
     return(
         <Page>
       <div className="message-list">

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import './Compose.css';
 import {ToolbarButton} from 'react-onsenui';
-import Emoji from 'react-emoji-render';
+//emotion
+import styled from '@emotion/styled'
 
 export default class Compose extends Component {
 
@@ -38,8 +39,12 @@ export default class Compose extends Component {
     }
 
     render() {
+    const wrapper = styled.div(props => ({
+        position: 'fixed',
+        bottom: 0
+    }));
     return (
-      <div className="compose">
+      <wrapper className="compose">
         <input
           type="text"
           className="compose-input"
@@ -52,7 +57,7 @@ export default class Compose extends Component {
 
         <ToolbarButton key="send" icon="ion-ios-send" onClick={this._submit.bind(this)}/>
         <ToolbarButton key="more" icon="ion-ios-more" MsgLst={this} onClick={this.props.more} />
-      </div>
+      </wrapper>
     );
   }
 }

@@ -151,13 +151,6 @@ class AddContactsToGroup extends React.Component {
                     <SplitterContent onClick={this.closeSplitterSide.bind(this)}>
                         <Page>
                             <div className="selected-uids-wrapper">
-                                {/*{this.state.checked.map(uid=>{*/}
-                                {/*    return (*/}
-                                {/*        <span key={"span-" + uid}>*/}
-                                {/*            {uid}*/}
-                                {/*        </span>*/}
-                                {/*    )*/}
-                                {/*})}*/}
                                 {!!this.state.checked ?  <GroupChatMemberPanel memberIds={this.state.checked} /> : ""}
                             </div>
                             <List

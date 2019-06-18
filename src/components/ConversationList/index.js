@@ -31,7 +31,6 @@ class ConversationList extends Component {
             text: randomWords(Math.floor(Math.random()*100)).join(" ") // most recent message in a session
           };
         });
-
         return { ...prevState, conversations };
       });
     });
