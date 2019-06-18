@@ -11,7 +11,7 @@ export default class Messenger extends Component {
         this.state = {
             isOpen: true,
             hidden: true,
-            contactListDialogOpen: false
+            contactListDialogOpen: false,
         };
         this.backBtn = React.createRef();
         document.addEventListener("openSideMenu", (ev)=>{

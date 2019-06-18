@@ -14,21 +14,21 @@ class ConversationList extends Component {
     this.state = {
       conversations: []
     };
-    //TODO: mock stub here
-    this.USERSURL='http://localhost:3001/users.json';
+    //TODO: mock stub here. Read from local db. should be sessions.json
+    this.SESSION_URL='http://localhost:3001/users.json';
     this.getConversations();
   }
 
   //TODO: mock stub
   getConversations = () => {
-    axios.get(this.USERSURL).then(response => {
+    axios.get(this.SESSION_URL).then(response => {
       this.setState(prevState => {
-        let conversations = response.data.map(result => {
+        let conversations = response.data.map(session => {
           return {
-            photo: result.photo,
-            name: `${result.name}`,
-            id: result.id,
-            text: randomWords(Math.floor(Math.random()*100)).join(" ")
+            photo: session.photo,
+            name: `${session.name}`,
+            id: session.id,
+            text: randomWords(Math.floor(Math.random()*100)).join(" ") // most recent message in a session
           };
         });
 
@@ -45,7 +45,7 @@ class ConversationList extends Component {
         {
           this.state.conversations.filter(conversation=>conversation.text.match(this.props.searchMessageText)).map(conversation =>
             <ConversationListItem
-              key={conversation.name}
+              key={conversation.id}
               data={conversation}
             />
           )
@@ -56,12 +56,6 @@ class ConversationList extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  // posts: getAllPosts(state),
-  // isFetching: getIsFetchingPosts(state),
-  // likedPostIds: getCurrentUsersLikedPostIds(state),
-  // currentPage: getPostsCurrentPage(state),
-  // totalPages: getPostsTotalPages(state),
-  // currentUser: getCurrentUser(state),
   searchMessageText: getSearchMessageText(state)
 });
 

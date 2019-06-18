@@ -15,13 +15,18 @@ import {
 import './AddContactsToGroup.css';
 //redux
 import { connect } from 'react-redux';
+import {goToGroupChat} from '../../actions/actionCreators/goToGroupChat';
 //lodash
 import {debounce} from 'lodash';
 
 //TODO: to be removed
 import randomWords from 'random-words';
 
-export default class AddContactsToGroup extends React.Component {
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+class AddContactsToGroup extends React.Component {
     constructor(props){
         super(props);
         this.state = {
@@ -30,23 +35,23 @@ export default class AddContactsToGroup extends React.Component {
         };
         //TODO: stub here. to be replaced with real feed (through mapStateToProps).
         let firstNames = randomWords(100);
-        let lastNames = randomWords(100);
+        let lastNames = randomWords(100).map(capitalizeFirstLetter);
         this.names = firstNames.map((fname, idx)=>{
             return {
                 uid: idx,
-                firstName: fname,
-                lastName: lastNames[idx]
+                firstName: capitalizeFirstLetter(fname),
+                lastName: capitalizeFirstLetter(lastNames[idx])
             }
         });
         //TODO: using latin letters. Other lang needs alphabet mapping like below:
         //const alphabetMapping = {'å':'a', 'ü':u ...}
-        this.splitterSideItems = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s", "t","u","v","w","x","y","z"];
+        this.splitterSideItems = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S", "T","U","V","W","X","Y","Z"];
     }
 
     componentDidMount() {
         this.setState({
             ...this.state,
-            lastNameAlphabet: 'a'
+            lastNameAlphabet: 'A'
         })
     }
 
@@ -77,7 +82,6 @@ export default class AddContactsToGroup extends React.Component {
     }
 
     toggleSelectContact(uid) {
-        console.log("uid: ", uid);
         if (this.state.checked.includes(uid)) {
             this.state.checked = this.state.checked.filter((a)=>a!==uid);
         }
@@ -88,6 +92,16 @@ export default class AddContactsToGroup extends React.Component {
 
     isCheckMarkVisible(uid) {
         return this.state.checked.includes(uid);
+    }
+
+    goToGroupConversation() {
+        this.props.navigator.popPage({
+            data: {
+                groupUsrIds: this.state.checked
+            }
+        }).then(el=>{
+            this.props.goToGroupChat(this.state.checked);
+        });
     }
 
     render() {
@@ -134,6 +148,15 @@ export default class AddContactsToGroup extends React.Component {
                     </SplitterSide>
                     <SplitterContent onClick={this.closeSplitterSide.bind(this)}>
                         <Page>
+                            <div className="selected-uids-wrapper">
+                                {this.state.checked.map(uid=>{
+                                    return (
+                                        <span key={"span-" + uid}>
+                                            {uid}
+                                        </span>
+                                    )
+                                })}
+                            </div>
                             <List
                                 dataSource={this.getContactsByLastNameAlphabet(this.state.lastNameAlphabet)}
                                 renderRow={(row, idx) =>
@@ -149,7 +172,7 @@ export default class AddContactsToGroup extends React.Component {
                                                             <Icon icon="ion-ios-checkmark-circle"
                                                               style={{display: this.isCheckMarkVisible(row.uid) ? "inline-block" : "none"}}/>
                                                         </div>
-                                                        <div className="name-wrapper">{name.firstName} {name.lastName}</div>
+                                                        <div className="name-wrapper">{name.firstName} <b>{name.lastName}</b></div>
                                                     </div>
                                                 )
                                             })()
@@ -165,3 +188,9 @@ export default class AddContactsToGroup extends React.Component {
     }
 }
 
+export default connect(
+        null,
+    {
+        goToGroupChat,
+    }
+)(AddContactsToGroup);

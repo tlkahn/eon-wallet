@@ -22,3 +22,8 @@
 .add-group-submit-btn ons-icon {
     font-size: 42px;
 }
+
+.selected-uids-wrapper {
+    height: 100px;
+    overflow-y: scroll;
+}

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import {debounce, throttle} from 'lodash';
+import { connect } from 'react-redux';
+//components
 import Compose from '../Compose';
-import Toolbar from '../Toolbar';
 import Message from '../Message';
 import moment from 'moment';
 import {Page, Dialog, ToolbarButton, List, ListItem, Button, AlertDialog, AlertDialogButton, Range} from 'react-onsenui';
@@ -10,19 +12,18 @@ import 'emoji-mart/css/emoji-mart.css';
 import { Picker} from 'emoji-mart';
 import {MESSAGE_FORM} from "../../config/constants";
 import ReactCardFlip from 'react-card-flip';
-
-//redux
-import { connect } from 'react-redux';
+import GroupChatMemberPanel from '../GroupChatMemberPanel';
 //selectors
 import {getConversationID} from '../../reducers/goToConversation';
 import {getSendCryptoStatus} from '../../reducers/sendCrypto';
 import {getSelectedEmoji} from '../../reducers/selectEmoji';
+import {getGroupChatUsrIds} from '../../reducers/goToGroupChat';
 //action creators
 import {sendCryptos} from '../../actions/actionCreators/sendCryptos';
 import {selectEmoji} from '../../actions/actionCreators/selectEmoji';
-import {debounce, throttle} from 'lodash';
+//services
 import {MY_USER_ID} from '../../services/myUserInfo';
-import {fetchMessagesFromUser} from "../../services/fetchMessagesFromUser";
+import fetchMessagesFromUser from "../../services/fetchMessagesFromUser";
 
 //TODO: mock stub. to be replaced.
 //TODO: put all mocks into service
@@ -50,6 +51,11 @@ const CRYPTO_PORTFOLIO = {
     ]
 };
 
+const CONVERSATION_TYPES = Object.freeze({
+    individual: Symbol("individual"),
+    groupChat: Symbol("groupChat"),
+});
+
 class MessageList extends Component {
   constructor(props) {
       super(props);
@@ -67,7 +73,9 @@ class MessageList extends Component {
           cryptoToBeSentMax: 0,
           cryptoToBeSent: 0,
           cryptoToBeSentRecipient: null,
-          sendCryptoDialogFlipped: false
+          sendCryptoDialogFlipped: false,
+          conversationType: CONVERSATION_TYPES.individual,
+          infoDialogOpen: false
       };
       window.addEventListener('message', (event)=> {
           var loc = event.data;
@@ -181,6 +189,9 @@ class MessageList extends Component {
 
   componentWillReceiveProps(nextProps) {
       this.getMessages({conversationId: nextProps.conversationId});
+      if (typeof this.props.groupChatUsrIds === 'undefined' && typeof nextProps.groupChatUsrIds !== 'undefined') {
+          this.state.conversationType = CONVERSATION_TYPES.groupChat;
+      }
       if ((typeof nextProps.sendCryptoStatus)  !== 'undefined' &&
           (typeof this.props.sendCryptoStatus) !== 'undefined' &&
             nextProps.sendCryptoStatus.status  !== this.props.sendCryptoStatus.status &&
@@ -308,6 +319,20 @@ class MessageList extends Component {
       });
   }
 
+  toggleInfoDialog() {
+      this.setState({
+          infoDialogOpen: !this.state.infoDialogOpen,
+          dialogOpen: false
+      })
+  }
+
+  closeInfoDialog() {
+      this.setState({
+          dialogOpen: false,
+          infoDialogOpen: false
+      })
+  }
+
   handleAlertDialogCancel() {
       this.setState({
           ...this.state,
@@ -336,7 +361,6 @@ class MessageList extends Component {
   }
 
   render() {
-      {console.log(this.state)}
     return(
         <Page>
       <div className="message-list">
@@ -380,7 +404,7 @@ class MessageList extends Component {
                     <ToolbarButton width="20%" key="document" icon="ion-ios-document" />
                 </ons-col>
                 <ons-col>
-                    <ToolbarButton width="20%" key="info" icon="ion-ios-information-circle-outline" />
+                    <ToolbarButton width="20%" key="info" icon="ion-ios-information-circle-outline" onClick={this.toggleInfoDialog.bind(this)}/>
                 </ons-col>
                 <ons-col>
                     <ToolbarButton width="20%" key="video" icon="ion-ios-videocam" />
@@ -492,6 +516,16 @@ class MessageList extends Component {
                   </div>
               </ReactCardFlip>
           </Dialog>
+          <Dialog isOpen={this.state.infoDialogOpen} onCancel={this.closeInfoDialog.bind(this)}>
+              <div>
+                  {
+                      this.state.conversationType === CONVERSATION_TYPES.individual ?
+                      this.props.conversationId:
+                      <GroupChatMemberPanel memberIds={this.props.groupChatUsrIds} />
+                  }
+
+              </div>
+          </Dialog>
       </div>
             </Page>
     );
@@ -503,10 +537,12 @@ const mapStateToProps = (state) => {
     const conversationId = getConversationID(state);
     const sendCryptoStatus = getSendCryptoStatus(state);
     const selectedEmoji = getSelectedEmoji(state);
+    const groupChatUsrIds = getGroupChatUsrIds(state);
     return {
         conversationId,
         sendCryptoStatus,
-        selectedEmoji
+        selectedEmoji,
+        groupChatUsrIds
     }
 };
 

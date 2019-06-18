@@ -1,5 +1,5 @@
 //TODO: mock stub
-export function fetchMessagesFromUser(userId) {
+export default function fetchMessagesFromUser(userId) {
     return [
           {
               id: 1,
