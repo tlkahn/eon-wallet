@@ -39,12 +39,8 @@ export default class Compose extends Component {
     }
 
     render() {
-    const wrapper = styled.div(props => ({
-        position: 'fixed',
-        bottom: 0
-    }));
     return (
-      <wrapper className="compose">
+      <div className="compose">
         <input
           type="text"
           className="compose-input"
@@ -57,7 +53,7 @@ export default class Compose extends Component {
 
         <ToolbarButton key="send" icon="ion-ios-send" onClick={this._submit.bind(this)}/>
         <ToolbarButton key="more" icon="ion-ios-more" MsgLst={this} onClick={this.props.more} />
-      </wrapper>
+      </div>
     );
   }
 }

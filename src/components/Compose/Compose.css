@@ -6,8 +6,7 @@
   border-top: 1px solid #eeeef1;
   position: fixed;
   width: calc(100% - 20px);
-  bottom: 0;
-  left: 0;
+  bottom: 0px;
 }
 
 @supports (backdrop-filter: blur(20px)) {

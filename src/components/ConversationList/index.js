@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import './ConversationList.css';
 import {getSearchMessageText} from '../../reducers/searchMessageText';
 import randomWords from 'random-words';
-
+import {API_URL} from '../../config/constants';
 
 class ConversationList extends Component {
   constructor(props) {
@@ -15,7 +15,7 @@ class ConversationList extends Component {
       conversations: []
     };
     //TODO: mock stub here. Read from local db. should be sessions.json
-    this.SESSION_URL='http://localhost:3001/users.json';
+    this.SESSION_URL=`${API_URL}/users.json`;
     this.getConversations();
   }
 

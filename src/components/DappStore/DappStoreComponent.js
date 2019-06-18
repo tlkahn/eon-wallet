@@ -4,12 +4,13 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./DappStore.css";
 import axios from 'axios'
-import {BACKEND_URL} from '../../../package.json';
 import AppSet from '../AppSet'
 import {
     Page,
     Card
 } from 'react-onsenui';
+import {API_URL} from '../../config/constants';
+
 let groupBy = function(xs, key) {
   return xs.reduce(function(rv, x) {
     (rv[x[key]] = rv[x[key]] || []).push(x);
@@ -36,7 +37,7 @@ export default class DappStoreComponent extends React.Component {
     }
 
     getData = () => {
-        return axios.get(BACKEND_URL.test).then(response => {
+        return axios.get(`${API_URL}/app_items.json`).then(response => {
             this.setState(prevState => {
                 let appsets = response.data.map(appset => {
                     return {

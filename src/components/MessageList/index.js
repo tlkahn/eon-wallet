@@ -164,7 +164,6 @@ class MessageList extends Component {
   }
 
   getMessages({conversationId}) {
-      debugger
       let messages = JSON.parse(window.localStorage.getItem('messages'));
       if (!messages || messages.length == 0) {
         messages = fetchMessagesFromUser(conversationId)
@@ -191,7 +190,9 @@ class MessageList extends Component {
 
   componentWillReceiveProps(nextProps, nextContext) {
       this.getMessages({conversationId: nextProps.conversationId});
-      if (typeof this.props.groupChatUsrIds === 'undefined' && typeof nextProps.groupChatUsrIds !== 'undefined') {
+      if (typeof this.props.groupChatUsrIds === 'undefined' &&
+          typeof nextProps.groupChatUsrIds !== 'undefined' &&
+          nextProps.groupChatUsrIds !== this.props.groupChatUsrIds) {
           this.setState({
               conversationType: CONVERSATION_TYPES.groupChat,
               messages: [...this.state.messages, {

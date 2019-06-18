@@ -9,22 +9,22 @@
   overflow-y: scroll;
 }
 
-.page__content {
-  -webkit-transform: translate3d(0,0,0);
-  overflow-x: hidden;
-  overflow-y: scroll;
-}
+/*.page__content {*/
+/*  -webkit-transform: translate3d(0,0,0);*/
+/*  overflow-x: hidden;*/
+/*  overflow-y: scroll;*/
+/*}*/
 
-body {
-  overflow-x: hidden;
-  overflow-y: scroll;
-  -webkit-overflow-scrolling: touch;
-}
+/*body {*/
+/*  overflow-x: hidden;*/
+/*  overflow-y: scroll;*/
+/*  -webkit-overflow-scrolling: touch;*/
+/*}*/
 
-.tabbar {
-  position: fixed !important;
-  z-index: 999999;
-}
+/*.tabbar {*/
+/*  position: fixed !important;*/
+/*  z-index: 999999;*/
+/*}*/
 
 input[type="color"],
 input[type="date"],
@@ -50,8 +50,8 @@ html {
   position: fixed;
 }
 
-::-webkit-scrollbar {
-    width: 0px;  /* Remove scrollbar space */
-    background: transparent;  /* Optional: just make scrollbar invisible */
-}
+/*::-webkit-scrollbar {*/
+/*    width: 0px;  !* Remove scrollbar space *!*/
+/*    background: transparent;  !* Optional: just make scrollbar invisible *!*/
+/*}*/
 
