@@ -17,13 +17,16 @@ class ConversationList extends Component {
     this.MY_USER_ID = MY_USER_ID;
     Array.prototype.uniq = function() {
       return uniq(this);
+    };
+    Array.prototype.orderBy = function (...cond) {
+      return orderBy(this, ...cond);
     }
   }
 
    _getLastMessageBy(sessionId) {
-    return this.messages && orderBy(
-        this.messages.filter(m=>m.author === sessionId ||
-        m.recipient === sessionId), 'timestamp')[0].message;
+    debugger
+    return this.messages && this.messages.filter(m=>m.author == sessionId ||
+        m.recipient == sessionId).orderBy('timestamp')[0].message;
   }
 
   componentDidMount() {
@@ -56,7 +59,8 @@ class ConversationList extends Component {
 
       return Promise.all(usrPromises).then(usrs=>{
         return usrs.map(u=>{
-          const {photo, name, id, text} = u;
+          const {photo, name, id} = u;
+          let text = this._getLastMessageBy(u.id) || "";
           return {
             photo,
             name,
