@@ -7,7 +7,6 @@ import ContactList from '../ContactList';
 import AddContactsToGroup from '../AddContactsToGroup';
 import { connect } from 'react-redux';
 import {goToConversation} from "../../actions/actionCreators/goToConversation";
-import fetchMessagesFromUser from "../../services/fetchMessagesFromUser";
 
 class Messenger extends Component {
     constructor(props) {
@@ -89,7 +88,7 @@ class Messenger extends Component {
                     swipeable={true}
                     isOpen={this.state.isOpen}
                 >
-                    <Page>  <ConversationList msg={this} currentSessionId={this.state.currentSessionId}/> </Page>
+                    <Page>  <ConversationList msg={this} currentSessionId={this.state.currentSessionId} /> </Page>
                 </SplitterSide>
                 <SplitterContent>
                     <Page>  <MessageList msg={this}/> </Page>

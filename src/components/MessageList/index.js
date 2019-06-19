@@ -118,7 +118,8 @@ class MessageList extends Component {
           author: MY_USER_ID,
           location: this.state.locationPickedObj,
           timestamp: new Date().getTime(),
-          messageForm: MESSAGE_FORM.location
+          messageForm: MESSAGE_FORM.location,
+          message: "You just shared a location."
       }]);
       let filteredMessages = this._filterMessages(messages, this.props.conversationId);
       this.setState({
@@ -142,7 +143,8 @@ class MessageList extends Component {
               recipient: this.props.conversationId,
               imageUrl: imageFileUrl,
               timestamp: new Date().getTime(),
-              messageForm: MESSAGE_FORM.image
+              messageForm: MESSAGE_FORM.image,
+              message: "You just sent an image"
           }]);
       let filteredMessages = this._filterMessages(messages, this.props.conversationId);
       this.setState({
@@ -163,7 +165,9 @@ class MessageList extends Component {
               id,
               author: MY_USER_ID,
               crypto, amount, account, recipient,
-              messageForm: MESSAGE_FORM.crypto
+              messageForm: MESSAGE_FORM.crypto,
+              message: `You just sent ${amount} ${crypto} to ${recipient}`,
+              timestamp: new Date().getTime()
           }]);
       let filteredMessages = this._filterMessages(messages, this.props.conversationId);
       this.setState({
@@ -222,7 +226,9 @@ class MessageList extends Component {
                   updateText: 'You entered into group chat with ' + nextProps.groupChatUsrIds.join(' '),
                   recipient: MY_USER_ID,
                   author: sessionId,
-                  groupMembers: nextProps.groupChatUsrIds
+                  groupMembers: nextProps.groupChatUsrIds,
+                  timestamp: new Date().getTime(),
+                  message: 'You entered into group chat with ' + nextProps.groupChatUsrIds.join(' '),
               }]
           });
           this.props.msg.updateSessionId({currentSessionId: sessionId});

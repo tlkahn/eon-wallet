@@ -5,7 +5,7 @@ import './ConversationList.css';
 import {getSearchMessageText} from '../../reducers/searchMessageText';
 import {MY_USER_ID}  from '../../services/myUserInfo';
 import fetchUsrInfo from '../../services/fetchUsrInfo';
-import {orderBy, uniq} from 'lodash';
+import {orderBy, uniq, head} from 'lodash';
 import fetchMessagesFromUser from "../../services/fetchMessagesFromUser";
 
 class ConversationList extends Component {
@@ -20,12 +20,19 @@ class ConversationList extends Component {
     };
     Array.prototype.orderBy = function (...cond) {
       return orderBy(this, ...cond);
+    };
+    Array.prototype.head = function () {
+      return head(this);
     }
   }
 
    _getLastMessageBy(sessionId) {
+    debugger
+    this.messages.forEach(m=>{
+      m.timestamp = new Date(m.timestamp);
+    });
     return this.messages && this.messages.filter(m=>m.author == sessionId ||
-        m.recipient == sessionId).orderBy('timestamp')[0].message;
+        m.recipient == sessionId).orderBy('timestamp', 'desc').head().message;
   }
 
   componentDidMount() {
@@ -54,12 +61,25 @@ class ConversationList extends Component {
         }
       }
 
-      let usrPromises = sessionIds.uniq().map((sessionId)=>{
+      //TODO: add group chat icons
+      //sessionIds == ["1", "2", "2", "1", "2", "3", "2", "3", "1", "3", "1", "1", "2", "2", "2", "3", "3", "1", "1", "1", "1", "1", "3,30,88", "3,30,88"]
+
+      let oneToOneSessionIds = sessionIds.uniq().filter(s=>{
+        return s.split(',').length === 1
+      });
+
+      let groupChatSessionIds = sessionIds.uniq().filter(s=>{
+        return s.split(',').length > 1
+      });
+
+      let usrPromises = oneToOneSessionIds.map((sessionId)=>{
           return fetchUsrInfo(sessionId);
       });
 
+      let results = [];
+
       return Promise.all(usrPromises).then(usrs=>{
-        return usrs.map(u=>{
+        let oneToOneResults = usrs.map(u=>{
           const {photo, name, id} = u;
           let text = this._getLastMessageBy(u.id) || "";
           return {
@@ -68,8 +88,19 @@ class ConversationList extends Component {
             id,
             text
           }
-        })
-      })
+        });
+        let groupChatResults = groupChatSessionIds.map(g=>{
+          //TODO: change
+          let text = this._getLastMessageBy(g) || "";
+          return {
+            id: g,
+            name: "Group chat",
+            photo: "https://image.flaticon.com/icons/svg/115/115935.svg",
+            text
+          }
+        });
+        return oneToOneResults.concat(groupChatResults);
+      });
     }
   };
 

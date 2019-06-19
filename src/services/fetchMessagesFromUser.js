@@ -7,7 +7,7 @@ export default function fetchMessagesFromUser() {
               recipient: 'apple',
               message: 'hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.',
               messageForm: 'text',
-              timestamp: new Date(new Date().getTime() - Math.random() * 1000000)
+              timestamp: new Date().getTime() - Math.floor(Math.random() * 1000000)
           },
           {
               id: 2,
@@ -15,7 +15,7 @@ export default function fetchMessagesFromUser() {
               recipient: 'apple',
               message: 'It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!',
               messageForm: 'text',
-              timestamp: new Date(new Date().getTime() - Math.random() * 1000000)
+              timestamp: new Date().getTime() - Math.floor(Math.random() * 1000000)
           },
           {
               id: 3,
@@ -23,7 +23,7 @@ export default function fetchMessagesFromUser() {
               recipient: 'apple',
               message: 'Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.',
               messageForm: 'text',
-              timestamp: new Date(new Date().getTime() - Math.random() * 1000000)
+              timestamp: new Date().getTime() - Math.floor(Math.random() * 1000000)
           },
           {
               id: 4,
@@ -31,7 +31,7 @@ export default function fetchMessagesFromUser() {
               recipient: '1',
               message: 'It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!',
               messageForm: 'text',
-              timestamp: new Date(new Date().getTime() - Math.random() * 1000000)
+              timestamp: new Date().getTime() - Math.floor(Math.random() * 1000000)
           },
           {
               id: 5,
@@ -39,7 +39,7 @@ export default function fetchMessagesFromUser() {
               recipient: '2',
               message: 'Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.',
               messageForm: 'text',
-              timestamp: new Date(new Date().getTime() - Math.random() * 1000000)
+              timestamp: new Date().getTime() - Math.floor(Math.random() * 1000000)
           },
           {
               id: 6,
@@ -47,7 +47,7 @@ export default function fetchMessagesFromUser() {
               recipient: '3',
               message: 'It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!',
               messageForm: 'text',
-              timestamp: new Date(new Date().getTime() - Math.random() * 1000000)
+              timestamp: new Date().getTime() - Math.floor(Math.random() * 1000000)
           },
           {
               id: 7,
@@ -55,7 +55,7 @@ export default function fetchMessagesFromUser() {
               recipient: 'apple',
               message: 'Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.',
               messageForm: 'text',
-              timestamp: new Date(new Date().getTime() - Math.random() * 1000000)
+              timestamp: new Date().getTime() - Math.floor(Math.random() * 1000000)
           },
           {
               id: 8,
@@ -63,7 +63,7 @@ export default function fetchMessagesFromUser() {
               recipient: 'apple',
               message: 'It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!',
               messageForm: 'text',
-              timestamp: new Date(new Date().getTime() - Math.random() * 1000000)
+              timestamp: new Date().getTime() - Math.floor(Math.random() * 1000000)
           },
           {
               id: 9,
@@ -71,7 +71,7 @@ export default function fetchMessagesFromUser() {
               recipient: '1',
               message: 'Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.',
               messageForm: 'text',
-              timestamp: new Date(new Date().getTime() - Math.random() * 1000000)
+              timestamp: new Date().getTime() - Math.floor(Math.random() * 1000000)
           },
           {
               id: 10,
@@ -79,7 +79,7 @@ export default function fetchMessagesFromUser() {
               recipient: 'apple',
               messageForm: 'text',
               message: 'It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!',
-              timestamp: new Date(new Date().getTime() - Math.random() * 1000000)
+              timestamp: new Date().getTime() - Math.floor(Math.random() * 1000000)
           },
       ];
 }
