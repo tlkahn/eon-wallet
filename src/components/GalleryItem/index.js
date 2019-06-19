@@ -153,7 +153,6 @@ class GalleryItem extends React.Component {
         avatarUrl
       }
     } = this.props;
-    console.log(this.state);
     return (
       <article className="GalleryItem__root">
         <div className="GalleryItem-header">

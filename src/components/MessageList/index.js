@@ -98,6 +98,7 @@ class MessageList extends Component {
               messages: this.state.messages.concat([{
                   id,
                   author: MY_USER_ID,
+                  recipient: this.props.groupChatUsrIds ? this.props.groupChatUsrIds : this.props.conversationId,
                   message: composedContents,
                   timestamp: new Date().getTime(),
                   messageForm: MESSAGE_FORM.text
@@ -111,6 +112,8 @@ class MessageList extends Component {
       this.setState({
           ...this.state,
           id,
+          author: MY_USER_ID,
+          recipient: this.props.groupChatUsrIds ? this.props.groupChatUsrIds : this.props.conversationId,
           locationPickedP: false,
           locationDialogOpen: false,
           dialogOpen: false,
@@ -133,6 +136,7 @@ class MessageList extends Component {
           messages: this.state.messages.concat([{
               id,
               author: MY_USER_ID,
+              recipient: this.props.groupChatUsrIds ? this.props.groupChatUsrIds : this.props.conversationId,
               imageUrl: imageFileUrl,
               timestamp: new Date().getTime(),
               messageForm: MESSAGE_FORM.image
@@ -163,7 +167,7 @@ class MessageList extends Component {
     this.messageListContainer.scrollIntoView(false);
   }
 
-  getMessages({conversationId}) {
+  getMessages(conversationId, myUserId) {
       let messages = JSON.parse(window.localStorage.getItem('messages'));
       if (!messages || messages.length == 0) {
         messages = fetchMessagesFromUser(conversationId)
@@ -172,7 +176,7 @@ class MessageList extends Component {
           if (!f) {
               return messages;
           } else {
-              return messages.filter((m) => m.type === 'update' || (m.author === (f+'') && m.recipient === MY_USER_ID)||(m.recipient === (f+'') && m.author === MY_USER_ID));
+              return messages.filter(m=>(m.author === f && m.recipient === myUserId)||(m.recipient === f && m.author === myUserId));
           }
       };
       let filteredMessages = filterMessages(messages, conversationId);
@@ -189,15 +193,19 @@ class MessageList extends Component {
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
-      this.getMessages({conversationId: nextProps.conversationId});
+      this.getMessages(nextProps.conversationId, MY_USER_ID);
       if (typeof this.props.groupChatUsrIds === 'undefined' &&
-          typeof nextProps.groupChatUsrIds !== 'undefined' &&
-          nextProps.groupChatUsrIds !== this.props.groupChatUsrIds) {
+          typeof nextProps.groupChatUsrIds !== 'undefined'
+          ) {
+          let sessionId = nextProps.groupChatUsrIds+'';
           this.setState({
               conversationType: CONVERSATION_TYPES.groupChat,
               messages: [...this.state.messages, {
                   type: 'update',
-                  updateText: 'You entered into group chat with ' + nextProps.groupChatUsrIds.join(' ')
+                  updateText: 'You entered into group chat with ' + nextProps.groupChatUsrIds.join(' '),
+                  recipient: MY_USER_ID,
+                  author: sessionId,
+                  groupMembers: nextProps.groupChatUsrIds
               }]
           })
       }
@@ -213,7 +221,6 @@ class MessageList extends Component {
     let i = 0;
     let messageCount = this.state.messages.length;
     let messages = [];
-
     while (i < messageCount) {
       let previous = this.state.messages[i - 1];
       let current = this.state.messages[i];
@@ -373,7 +380,8 @@ class MessageList extends Component {
   }
 
   render() {
-      window.localStorage.setItem('messages', JSON.stringify(this.state.messages));
+    window.localStorage.setItem('messages', JSON.stringify(this.state.messages));
+    console.log(this.state.messages);
     return(
         <Page>
       <div className="message-list">
