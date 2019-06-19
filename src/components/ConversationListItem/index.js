@@ -20,7 +20,6 @@ class ConversationListItem extends Component {
 
     }
 
-
   render() {
     const { photo, name, text } = this.props.data;
 
@@ -35,7 +34,6 @@ class ConversationListItem extends Component {
     );
   }
 }
-
 
 export default connect(
   null,

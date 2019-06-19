@@ -24,15 +24,15 @@ class ConversationList extends Component {
   }
 
    _getLastMessageBy(sessionId) {
-    debugger
     return this.messages && this.messages.filter(m=>m.author == sessionId ||
         m.recipient == sessionId).orderBy('timestamp')[0].message;
   }
 
   componentDidMount() {
-    this.messages = window.localStorage.getItem("messsages");
-    if  (!this.messages) {
+    this.messages = JSON.parse(window.localStorage.getItem("messages"));
+    if  (!this.messages || !this.messages.length) {
       this.messages =  fetchMessagesFromUser();
+      window.localStorage.setItem("messages", JSON.stringify(this.messages));
     }
     this._getConversations().then(conversations=>{
       this.setState({

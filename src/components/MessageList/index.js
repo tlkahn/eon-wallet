@@ -61,6 +61,7 @@ class MessageList extends Component {
       super(props);
       this.state = {
           messages: [],
+          filteredMessages:[],
           dialogOpen: false,
           sendCryptoDialogOpen: false,
           cryptoRangeDialogOpen: false,
@@ -93,17 +94,20 @@ class MessageList extends Component {
   postNewComposedContent(composedContents) {
       if (composedContents.trim().length > 1) {
           let id = this.state.messages.length+1;
-          this.setState({
-              ...this.state,
-              messages: this.state.messages.concat([{
+          let messages = this.state.messages.concat([{
                   id,
                   author: MY_USER_ID,
                   recipient: this.props.conversationId,
                   message: composedContents,
                   timestamp: new Date().getTime(),
                   messageForm: MESSAGE_FORM.text
-              }])
-          })
+              }]);
+          let filteredMessages = this._filterMessages(messages, this.props.conversationId);
+          this.setState({
+              ...this.state,
+              messages,
+              filteredMessages
+          });
       }
   }
 
@@ -167,33 +171,36 @@ class MessageList extends Component {
     this.messageListContainer.scrollIntoView(false);
   }
 
-  getMessages(conversationId, myUserId) {
-      let stringify = JSON.stringify;
+  _filterMessages(messages, f) {
+    if (!f) {
+        return messages;
+    } else {
+      return messages.filter(m=>(m.author == f &&
+        m.recipient == MY_USER_ID)||
+        (m.recipient == f &&
+            m.author == MY_USER_ID));
+    }
+  };
+
+  getMessages(conversationId) {
       let messages = JSON.parse(window.localStorage.getItem('messages'));
-      let filterMessages = (messages, f) => {
-          if (!f) {
-              return messages;
-          } else {
-              return messages.filter(m=>(stringify(m.author) === stringify(f)&&
-                  stringify(m.recipient) === stringify(myUserId))||
-                  (stringify(m.recipient) === stringify(f) &&
-                      stringify(m.author) === stringify(myUserId)));
-          }
-      };
-      let filteredMessages = filterMessages(messages, conversationId);
+      let filteredMessages = this._filterMessages(messages, conversationId);
       this.setState(prevState => {
           return {
               ...prevState,
-              messages: filteredMessages
+              messages,
+              filteredMessages
           }
       });
   }
 
   componentDidUpdate() {
     this.messageListContainer.scrollIntoView(false);
+    window.localStorage.setItem('messages', JSON.stringify(this.state.messages));
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
+      debugger
       this.getMessages(nextProps.conversationId, MY_USER_ID);
       if (typeof this.props.groupChatUsrIds === 'undefined' &&
           typeof nextProps.groupChatUsrIds !== 'undefined'
@@ -222,13 +229,13 @@ class MessageList extends Component {
 
   renderMessages() {
     let i = 0;
-    let messageCount = this.state.messages.length;
+    let messageCount = this.state.filteredMessages.length;
     let messages = [];
     while (i < messageCount) {
-      let previous = this.state.messages[i - 1];
-      let current = this.state.messages[i];
+      let previous = this.state.filteredMessages[i - 1];
+      let current = this.state.filteredMessages[i];
       if (typeof current.type == 'undefined') {
-          let next = this.state.messages[i + 1];
+          let next = this.state.filteredMessages[i + 1];
           let isMine = current.author === MY_USER_ID;
           let currentMoment = moment(current.timestamp);
           let prevBySameAuthor = false;
@@ -383,8 +390,7 @@ class MessageList extends Component {
   }
 
   render() {
-    window.localStorage.setItem('messages', JSON.stringify(this.state.messages));
-    console.log(this.state.messages);
+      console.log(this.state.messages);
     return(
         <Page>
       <div className="message-list">
@@ -466,6 +472,7 @@ class MessageList extends Component {
                   </Button>
               </div>
           </AlertDialog>
+
           <Dialog isOpen={this.state.sendCryptoDialogOpen} onCancel={this.closeSendCryptoDialog.bind(this)} cancelable>
               <ReactCardFlip isFlipped={this.state.sendCryptoDialogFlipped} flipDirection="vertical">
                   <div key="front" className="crypto-list-wrapper">
@@ -540,6 +547,7 @@ class MessageList extends Component {
                   </div>
               </ReactCardFlip>
           </Dialog>
+
           <Dialog isOpen={this.state.infoDialogOpen} onCancel={this.closeInfoDialog.bind(this)}>
               <div>
                   {
