@@ -168,15 +168,24 @@ class MessageList extends Component {
   }
 
   getMessages(conversationId, myUserId) {
+      let stringify = JSON.stringify;
       let messages = JSON.parse(window.localStorage.getItem('messages'));
       if (!messages || messages.length == 0) {
         messages = fetchMessagesFromUser(conversationId)
       }
+      Array.prototype.eq = function (y) {
+          return (this.length == y.length) && this.every(function(element, index) {
+              return element === y[index];
+          });
+      };
       let filterMessages = (messages, f) => {
           if (!f) {
               return messages;
           } else {
-              return messages.filter(m=>(m.author === f && m.recipient === myUserId)||(m.recipient === f && m.author === myUserId));
+              return messages.filter(m=>(stringify(m.author) === stringify(f)&&
+                  stringify(m.recipient) === stringify(myUserId))||
+                  (stringify(m.recipient) === stringify(f) &&
+                      stringify(m.author) === stringify(myUserId)));
           }
       };
       let filteredMessages = filterMessages(messages, conversationId);
@@ -193,7 +202,7 @@ class MessageList extends Component {
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
-      this.getMessages(nextProps.conversationId, MY_USER_ID);
+      this.getMessages(nextProps.groupChatUsrIds ? nextProps.groupChatUsrIds : nextProps.conversationId, MY_USER_ID);
       if (typeof this.props.groupChatUsrIds === 'undefined' &&
           typeof nextProps.groupChatUsrIds !== 'undefined'
           ) {
