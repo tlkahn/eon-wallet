@@ -113,6 +113,14 @@ class MessageList extends Component {
 
   postLocationContent(){
       let id = this.state.messages.length+1;
+      let messages = this.state.messages.concat([{
+          id,
+          author: MY_USER_ID,
+          location: this.state.locationPickedObj,
+          timestamp: new Date().getTime(),
+          messageForm: MESSAGE_FORM.location
+      }]);
+      let filteredMessages = this._filterMessages(messages, this.props.conversationId);
       this.setState({
           ...this.state,
           id,
@@ -121,30 +129,28 @@ class MessageList extends Component {
           locationPickedP: false,
           locationDialogOpen: false,
           dialogOpen: false,
-          messages: this.state.messages.concat([{
-              id,
-              author: MY_USER_ID,
-              location: this.state.locationPickedObj,
-              timestamp: new Date().getTime(),
-              messageForm: MESSAGE_FORM.location
-          }])
+          messages,
+          filteredMessages
       });
   }
 
   postImageContent = debounce((imageFileUrl) => {
       let id = this.state.messages.length+1;
-      this.setState({
-          ...this.state,
-          id,
-          dialogOpen: false,
-          messages: this.state.messages.concat([{
+      let messages = this.state.messages.concat([{
               id,
               author: MY_USER_ID,
               recipient: this.props.conversationId,
               imageUrl: imageFileUrl,
               timestamp: new Date().getTime(),
               messageForm: MESSAGE_FORM.image
-          }])
+          }]);
+      let filteredMessages = this._filterMessages(messages, this.props.conversationId);
+      this.setState({
+          ...this.state,
+          id,
+          dialogOpen: false,
+          messages,
+          filteredMessages
       })});
 
   postCryptoSending(sendCryptoStatus) {
@@ -153,15 +159,18 @@ class MessageList extends Component {
       if (this.state.conversationType !== CONVERSATION_TYPES.individual) {
           recipient = this.props.groupChatUsrIds
       }
-      this.setState({
-          ...this.state,
-          id,
-          messages: this.state.messages.concat([{
+      let messages = this.state.messages.concat([{
               id,
               author: MY_USER_ID,
               crypto, amount, account, recipient,
               messageForm: MESSAGE_FORM.crypto
-          }])
+          }]);
+      let filteredMessages = this._filterMessages(messages, this.props.conversationId);
+      this.setState({
+          ...this.state,
+          id,
+          messages,
+          filteredMessages
       }, ()=>{
           this.toggleSendCryptoDialog();
       });
@@ -200,7 +209,6 @@ class MessageList extends Component {
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
-      debugger
       this.getMessages(nextProps.conversationId, MY_USER_ID);
       if (typeof this.props.groupChatUsrIds === 'undefined' &&
           typeof nextProps.groupChatUsrIds !== 'undefined'

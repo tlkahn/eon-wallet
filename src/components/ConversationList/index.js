@@ -31,6 +31,7 @@ class ConversationList extends Component {
   componentDidMount() {
     this.messages = JSON.parse(window.localStorage.getItem("messages"));
     if  (!this.messages || !this.messages.length) {
+      //TODO: mock stub
       this.messages =  fetchMessagesFromUser();
       window.localStorage.setItem("messages", JSON.stringify(this.messages));
     }
@@ -45,11 +46,11 @@ class ConversationList extends Component {
     let sessionIds = [];
     if (this.messages) {
       for (let m of this.messages) {
-        if (m.author !== this.MY_USER_ID) {
-          sessionIds.push(m.author);
+        if (m.author != this.MY_USER_ID) {
+          sessionIds.push(m.author+'');
         }
-        if (m.recipient !== this.MY_USER_ID) {
-          sessionIds.push(m.recipient);
+        if (m.recipient != this.MY_USER_ID) {
+          sessionIds.push(m.recipient+'');
         }
       }
 
