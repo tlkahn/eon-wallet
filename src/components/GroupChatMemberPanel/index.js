@@ -28,7 +28,7 @@ export default class GroupChatMemberPanel extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className="group-chat-member-icons-wrapper">
                 {
                     this.state.usrInfo.length > 0 ? this.state.usrInfo.map(obj=>{
                         return (
@@ -36,7 +36,7 @@ export default class GroupChatMemberPanel extends React.Component {
                                 <img className="conversation-photo" src={obj.photo} alt="conversation" />
                             </span>
                         )
-                    }) : <Spinner/>
+                    }) : null
                 }
             </div>
         )

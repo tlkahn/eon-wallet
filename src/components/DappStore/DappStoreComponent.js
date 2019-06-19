@@ -29,11 +29,14 @@ export default class DappStoreComponent extends React.Component {
             slidesToScroll: 1,
             arrows: false
         };
-        this.state = {}
+        this.state = {
+            editors_choices: []
+        }
     }
 
     componentDidMount() {
         this.getData();
+        this.getEditorsChoicesData();
     }
 
     getData = () => {
@@ -57,35 +60,37 @@ export default class DappStoreComponent extends React.Component {
             });
         });
     };
-    //TODO: mock stub
+
+    getEditorsChoicesData = () => {
+        return axios.get(`${API_URL}/editors_choices.json`).then(response => {
+            this.setState(prevState => {
+                return { ...prevState, editors_choices: response.data};
+            });
+        });
+    };
+
     render() {
         if (typeof this.state.appSetsByCategory != 'undefined') {
-            return <Page>
+            return (
+            <Page>
             <div className="app-set-container">
                 <div className="app-set-title"><h2><b>Editors' Choice</b></h2></div>
                 <div className="app-set">
                     <div className="sliderContainer">
                         <Slider {...this.sliderSettings}>
-                            <Card>
-                                <div className="img-holder">
-                                    <img src="https://source.unsplash.com/random/201x201" alt=""/>
-                                </div>
-                                <div className="app-item-title"><h3>Get stablecoin using idle cryptos</h3></div>
-                            </Card>
-                            <Card>
-
-                                <div className="img-holder">
-                                    <img src="https://source.unsplash.com/random/200x200" alt=""/>
-                                </div>
-                                <div className="app-item-title"><h3>Get stablecoin using idle cryptos</h3></div>
-                            </Card>
-                            <Card>
-
-                                <div className="img-holder">
-                                    <img src="https://source.unsplash.com/random/202x202" alt=""/>
-                                </div>
-                                <div className="app-item-title"><h3>Get stablecoin using idle cryptos</h3></div>
-                            </Card>
+                            {
+                                this.state.editors_choices && this.state.editors_choices.map((editors_choice, idx)=>{
+                                    return (
+                                        <Card key={"card-"+idx}>
+                                            <div className="img-holder">
+                                                <img src={editors_choice.photo} alt=""/>
+                                            </div>
+                                            <div className="app-item-title">
+                                                <h3>{editors_choice.description}</h3></div>
+                                        </Card>
+                                    )
+                                })
+                            }
                         </Slider>
                     </div>
                 </div>
@@ -100,8 +105,8 @@ export default class DappStoreComponent extends React.Component {
                     index = {index}
                 />
             })}
-        </Page>
-        }
+            </Page>
+        )}
         else {
             return "";
         }

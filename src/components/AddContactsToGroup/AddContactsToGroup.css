@@ -27,3 +27,8 @@
     height: 100px;
     overflow-y: scroll;
 }
+
+.selected-uids-wrapper .group-chat-member-icons-wrapper {
+    height: 50px;
+    margin-top: 25px;
+}
