@@ -1,7 +1,7 @@
 import moment from 'moment';
 //TODO: mock stub
 export const posts = [{
-    photoUrl: "https://via.placeholder.com/150/",
+    photoUrl: "https://source.unsplash.com/random/209x209",
     caption: "text",
     userId: 1,
     createdAt: moment("20180101", "YYYYMMDD"),
@@ -13,7 +13,7 @@ export const posts = [{
     comments_count: 2,
     user: {
         username: 'toeinriver',
-        avatarUrl: 'https://via.placeholder.com/150/'
+        avatarUrl: 'https://source.unsplash.com/random/201x201'
     },
     comments: [{
         id: 1,
@@ -31,7 +31,7 @@ export const posts = [{
         currentPage: null
     }
 }, {
-    photoUrl: "https://via.placeholder.com/150/",
+    photoUrl: "https://source.unsplash.com/random/202x202",
     caption: "text",
     userId: 1,
     createdAt: moment("20180101", "YYYYMMDD"),
@@ -43,7 +43,7 @@ export const posts = [{
     comments_count: 2,
     user: {
         username: 'toeinriver',
-        avatarUrl: 'https://via.placeholder.com/150/'
+        avatarUrl: 'https://source.unsplash.com/random/203x203'
     },
     comments: [{
         id: 1,
@@ -61,7 +61,7 @@ export const posts = [{
         currentPage: null
     }
 }, {
-    photoUrl: "https://via.placeholder.com/150/",
+    photoUrl: "https://source.unsplash.com/random/200x200",
     caption: "text",
     userId: 1,
     createdAt: moment("20180101", "YYYYMMDD"),
@@ -73,7 +73,7 @@ export const posts = [{
     comments_count: 2,
     user: {
         username: 'toeinriver',
-        avatarUrl: 'https://via.placeholder.com/150/'
+        avatarUrl: 'https://source.unsplash.com/random/204x204'
     },
     comments: [{
         id: 1,

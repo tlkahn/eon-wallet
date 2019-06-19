@@ -15,6 +15,7 @@ import { instanceOf } from 'prop-types';
 // import { withCookies, Cookies } from 'react-cookie';
 // import {signOutCurrentUser} from '../actions/actionCreators/signOutCurrentUser';
 import {signOutCurrentUser} from '../actions/actionCreators/signOutCurrentUser';
+import { withCookies, Cookies } from 'react-cookie';
 
 class ProfilePage extends React.Component {
     constructor(props) {
@@ -44,8 +45,8 @@ class ProfilePage extends React.Component {
     }
 
     onLogOut() {
-        // const { cookies } = this.props;
-        // cookies.remove('userId');
+        const { cookies } = this.props;
+        cookies.remove('loggedIn');
         this.props.signOutCurrentUser();
     }
 
@@ -97,7 +98,7 @@ class Profile extends React.Component {
             initialRoute={{comp: connect(
                     null,
                     { signOutCurrentUser }
-                )(ProfilePage), props: { key: 'profile-page'}}}
+                )(withCookies(ProfilePage)), props: { key: 'profile-page'}}}
             renderPage={Profile.renderPage}
         />
     );

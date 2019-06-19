@@ -11,19 +11,20 @@ import PhotoGallery from "./containers/PhotoGallery";
 import Profile from './containers/Profile';
 import UserAuth from './containers/UserAuth';
 import { instanceOf } from 'prop-types';
-// import { withCookies, Cookies } from 'react-cookie';
+import { withCookies, Cookies } from 'react-cookie';
 import {getLoggedInStatus} from "./reducers/logInCurrentUser";
 
 class App extends Component {
 
-    // static propTypes = {
-    //     cookies: instanceOf(Cookies).isRequired
-    // };
+    static propTypes = {
+        cookies: instanceOf(Cookies).isRequired
+    };
 
     constructor(props) {
         super(props);
         this.state = {
             index: 0,
+            loggedIn: this.props.loggedIn
         };
         document.ontouchmove = function(event){
             event.preventDefault();
@@ -31,11 +32,27 @@ class App extends Component {
     }
 
     componentDidMount() {
-        // const { cookies } = this.props;
+        const { cookies } = this.props;
         // let name = 'josh';
         // cookies.set('name', name, { path: '/' });
         // if  (cookies.get('userId')) {
         // }
+        let loggedIn = cookies.get('loggedIn');
+        if (loggedIn) {
+            this.setState({
+                loggedIn: true
+            })
+        }
+    }
+
+    componentWillReceiveProps(nextProps, nextContext) {
+        if (nextProps.loggedIn !== this.props.loggedIn) {
+            const { cookies } = this.props;
+            this.setState({
+                loggedIn: nextProps.loggedIn
+            });
+            cookies.set('loggedIn', nextProps.loggedIn, { path: '/' });
+        }
     }
 
     render() {
@@ -43,14 +60,13 @@ class App extends Component {
             <Ons.Page>
             <div className="App">
                 {(()=>{
-                    console.log("loggedIn", this.props.loggedIn);
                     return (
 
                         (()=>{
-                            if(this.props.loggedIn) {
+                            if(this.state.loggedIn) {
                                 return (
                                     <Ons.Page>
-                                        <Ons.Tabbar key={"tabbar-logged-in-" + this.props.loggedIn}
+                                        <Ons.Tabbar key={"tabbar-logged-in-" + this.state.loggedIn}
                                             renderTabs={() => [
                                                 {
                                                     content: <Pokemon key="pokemon"/>,
@@ -77,7 +93,7 @@ class App extends Component {
                             else {
                                 return (
                                     <Ons.Page>
-                                        <UserAuth key={"user-auth-logged-in-" + this.props.loggedIn}/>
+                                        <UserAuth key={"user-auth-logged-in-" + this.state.loggedIn}/>
                                     </Ons.Page>
                                 )}})())})()}
             </div>
@@ -93,4 +109,4 @@ const mapStateToProps = (state) => ({
 export default connect(
   mapStateToProps,
   {  }
-)(App);
+)(withCookies(App));

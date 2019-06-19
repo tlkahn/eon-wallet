@@ -57,7 +57,7 @@ export default class DappStoreComponent extends React.Component {
             });
         });
     };
-
+    //TODO: mock stub
     render() {
         if (typeof this.state.appSetsByCategory != 'undefined') {
             return <Page>
@@ -68,7 +68,7 @@ export default class DappStoreComponent extends React.Component {
                         <Slider {...this.sliderSettings}>
                             <Card>
                                 <div className="img-holder">
-                                    <img src="https://source.unsplash.com/random/200x200" alt=""/>
+                                    <img src="https://source.unsplash.com/random/201x201" alt=""/>
                                 </div>
                                 <div className="app-item-title"><h3>Get stablecoin using idle cryptos</h3></div>
                             </Card>
@@ -82,7 +82,7 @@ export default class DappStoreComponent extends React.Component {
                             <Card>
 
                                 <div className="img-holder">
-                                    <img src="https://source.unsplash.com/random/200x200" alt=""/>
+                                    <img src="https://source.unsplash.com/random/202x202" alt=""/>
                                 </div>
                                 <div className="app-item-title"><h3>Get stablecoin using idle cryptos</h3></div>
                             </Card>
