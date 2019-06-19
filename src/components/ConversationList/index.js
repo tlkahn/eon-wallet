@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import ConversationSearch from '../ConversationSearch';
 import ConversationListItem from '../ConversationListItem';
-import axios from 'axios';
 import { connect } from 'react-redux';
 import './ConversationList.css';
 import {getSearchMessageText} from '../../reducers/searchMessageText';
-import randomWords from 'random-words';
-import {API_URL} from '../../config/constants';
+import {MY_USER_ID}  from '../../services/myUserInfo';
+import fetchUsrInfo from '../../services/fetchUsrInfo';
+import {orderBy, uniq} from 'lodash';
+import fetchMessagesFromUser from "../../services/fetchMessagesFromUser";
 
 class ConversationList extends Component {
   constructor(props) {
@@ -14,26 +14,58 @@ class ConversationList extends Component {
     this.state = {
       conversations: []
     };
-    //TODO: mock stub here. Read from local db. should be sessions.json
-    this.SESSION_URL=`${API_URL}/users.json`;
-    this.getConversations();
+    this.MY_USER_ID = MY_USER_ID;
+    Array.prototype.uniq = function() {
+      return uniq(this);
+    }
   }
 
-  //TODO: mock stub
-  getConversations = () => {
-    axios.get(this.SESSION_URL).then(response => {
-      this.setState(prevState => {
-        let conversations = response.data.map(session => {
-          return {
-            photo: session.photo,
-            name: `${session.name}`,
-            id: session.id,
-            text: randomWords(Math.floor(Math.random()*100)).join(" ") // most recent message in a session
-          };
-        });
-        return { ...prevState, conversations };
+   _getLastMessageBy(sessionId) {
+    return this.messages && orderBy(
+        this.messages.filter(m=>m.author === sessionId ||
+        m.recipient === sessionId), 'timestamp')[0].message;
+  }
+
+  componentDidMount() {
+    this.messages = window.localStorage.getItem("messsages");
+    if  (!this.messages) {
+      this.messages =  fetchMessagesFromUser();
+    }
+    this._getConversations().then(conversations=>{
+      this.setState({
+        conversations
       });
     });
+  }
+
+  _getConversations() {
+    let sessionIds = [];
+    if (this.messages) {
+      for (let m of this.messages) {
+        if (m.author !== this.MY_USER_ID) {
+          sessionIds.push(m.author);
+        }
+        if (m.recipient !== this.MY_USER_ID) {
+          sessionIds.push(m.recipient);
+        }
+      }
+
+      let usrPromises = sessionIds.uniq().map((sessionId)=>{
+          return fetchUsrInfo(sessionId);
+      });
+
+      return Promise.all(usrPromises).then(usrs=>{
+        return usrs.map(u=>{
+          const {photo, name, id, text} = u;
+          return {
+            photo,
+            name,
+            id,
+            text
+          }
+        })
+      })
+    }
   };
 
   render() {
@@ -42,7 +74,8 @@ class ConversationList extends Component {
         {/*TODO: make search bar trigger by pull down*/}
         {/*<ConversationSearch />*/}
         {
-          this.state.conversations.filter(conversation=>conversation.text.match(this.props.searchMessageText)).map(conversation =>
+          this.state.conversations && this.state.conversations.map(conversation =>
+              // .filter(conversation=>conversation.text.match(this.props.searchMessageText))
             <ConversationListItem
               key={conversation.id}
               data={conversation}

@@ -5,7 +5,11 @@ import './Messenger.css';
 import {Splitter, SplitterSide, Page, SplitterContent, Toolbar, ToolbarButton, Icon, Dialog} from 'react-onsenui';
 import ContactList from '../ContactList';
 import AddContactsToGroup from '../AddContactsToGroup';
-export default class Messenger extends Component {
+import { connect } from 'react-redux';
+import {goToConversation} from "../../actions/actionCreators/goToConversation";
+import fetchMessagesFromUser from "../../services/fetchMessagesFromUser";
+
+class Messenger extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -34,6 +38,16 @@ export default class Messenger extends Component {
             hidden: !(this.state.hidden),
             hideStatus: this.state.hidden ? 'hidden' : '',
         });
+    }
+
+    updateSessionId(config) {
+        let currentSessionId = config && config.currentSessionId;
+        if (currentSessionId) {
+            this.setState({
+                currentSessionId
+            });
+            this.props.goToConversation(currentSessionId);
+        }
     }
 
     pushContactList() {
@@ -75,7 +89,7 @@ export default class Messenger extends Component {
                     swipeable={true}
                     isOpen={this.state.isOpen}
                 >
-                    <Page>  <ConversationList msg={this}/> </Page>
+                    <Page>  <ConversationList msg={this} currentSessionId={this.state.currentSessionId}/> </Page>
                 </SplitterSide>
                 <SplitterContent>
                     <Page>  <MessageList msg={this}/> </Page>
@@ -85,3 +99,11 @@ export default class Messenger extends Component {
         );
     }
 }
+
+export default connect(
+  null,
+  {
+    goToConversation,
+  }
+)(Messenger);
+

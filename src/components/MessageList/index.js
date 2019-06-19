@@ -23,7 +23,7 @@ import {sendCryptos} from '../../actions/actionCreators/sendCryptos';
 import {selectEmoji} from '../../actions/actionCreators/selectEmoji';
 //services
 import {MY_USER_ID} from '../../services/myUserInfo';
-import fetchMessagesFromUser from "../../services/fetchMessagesFromUser";
+
 
 //TODO: mock stub. to be replaced.
 //TODO: put all mocks into service
@@ -98,7 +98,7 @@ class MessageList extends Component {
               messages: this.state.messages.concat([{
                   id,
                   author: MY_USER_ID,
-                  recipient: this.props.groupChatUsrIds ? this.props.groupChatUsrIds : this.props.conversationId,
+                  recipient: this.props.conversationId,
                   message: composedContents,
                   timestamp: new Date().getTime(),
                   messageForm: MESSAGE_FORM.text
@@ -113,7 +113,7 @@ class MessageList extends Component {
           ...this.state,
           id,
           author: MY_USER_ID,
-          recipient: this.props.groupChatUsrIds ? this.props.groupChatUsrIds : this.props.conversationId,
+          recipient: this.props.conversationId,
           locationPickedP: false,
           locationDialogOpen: false,
           dialogOpen: false,
@@ -136,7 +136,7 @@ class MessageList extends Component {
           messages: this.state.messages.concat([{
               id,
               author: MY_USER_ID,
-              recipient: this.props.groupChatUsrIds ? this.props.groupChatUsrIds : this.props.conversationId,
+              recipient: this.props.conversationId,
               imageUrl: imageFileUrl,
               timestamp: new Date().getTime(),
               messageForm: MESSAGE_FORM.image
@@ -170,14 +170,6 @@ class MessageList extends Component {
   getMessages(conversationId, myUserId) {
       let stringify = JSON.stringify;
       let messages = JSON.parse(window.localStorage.getItem('messages'));
-      if (!messages || messages.length == 0) {
-        messages = fetchMessagesFromUser(conversationId)
-      }
-      Array.prototype.eq = function (y) {
-          return (this.length == y.length) && this.every(function(element, index) {
-              return element === y[index];
-          });
-      };
       let filterMessages = (messages, f) => {
           if (!f) {
               return messages;
@@ -202,7 +194,7 @@ class MessageList extends Component {
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
-      this.getMessages(nextProps.groupChatUsrIds ? nextProps.groupChatUsrIds : nextProps.conversationId, MY_USER_ID);
+      this.getMessages(nextProps.conversationId, MY_USER_ID);
       if (typeof this.props.groupChatUsrIds === 'undefined' &&
           typeof nextProps.groupChatUsrIds !== 'undefined'
           ) {
@@ -210,13 +202,15 @@ class MessageList extends Component {
           this.setState({
               conversationType: CONVERSATION_TYPES.groupChat,
               messages: [...this.state.messages, {
+                  id: this.state.messages.length + 1,
                   type: 'update',
                   updateText: 'You entered into group chat with ' + nextProps.groupChatUsrIds.join(' '),
                   recipient: MY_USER_ID,
                   author: sessionId,
                   groupMembers: nextProps.groupChatUsrIds
               }]
-          })
+          });
+          this.props.msg.updateSessionId({currentSessionId: sessionId});
       }
       if ((typeof nextProps.sendCryptoStatus)  !== 'undefined' &&
           (typeof this.props.sendCryptoStatus) !== 'undefined' &&
