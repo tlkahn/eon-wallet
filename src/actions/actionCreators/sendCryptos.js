@@ -5,14 +5,15 @@ import {
     SEND_CRYPTO_SUCCESS
 } from '../actionTypes'
 
-export const sendCryptos = (crypto, amount, account, recipient) => (dispatch, getState) => {
+export const sendCryptos = (crypto, amount, account, recipient, messageText) => (dispatch, getState) => {
     dispatch({
         type: 'SEND_CRYPTO_STARTED',
         payload: {
             crypto,
             amount,
             account,
-            recipient
+            recipient,
+            messageText
         }
     });
     //TODO: mock stub.
@@ -23,8 +24,9 @@ export const sendCryptos = (crypto, amount, account, recipient) => (dispatch, ge
                 crypto,
                 amount,
                 account,
-                recipient
+                recipient,
+                messageText
             }
         });
     }, 2000);
-}
+};

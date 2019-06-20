@@ -1,12 +1,19 @@
 import React, { Component } from 'react';
 import ConversationListItem from '../ConversationListItem';
 import { connect } from 'react-redux';
+import {orderBy, uniq, head, find} from 'lodash';
+
 import './ConversationList.css';
-import {getSearchMessageText} from '../../reducers/searchMessageText';
+
+import {getSearchMessageText} from "../../reducers/searchMessageText";
+import {getSendLocationStatus} from '../../reducers/sendLocation';
+import {getSendCryptoStatus} from '../../reducers/sendCrypto';
+
 import {MY_USER_ID}  from '../../services/myUserInfo';
 import fetchUsrInfo from '../../services/fetchUsrInfo';
-import {orderBy, uniq, head} from 'lodash';
+
 import fetchMessagesFromUser from "../../services/fetchMessagesFromUser";
+
 
 class ConversationList extends Component {
   constructor(props) {
@@ -23,11 +30,13 @@ class ConversationList extends Component {
     };
     Array.prototype.head = function () {
       return head(this);
-    }
+    };
+    Array.prototype.find = function (...args) {
+      return find(this, ...args);
+    };
   }
 
    _getLastMessageBy(sessionId) {
-    debugger
     this.messages.forEach(m=>{
       m.timestamp = new Date(m.timestamp);
     });
@@ -47,6 +56,20 @@ class ConversationList extends Component {
         conversations
       });
     });
+  }
+
+  componentWillReceiveProps(nextProps, nextContext) {
+    debugger
+    if (nextProps.sendLocationStatus !== this.props.sendLocationStatus) {
+      this.state.conversations.find(['id', nextProps.sendLocationStatus.conversationId]).message = nextProps.sendLocationStatus.latestMessage;
+    }
+    if (nextProps.sendCryptoStatus !== this.props.sendCryptoStatus) {
+      let conversations = this.state.conversations;
+      conversations.find(['id', nextProps.sendCryptoStatus.recipient]).text = nextProps.sendCryptoStatus.messageText;
+      this.setState({
+        conversations
+      })
+    }
   }
 
   _getConversations() {
@@ -105,17 +128,23 @@ class ConversationList extends Component {
   };
 
   render() {
+    console.log(this.state.conversations);
     return (
       <div className="conversation-list">
         {/*TODO: make search bar trigger by pull down*/}
         {/*<ConversationSearch />*/}
         {
-          this.state.conversations && this.state.conversations.map(conversation =>
-              // .filter(conversation=>conversation.text.match(this.props.searchMessageText))
-            <ConversationListItem
-              key={conversation.id}
-              data={conversation}
-            />
+          this.state.conversations && this.state.conversations.map(conversation => {
+            // .filter(conversation=>conversation.text.match(this.props.searchMessageText))
+                debugger
+                return (
+                    <ConversationListItem
+                        key={conversation.id+conversation.text}
+                        data={conversation}
+                        conversations={this.state.conversations}
+                    />
+                )
+          }
           )
         }
       </div>
@@ -124,7 +153,9 @@ class ConversationList extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  searchMessageText: getSearchMessageText(state)
+  searchMessageText: getSearchMessageText(state),
+  locationStatus: getSendLocationStatus(state),
+  sendCryptoStatus: getSendCryptoStatus(state)
 });
 
 export default connect(

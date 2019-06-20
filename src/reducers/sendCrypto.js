@@ -16,7 +16,8 @@ export const sendCryptos = (state = initialState, action) => {
             crypto: action.payload.crypto,
             amount: action.payload.amount,
             account: action.payload.account,
-            recipient: action.payload.recipient
+            recipient: action.payload.recipient,
+            messageText: action.payload.messageText
         };
         case SEND_CRYPTO_SUCCESS:
         return {
@@ -26,7 +27,8 @@ export const sendCryptos = (state = initialState, action) => {
             crypto: action.payload.crypto,
             amount: action.payload.amount,
             account: action.payload.account,
-            recipient: action.payload.recipient
+            recipient: action.payload.recipient,
+            messageText: action.payload.messageText
         };
     default:
       return state;
@@ -39,17 +41,17 @@ export default ({
 
 //selectors
 export const getSendCryptoStatus = (state) => {
-  const {crypto, amount, account, recipient} = state.sendCryptos;
+  const {crypto, amount, account, recipient, messageText} = state.sendCryptos;
   if (state.sendCryptos.sendCryptoStarted) {
       return {
           status: 'started',
-          crypto, amount, account, recipient
+          crypto, amount, account, recipient, messageText
       };
   }
   if (state.sendCryptos.sendCryptoSuccess) {
       return {
           status: 'success',
-          crypto, amount, account, recipient
+          crypto, amount, account, recipient, messageText
       }
   }
 };

@@ -37,6 +37,7 @@ class Messenger extends Component {
             hidden: !(this.state.hidden),
             hideStatus: this.state.hidden ? 'hidden' : '',
         });
+        this.forceUpdate();
     }
 
     updateSessionId(config) {

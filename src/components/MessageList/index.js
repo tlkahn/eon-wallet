@@ -21,6 +21,7 @@ import {getGroupChatUsrIds} from '../../reducers/goToGroupChat';
 //action creators
 import {sendCryptos} from '../../actions/actionCreators/sendCryptos';
 import {selectEmoji} from '../../actions/actionCreators/selectEmoji';
+import {sendLocation} from '../../actions/actionCreators/sendLocation';
 //services
 import {MY_USER_ID} from '../../services/myUserInfo';
 
@@ -119,7 +120,8 @@ class MessageList extends Component {
           location: this.state.locationPickedObj,
           timestamp: new Date().getTime(),
           messageForm: MESSAGE_FORM.location,
-          message: "You just shared a location."
+          message: "You just shared a location.",
+          recipient: this.props.conversationId,
       }]);
       let filteredMessages = this._filterMessages(messages, this.props.conversationId);
       this.setState({
@@ -132,6 +134,16 @@ class MessageList extends Component {
           dialogOpen: false,
           messages,
           filteredMessages
+      });
+      this.props.sendLocation({
+          id,
+          author: MY_USER_ID,
+          location: this.state.locationPickedObj,
+          timestamp: new Date().getTime(),
+          messageForm: MESSAGE_FORM.location,
+          message: "You just shared a location.",
+          recipient: this.props.conversationId,
+          conversationId: this.props.conversationId
       });
   }
 
@@ -539,11 +551,12 @@ class MessageList extends Component {
                               modifier='quiet' onClick={ () => {
                               this.props.sendCryptos(
                                   this.state.cryptoToBeSentCoinName,
-                                  this.state.cryptoToBeSent, {
+                                  this.state.cryptoToBeSent * this.state.cryptoToBeSentMax / 100, {
                                       addr: this.state.cryptoToBeSentFromAddr,
                                       balance: this.state.cryptoToBeSentMax
                                   },
-                                  this.props.conversationId);
+                                  this.props.conversationId,
+                                  `You sent ${this.state.cryptoToBeSent * this.state.cryptoToBeSentMax / 100} ${this.state.cryptoToBeSentCoinName} to ${this.props.conversationId}`);
                           }}>
                               Send
                           </Button>
@@ -597,5 +610,6 @@ export default connect(
     {
         sendCryptos,
         selectEmoji,
+        sendLocation
     }
 )(MessageList);

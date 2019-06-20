@@ -5,6 +5,10 @@ export const SELECT_EMOJI = 'SELECT_EMOJI';
 export const SEARCH_MESSAGE_TEXT = 'SEARCH_MESSAGE_TEXT';
 export const LOG_IN_CURRENT_USER = 'LOG_IN_CURRENT_USER';
 export const GOTO_GROUPCHAT = 'GOTO_GROUPCHAT';
+export const SEND_LOCATION = 'SEND_LOCATION';
+export const SEND_IMAGE = 'SEND_IMAGE';
+export const SEND_TEXT = 'SEND_TEXT';
+
 
 
 

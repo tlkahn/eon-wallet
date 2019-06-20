@@ -6,6 +6,7 @@ import {selectEmoji} from '../reducers/selectEmoji';
 import {searchMessageText} from '../reducers/searchMessageText';
 import {logInCurrentUser} from '../reducers/logInCurrentUser';
 import {goToGroupChat} from '../reducers/goToGroupChat';
+import {sendLocation} from '../reducers/sendLocation';
 
 const appReducer = combineReducers({
   goToConversation,
@@ -13,7 +14,8 @@ const appReducer = combineReducers({
   selectEmoji,
   searchMessageText,
   logInCurrentUser,
-  goToGroupChat
+  goToGroupChat,
+  sendLocation
 });
 
 const rootReducer = (state, action) => {
