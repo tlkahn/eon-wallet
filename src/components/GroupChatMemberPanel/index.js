@@ -12,7 +12,9 @@ export default class GroupChatMemberPanel extends React.Component {
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
-      this.getUsrInfo(nextProps.memberIds);
+      if (this._isMounted) {
+        this.getUsrInfo(nextProps.memberIds);
+      }
   }
 
   getUsrInfo(memberIds) {
@@ -25,6 +27,15 @@ export default class GroupChatMemberPanel extends React.Component {
           })
       });
   }
+
+  componentDidMount() {
+      this._isMounted = true;
+  }
+
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
+
 
     render() {
         return (

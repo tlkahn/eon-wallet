@@ -61,12 +61,11 @@ class ConversationList extends Component {
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
-
     if (nextProps.sendLocationStatus !== this.props.sendLocationStatus) {
       this.state.conversations.find(['id', nextProps.sendLocationStatus.conversationId]).message = nextProps.sendLocationStatus.latestMessage;
     }
 
-    if (nextProps.sendTextStatus !== this.props.sendTextStatus) {
+    if (JSON.stringify(nextProps.sendTextStatus) !== JSON.stringify(this.props.sendTextStatus)) {
       let conversations = this.state.conversations;
       let c = conversations.find(['id', nextProps.sendTextStatus.conversationId]);
       if (c) {
@@ -76,14 +75,14 @@ class ConversationList extends Component {
           conversations
         });
       } else if (nextProps.sendTextStatus.conversationId)  {
-        const {id, text, timestamp} = nextProps.sendTextStatus;
+        const {conversationId, latestMessage, timestamp} = nextProps.sendTextStatus;
         this.setState({
           conversations: [
               ...conversations, {
               photo: letterGIconUrl,
               name: 'Group Chat',
-              id,
-              text,
+              id: conversationId,
+              text: latestMessage,
               timestamp,
             }
           ]
@@ -143,6 +142,7 @@ class ConversationList extends Component {
             timestamp
           }
         });
+        debugger
         let groupChatResults = groupChatSessionIds.map(g=>{
           //TODO: change
           let text = this._getLastMessageAndTimeStampBy(g)[0] || "";
@@ -161,7 +161,6 @@ class ConversationList extends Component {
   };
 
   render() {
-    debugger
     return (
       <div className="conversation-list" key={"conversation-list"+ this.state.conversations.length + this.props.sendTextStatus.latestMessage + this.props.sendTextStatus.timestamp } >
         {/*TODO: make search bar trigger by pull down*/}
