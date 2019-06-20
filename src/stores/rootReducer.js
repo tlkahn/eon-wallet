@@ -7,6 +7,7 @@ import {searchMessageText} from '../reducers/searchMessageText';
 import {logInCurrentUser} from '../reducers/logInCurrentUser';
 import {goToGroupChat} from '../reducers/goToGroupChat';
 import {sendLocation} from '../reducers/sendLocation';
+import {sendText} from '../reducers/sendText';
 
 const appReducer = combineReducers({
   goToConversation,
@@ -15,7 +16,8 @@ const appReducer = combineReducers({
   searchMessageText,
   logInCurrentUser,
   goToGroupChat,
-  sendLocation
+  sendLocation,
+  sendText
 });
 
 const rootReducer = (state, action) => {

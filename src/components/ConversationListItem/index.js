@@ -22,7 +22,6 @@ class ConversationListItem extends Component {
 
     render() {
     const { photo, name, text } = this.props.data;
-    debugger
     return (
       <div className="conversation-list-item" onClick={this.gotoMessages.bind(this)}>
         <img className="conversation-photo" src={photo} alt="conversation" />

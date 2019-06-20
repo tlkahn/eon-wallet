@@ -8,12 +8,14 @@ import './ConversationList.css';
 import {getSearchMessageText} from "../../reducers/searchMessageText";
 import {getSendLocationStatus} from '../../reducers/sendLocation';
 import {getSendCryptoStatus} from '../../reducers/sendCrypto';
+import {getSendTextStatus} from '../../reducers/sendText';
+
 
 import {MY_USER_ID}  from '../../services/myUserInfo';
 import fetchUsrInfo from '../../services/fetchUsrInfo';
 
 import fetchMessagesFromUser from "../../services/fetchMessagesFromUser";
-
+import letterGIconUrl from "../../services/letterGIconUrl";
 
 class ConversationList extends Component {
   constructor(props) {
@@ -59,9 +61,29 @@ class ConversationList extends Component {
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
-    debugger
     if (nextProps.sendLocationStatus !== this.props.sendLocationStatus) {
       this.state.conversations.find(['id', nextProps.sendLocationStatus.conversationId]).message = nextProps.sendLocationStatus.latestMessage;
+    }
+    if (nextProps.sendTextStatus !== this.props.sendTextStatus) {
+      let conversations = this.state.conversations;
+      let c = conversations.find(['id', nextProps.sendTextStatus.conversationId]);
+      if (c) {
+        c.text = nextProps.sendTextStatus.latestMessage;
+        this.setState({
+          conversations
+        });
+      } else {
+        this.setState({
+          conversations: [
+              ...conversations, {
+              photo: letterGIconUrl,
+              name: 'Group Chat',
+              id:  nextProps.sendTextStatus.conversationId,
+              text:  nextProps.sendTextStatus.latestMessage
+            }
+          ]
+        })
+      }
     }
     if (nextProps.sendCryptoStatus !== this.props.sendCryptoStatus) {
       let conversations = this.state.conversations;
@@ -118,7 +140,7 @@ class ConversationList extends Component {
           return {
             id: g,
             name: "Group chat",
-            photo: "https://image.flaticon.com/icons/svg/115/115935.svg",
+            photo: letterGIconUrl,
             text
           }
         });
@@ -128,22 +150,20 @@ class ConversationList extends Component {
   };
 
   render() {
-    console.log(this.state.conversations);
     return (
-      <div className="conversation-list">
+      <div className="conversation-list" key={"conversation-list"+ this.state.conversations.length + this.props.sendTextStatus.latestMessage } >
         {/*TODO: make search bar trigger by pull down*/}
         {/*<ConversationSearch />*/}
         {
           this.state.conversations && this.state.conversations.map(conversation => {
             // .filter(conversation=>conversation.text.match(this.props.searchMessageText))
-                debugger
-                return (
-                    <ConversationListItem
-                        key={conversation.id+conversation.text}
-                        data={conversation}
-                        conversations={this.state.conversations}
-                    />
-                )
+             return (
+               <ConversationListItem
+                 key={conversation.id+conversation.text}
+                 data={conversation}
+                 conversations={this.state.conversations}
+               />
+             )
           }
           )
         }
@@ -155,7 +175,8 @@ class ConversationList extends Component {
 const mapStateToProps = (state) => ({
   searchMessageText: getSearchMessageText(state),
   locationStatus: getSendLocationStatus(state),
-  sendCryptoStatus: getSendCryptoStatus(state)
+  sendCryptoStatus: getSendCryptoStatus(state),
+  sendTextStatus: getSendTextStatus(state)
 });
 
 export default connect(

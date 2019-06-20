@@ -22,6 +22,7 @@ import {getGroupChatUsrIds} from '../../reducers/goToGroupChat';
 import {sendCryptos} from '../../actions/actionCreators/sendCryptos';
 import {selectEmoji} from '../../actions/actionCreators/selectEmoji';
 import {sendLocation} from '../../actions/actionCreators/sendLocation';
+import {sendText} from '../../actions/actionCreators/sendText';
 //services
 import {MY_USER_ID} from '../../services/myUserInfo';
 
@@ -108,6 +109,15 @@ class MessageList extends Component {
               ...this.state,
               messages,
               filteredMessages
+          });
+          this.props.sendText({
+              id,
+              author: MY_USER_ID,
+              recipient: this.props.conversationId,
+              conversationId: this.props.conversationId,
+              message: composedContents,
+              timestamp: new Date().getTime(),
+              messageForm: MESSAGE_FORM.text
           });
       }
   }
@@ -225,9 +235,11 @@ class MessageList extends Component {
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
+      debugger
       this.getMessages(nextProps.conversationId, MY_USER_ID);
-      if (typeof this.props.groupChatUsrIds === 'undefined' &&
-          typeof nextProps.groupChatUsrIds !== 'undefined'
+      if ((typeof this.props.groupChatUsrIds === 'undefined' &&
+          typeof nextProps.groupChatUsrIds !== 'undefined') ||
+          this.props.groupChatUsrIds !== nextProps.groupChatUsrIds
           ) {
           let sessionId = nextProps.groupChatUsrIds+'';
           this.setState({
@@ -610,6 +622,7 @@ export default connect(
     {
         sendCryptos,
         selectEmoji,
-        sendLocation
+        sendLocation,
+        sendText,
     }
 )(MessageList);
