@@ -61,10 +61,6 @@ class ConversationList extends Component {
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
-    if (nextProps.sendLocationStatus !== this.props.sendLocationStatus) {
-      this.state.conversations.find(['id', nextProps.sendLocationStatus.conversationId]).message = nextProps.sendLocationStatus.latestMessage;
-    }
-
     if (JSON.stringify(nextProps.sendTextStatus) !== JSON.stringify(this.props.sendTextStatus)) {
       let conversations = this.state.conversations;
       let c = conversations.find(['id', nextProps.sendTextStatus.conversationId]);
@@ -88,14 +84,6 @@ class ConversationList extends Component {
           ]
         })
       }
-    }
-
-    if (nextProps.sendCryptoStatus !== this.props.sendCryptoStatus) {
-      let conversations = this.state.conversations;
-      conversations.find(['id', nextProps.sendCryptoStatus.recipient]).text = nextProps.sendCryptoStatus.messageText;
-      this.setState({
-        conversations
-      })
     }
 
   }

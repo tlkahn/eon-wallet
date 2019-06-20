@@ -15,9 +15,9 @@ import ReactCardFlip from 'react-card-flip';
 import GroupChatMemberPanel from '../GroupChatMemberPanel';
 //selectors
 import {getConversationID} from '../../reducers/goToConversation';
-import {getSendCryptoStatus} from '../../reducers/sendCrypto';
 import {getSelectedEmoji} from '../../reducers/selectEmoji';
 import {getGroupChatUsrIds} from '../../reducers/goToGroupChat';
+import {getSendTextStatus} from "../../reducers/sendText";
 //action creators
 import {sendCryptos} from '../../actions/actionCreators/sendCryptos';
 import {selectEmoji} from '../../actions/actionCreators/selectEmoji';
@@ -25,6 +25,7 @@ import {sendLocation} from '../../actions/actionCreators/sendLocation';
 import {sendText} from '../../actions/actionCreators/sendText';
 //services
 import {MY_USER_ID} from '../../services/myUserInfo';
+
 
 //TODO: mock stub. to be replaced.
 //TODO: put all mocks into service
@@ -92,23 +93,28 @@ class MessageList extends Component {
       }, false);
   }
 
+  _appendMessageToQueue(message) {
+      let messages = this.state.messages.concat([message]);
+      let filteredMessages = this._filterMessages(messages, this.props.conversationId);
+      this.setState({
+          ...this.state,
+          messages,
+          filteredMessages
+      });
+  }
+
   postNewComposedContent(composedContents) {
+      let id = this.state.messages.length+1;
       if (composedContents.trim().length > 1) {
-          let id = this.state.messages.length+1;
-          let messages = this.state.messages.concat([{
-                  id,
-                  author: MY_USER_ID,
-                  recipient: this.props.conversationId,
-                  message: composedContents,
-                  timestamp: new Date().getTime(),
-                  messageForm: MESSAGE_FORM.text
-              }]);
-          let filteredMessages = this._filterMessages(messages, this.props.conversationId);
-          this.setState({
-              ...this.state,
-              messages,
-              filteredMessages
-          });
+          const message = {
+              id,
+              author: MY_USER_ID,
+              recipient: this.props.conversationId,
+              message: composedContents,
+              timestamp: new Date().getTime(),
+              messageForm: MESSAGE_FORM.text
+          };
+          this._appendMessageToQueue(message);
           this.props.sendText({
               id,
               author: MY_USER_ID,
@@ -176,31 +182,6 @@ class MessageList extends Component {
           filteredMessages
       })});
 
-  postCryptoSending(sendCryptoStatus) {
-      let id = this.state.messages.length+1;
-      let {crypto, amount, account, recipient} = sendCryptoStatus;
-      if (this.state.conversationType !== CONVERSATION_TYPES.individual) {
-          recipient = this.props.groupChatUsrIds
-      }
-      let messages = this.state.messages.concat([{
-              id,
-              author: MY_USER_ID,
-              crypto, amount, account, recipient,
-              messageForm: MESSAGE_FORM.crypto,
-              message: `You just sent ${amount} ${crypto} to ${recipient}`,
-              timestamp: new Date().getTime()
-          }]);
-      let filteredMessages = this._filterMessages(messages, this.props.conversationId);
-      this.setState({
-          ...this.state,
-          id,
-          messages,
-          filteredMessages
-      }, ()=>{
-          this.toggleSendCryptoDialog();
-      });
-  }
-
   componentDidMount() {
     this.messageListContainer.scrollIntoView(false);
   }
@@ -234,11 +215,9 @@ class MessageList extends Component {
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
+      debugger
       this.getMessages(nextProps.conversationId, MY_USER_ID);
-      if ((typeof this.props.groupChatUsrIds === 'undefined' &&
-          typeof nextProps.groupChatUsrIds !== 'undefined') ||
-          this.props.groupChatUsrIds !== nextProps.groupChatUsrIds
-          ) {
+      if (!this.props.groupChatUsrIds && nextProps.groupChatUsrIds || this.props.groupChatUsrIds !== nextProps.groupChatUsrIds) {
           let sessionId = nextProps.groupChatUsrIds+'';
           this.setState({
               conversationType: CONVERSATION_TYPES.groupChat,
@@ -253,14 +232,13 @@ class MessageList extends Component {
                   message: 'You entered into group chat with ' + nextProps.groupChatUsrIds.join(' '),
               }]
           });
+          let filteredMessages = this._filterMessages(this.state.messages);
+          this.setState({
+              filteredMessages
+          });
           this.props.msg.updateSessionId({currentSessionId: sessionId});
       }
-      if ((typeof nextProps.sendCryptoStatus)  !== 'undefined' &&
-          (typeof this.props.sendCryptoStatus) !== 'undefined' &&
-            nextProps.sendCryptoStatus.status  !== this.props.sendCryptoStatus.status &&
-            nextProps.sendCryptoStatus.status  === 'success') {
-          this.postCryptoSending(nextProps.sendCryptoStatus);
-      }
+
   }
 
   renderMessages() {
@@ -306,7 +284,7 @@ class MessageList extends Component {
 
           messages.push(
               <Message
-                  key={i}
+                  key={i+"@"+this.state.messages.length}
                   isMine={isMine}
                   startsSequence={startsSequence}
                   endsSequence={endsSequence}
@@ -322,7 +300,6 @@ class MessageList extends Component {
               </div>
           );
       }
-      // Proceed to the next message.
       i += 1;
     }
 
@@ -420,17 +397,25 @@ class MessageList extends Component {
       this.imageInput.click();
   }
 
-  static getUserName(conversationId) {
-      //TODO: use service to fetch username
-      return conversationId;
+  sendCrypto() {
+      const message = {
+          id: this.state.messages.length + 1,
+          author: MY_USER_ID,
+          recipient: this.props.conversationId,
+          conversationId: this.props.conversationId,
+          message: `You sent ${this.state.cryptoToBeSent * this.state.cryptoToBeSentMax / 100} ${this.state.cryptoToBeSentCoinName} to ${this.props.conversationId}`,
+          timestamp: new Date().getTime(),
+          messageForm: MESSAGE_FORM.text
+      };
+      this._appendMessageToQueue(message);
+      this.props.sendText(message);
   }
 
   render() {
-      console.log(this.state.messages);
+      console.log(this.state.filteredMessages);
     return(
-        <Page>
+    <Page key={"message-list-with-len-"+this.state.messages.length}>
       <div className="message-list">
-
         <div className="message-list-container" ref={(messageListContainer)=>{
           this.messageListContainer = messageListContainer;
         }}>{this.renderMessages()}</div>
@@ -442,7 +427,9 @@ class MessageList extends Component {
             stopReceivingEmoji={!this.state.emojiDialogOpen}
         />
 
-        <Dialog
+        {/*Dialogus below*/}
+
+          <Dialog
           isOpen={this.state.dialogOpen}
           onCancel={this.toggleDialog.bind(this)}
           cancelable>
@@ -482,7 +469,7 @@ class MessageList extends Component {
                     <ToolbarButton width="20%" key="voice" icon="ion-ios-pulse" />
                 </ons-col>
             </ons-row>
-        </Dialog>
+          </Dialog>
 
           <Dialog isOpen={this.state.emojiDialogOpen} onCancel={this.toggleEmojiDialog.bind(this)} cancelable >
               <Picker set='apple' onClick={(emoji) => this.selectEmoji.bind(this)(emoji)} title='Pick your emoji…' emoji='point_up'/>
@@ -555,23 +542,11 @@ class MessageList extends Component {
                           </span>
                       </div>
                       <div>
-                          <Button style={{display: typeof this.props.sendCryptoStatus === 'undefined' ||
-                              this.props.sendCryptoStatus.status === 'start' ||
-                              this.props.sendCryptoStatus.status === 'success'? 'inline-block' : 'none'}}
-                              modifier='quiet' onClick={ () => {
-                              this.props.sendCryptos(
-                                  this.state.cryptoToBeSentCoinName,
-                                  this.state.cryptoToBeSent * this.state.cryptoToBeSentMax / 100, {
-                                      addr: this.state.cryptoToBeSentFromAddr,
-                                      balance: this.state.cryptoToBeSentMax
-                                  },
-                                  this.props.conversationId,
-                                  `You sent ${this.state.cryptoToBeSent * this.state.cryptoToBeSentMax / 100} ${this.state.cryptoToBeSentCoinName} to ${this.props.conversationId}`);
-                          }}>
+                          <Button modifier='quiet' onClick={this.sendCrypto.bind(this)}>
                               Send
                           </Button>
                       </div>
-                      <div className="send-crypto-status">
+                       <div className="send-crypto-status">
                           <div  className="send-crypto-status-start"
                                 style={{display: typeof this.props.sendCryptoStatus !== 'undefined' &&
                                     this.props.sendCryptoStatus.status !== 'success' ? 'inline-block' : 'none'}}>
@@ -595,8 +570,11 @@ class MessageList extends Component {
 
               </div>
           </Dialog>
+
+        {/* Dialogs end   */}
+
       </div>
-            </Page>
+    </Page>
     );
   }
 }
@@ -604,23 +582,21 @@ class MessageList extends Component {
 const mapStateToProps = (state) => {
     // console.log("state ", state);
     const conversationId = getConversationID(state);
-    const sendCryptoStatus = getSendCryptoStatus(state);
     const selectedEmoji = getSelectedEmoji(state);
     const groupChatUsrIds = getGroupChatUsrIds(state);
+    const sendTextStatus = getSendTextStatus(state);
     return {
         conversationId,
-        sendCryptoStatus,
         selectedEmoji,
-        groupChatUsrIds
+        groupChatUsrIds,
     }
 };
 
 export default connect(
     mapStateToProps,
     {
-        sendCryptos,
         selectEmoji,
         sendLocation,
-        sendText,
+        sendText
     }
 )(MessageList);
