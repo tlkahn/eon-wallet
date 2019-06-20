@@ -26,7 +26,6 @@ import {sendText} from '../../actions/actionCreators/sendText';
 //services
 import {MY_USER_ID} from '../../services/myUserInfo';
 
-
 //TODO: mock stub. to be replaced.
 //TODO: put all mocks into service
 const CRYPTO_PORTFOLIO = {
@@ -235,7 +234,6 @@ class MessageList extends Component {
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
-      debugger
       this.getMessages(nextProps.conversationId, MY_USER_ID);
       if ((typeof this.props.groupChatUsrIds === 'undefined' &&
           typeof nextProps.groupChatUsrIds !== 'undefined') ||

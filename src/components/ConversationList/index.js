@@ -10,7 +10,6 @@ import {getSendLocationStatus} from '../../reducers/sendLocation';
 import {getSendCryptoStatus} from '../../reducers/sendCrypto';
 import {getSendTextStatus} from '../../reducers/sendText';
 
-
 import {MY_USER_ID}  from '../../services/myUserInfo';
 import fetchUsrInfo from '../../services/fetchUsrInfo';
 
@@ -38,12 +37,13 @@ class ConversationList extends Component {
     };
   }
 
-   _getLastMessageBy(sessionId) {
+   _getLastMessageAndTimeStampBy(sessionId) {
     this.messages.forEach(m=>{
       m.timestamp = new Date(m.timestamp);
     });
-    return this.messages && this.messages.filter(m=>m.author == sessionId ||
-        m.recipient == sessionId).orderBy('timestamp', 'desc').head().message;
+    let lastMessage = this.messages && this.messages.filter(m=>m.author == sessionId ||
+        m.recipient == sessionId).orderBy('timestamp', 'desc').head();
+    return [lastMessage.message, lastMessage.timestamp];
   }
 
   componentDidMount() {
@@ -61,30 +61,36 @@ class ConversationList extends Component {
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
+
     if (nextProps.sendLocationStatus !== this.props.sendLocationStatus) {
       this.state.conversations.find(['id', nextProps.sendLocationStatus.conversationId]).message = nextProps.sendLocationStatus.latestMessage;
     }
+
     if (nextProps.sendTextStatus !== this.props.sendTextStatus) {
       let conversations = this.state.conversations;
       let c = conversations.find(['id', nextProps.sendTextStatus.conversationId]);
       if (c) {
         c.text = nextProps.sendTextStatus.latestMessage;
+        c.timestamp = nextProps.sendTextStatus.timestamp;
         this.setState({
           conversations
         });
-      } else {
+      } else if (nextProps.sendTextStatus.conversationId)  {
+        const {id, text, timestamp} = nextProps.sendTextStatus;
         this.setState({
           conversations: [
               ...conversations, {
               photo: letterGIconUrl,
               name: 'Group Chat',
-              id:  nextProps.sendTextStatus.conversationId,
-              text:  nextProps.sendTextStatus.latestMessage
+              id,
+              text,
+              timestamp,
             }
           ]
         })
       }
     }
+
     if (nextProps.sendCryptoStatus !== this.props.sendCryptoStatus) {
       let conversations = this.state.conversations;
       conversations.find(['id', nextProps.sendCryptoStatus.recipient]).text = nextProps.sendCryptoStatus.messageText;
@@ -92,6 +98,7 @@ class ConversationList extends Component {
         conversations
       })
     }
+
   }
 
   _getConversations() {
@@ -126,22 +133,26 @@ class ConversationList extends Component {
       return Promise.all(usrPromises).then(usrs=>{
         let oneToOneResults = usrs.map(u=>{
           const {photo, name, id} = u;
-          let text = this._getLastMessageBy(u.id) || "";
+          let text = this._getLastMessageAndTimeStampBy(u.id)[0] || "";
+          let timestamp = this._getLastMessageAndTimeStampBy(u.id)[1] || "";
           return {
             photo,
             name,
             id,
-            text
+            text,
+            timestamp
           }
         });
         let groupChatResults = groupChatSessionIds.map(g=>{
           //TODO: change
-          let text = this._getLastMessageBy(g) || "";
+          let text = this._getLastMessageAndTimeStampBy(g)[0] || "";
+          let timestamp = this._getLastMessageAndTimeStampBy(g)[1] || "";
           return {
             id: g,
             name: "Group chat",
             photo: letterGIconUrl,
-            text
+            text,
+            timestamp
           }
         });
         return oneToOneResults.concat(groupChatResults);
@@ -150,12 +161,13 @@ class ConversationList extends Component {
   };
 
   render() {
+    debugger
     return (
-      <div className="conversation-list" key={"conversation-list"+ this.state.conversations.length + this.props.sendTextStatus.latestMessage } >
+      <div className="conversation-list" key={"conversation-list"+ this.state.conversations.length + this.props.sendTextStatus.latestMessage + this.props.sendTextStatus.timestamp } >
         {/*TODO: make search bar trigger by pull down*/}
         {/*<ConversationSearch />*/}
         {
-          this.state.conversations && this.state.conversations.map(conversation => {
+          this.state.conversations && this.state.conversations.orderBy('timestamp', 'desc').map(conversation => {
             // .filter(conversation=>conversation.text.match(this.props.searchMessageText))
              return (
                <ConversationListItem

@@ -13,7 +13,8 @@ export const sendText = (state = initialState, action) => {
         return {
             ...state,
             conversationId: action.payload.conversationId,
-            latestMessage: action.payload.message
+            latestMessage: action.payload.message,
+            timestamp: action.payload.timestamp,
         };
     default:
       return state;
@@ -26,9 +27,10 @@ export default ({
 
 //selectors
 export const getSendTextStatus = (state) => {
-    const {conversationId, latestMessage} = state.sendText;
+    const {conversationId, latestMessage, timestamp} = state.sendText;
     return {
         conversationId,
-        latestMessage
+        latestMessage,
+        timestamp
     }
 };
