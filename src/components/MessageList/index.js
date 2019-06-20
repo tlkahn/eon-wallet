@@ -93,14 +93,14 @@ class MessageList extends Component {
       }, false);
   }
 
-  _appendMessageToQueue(message) {
+  _appendMessageToQueue(message, cb) {
       let messages = this.state.messages.concat([message]);
       let filteredMessages = this._filterMessages(messages, this.props.conversationId);
       this.setState({
           ...this.state,
           messages,
           filteredMessages
-      });
+      }, cb);
   }
 
   postNewComposedContent(composedContents) {
@@ -407,12 +407,11 @@ class MessageList extends Component {
           timestamp: new Date().getTime(),
           messageForm: MESSAGE_FORM.text
       };
-      this._appendMessageToQueue(message);
       this.props.sendText(message);
+      this._appendMessageToQueue(message, this.closeSendCryptoDialog.bind(this));
   }
 
   render() {
-      console.log(this.state.filteredMessages);
     return(
     <Page key={"message-list-with-len-"+this.state.messages.length}>
       <div className="message-list">
