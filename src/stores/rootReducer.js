@@ -8,6 +8,7 @@ import {goToGroupChat} from '../reducers/goToGroupChat';
 import {sendLocation} from '../reducers/sendLocation';
 import {sendText} from '../reducers/sendText';
 import {sendCryptoToHub} from '../reducers/sendCryptoToHub';
+import {createNewWallet} from '../reducers/createNewWallet';
 
 const appReducer = combineReducers({
   goToConversation,
@@ -18,7 +19,8 @@ const appReducer = combineReducers({
   goToGroupChat,
   sendLocation,
   sendText,
-  sendCryptoToHub
+  sendCryptoToHub,
+  createNewWallet
 });
 
 const rootReducer = (state, action) => {

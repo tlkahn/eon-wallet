@@ -85,7 +85,6 @@ class ConversationList extends Component {
         })
       }
     }
-
   }
 
   _getConversations() {

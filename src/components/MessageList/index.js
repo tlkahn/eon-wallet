@@ -19,6 +19,7 @@ import {getSelectedEmoji} from '../../reducers/selectEmoji';
 import {getGroupChatUsrIds} from '../../reducers/goToGroupChat';
 import {getSendTextStatus} from "../../reducers/sendText";
 import {getSendCryptoToHubResult} from "../../reducers/sendCryptoToHub";
+import {getWallets} from "../../reducers/createNewWallet";
 //action creators
 import {selectEmoji} from '../../actions/actionCreators/selectEmoji';
 import {sendLocation} from '../../actions/actionCreators/sendLocation';
@@ -26,33 +27,10 @@ import {sendText} from '../../actions/actionCreators/sendText';
 import {sendCryptoToHub} from '../../actions/actionCreators/sendCryptoToHub';
 //services
 import {MY_USER_ID} from '../../services/myUserInfo';
+import {cryptoWallets} from '../../services/getCryptoWallets';
 import {EON_HUB_ADDR} from '../../config/constants';
 
-//TODO: mock stub. to be replaced.
-//TODO: put all mocks into service
-const CRYPTO_PORTFOLIO = {
-    'BTC':[
-        {
-            addr: 'btcaddr1',
-            balance: 100
-        },
-        {
-            addr: 'btcaddr2',
-            balance: 200
-        }
-
-    ],
-    'ETH':[
-        {
-            addr: 'ethaddr1',
-            balance: 100
-        },
-        {
-            addr: 'ethaddr2',
-            balance: 200
-        },
-    ]
-};
+const CRYPTO_PORTFOLIO = cryptoWallets;
 
 const CONVERSATION_TYPES = Object.freeze({
     individual: Symbol("individual"),
@@ -95,7 +73,6 @@ class MessageList extends Component {
   }
 
   _appendMessageToQueue(message, cb) {
-      debugger
       let messages = this.state.messages.concat([message]);
       let filteredMessages = this._filterMessages(messages, this.props.conversationId);
       window.localStorage.setItem("messages", JSON.stringify(messages));
@@ -215,10 +192,10 @@ class MessageList extends Component {
   componentDidUpdate() {
     this.messageListContainer.scrollIntoView(false);
     window.localStorage.setItem('messages', JSON.stringify(this.state.messages));
+    console.log("this.props.wallets", this.props.wallets);
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
-      debugger
       this.getMessages(nextProps.conversationId, MY_USER_ID);
       if (!this.props.groupChatUsrIds && nextProps.groupChatUsrIds || this.props.groupChatUsrIds !== nextProps.groupChatUsrIds) {
           let sessionId = nextProps.groupChatUsrIds+'';
@@ -301,7 +278,7 @@ class MessageList extends Component {
       }
       else if (current.type === 'update') {
           messages.push(
-              <div className="update-text" key={"update-text-" + moment.now()}>
+              <div className="update-text" key={`update-text-${i}`}>
                   {current.updateText}
               </div>
           );
@@ -595,11 +572,13 @@ const mapStateToProps = (state) => {
     const groupChatUsrIds = getGroupChatUsrIds(state);
     // const sendTextStatus = getSendTextStatus(state);
     const sendCryptoToHubResult = getSendCryptoToHubResult(state);
+    const wallets = getWallets(state);
     return {
         conversationId,
         selectedEmoji,
         groupChatUsrIds,
-        sendCryptoToHubResult
+        sendCryptoToHubResult,
+        wallets
     }
 };
 
@@ -609,6 +588,6 @@ export default connect(
         selectEmoji,
         sendLocation,
         sendText,
-        sendCryptoToHub
+        sendCryptoToHub,
     }
 )(MessageList);

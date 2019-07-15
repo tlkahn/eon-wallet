@@ -8,6 +8,7 @@ import signUpUser from '../../services/signUpUser';
 import { instanceOf } from 'prop-types';
 // import { withCookies, Cookies } from 'react-cookie';
 import {logInCurrentUser} from '../../actions/actionCreators/logInCurrentUser';
+import {createNewWallet} from '../../actions/actionCreators/createNewWallet';
 
 class SignUpForm extends Component {
     constructor(props) {
@@ -34,7 +35,7 @@ class SignUpForm extends Component {
             let wallet = walletObj.wallet;
             wallet.save().then(() => {
                 console.log("wallet saved. please keep mnemonic in somewhere safe: ", walletObj.mnemonic);
-                
+                this.props.createNewWallet(wallet);
             }, (e) => {
                 console.log("database saved error: ", e);
             });
@@ -100,4 +101,4 @@ class SignUpForm extends Component {
 
 
 
-export default connect(null, {logInCurrentUser})(SignUpForm);
+export default connect(null, {logInCurrentUser, createNewWallet})(SignUpForm);

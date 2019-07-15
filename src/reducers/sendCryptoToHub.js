@@ -11,7 +11,6 @@ const initialState = {
 };
 
 export const sendCryptoToHub = (state = initialState, action) => {
-    debugger
     switch (action.type) {
         case SEND_CRYPTO_TO_HUB:
             let coinType = action.payload.coinType;
@@ -34,7 +33,6 @@ export default ({
 
 //selectors
 export const getSendCryptoToHubResult = (state) => {
-    debugger
     const {owed,} = state.sendCryptoToHub;
     return {owed};
 };
