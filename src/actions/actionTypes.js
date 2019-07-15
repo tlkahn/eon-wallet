@@ -8,7 +8,4 @@ export const GOTO_GROUPCHAT = 'GOTO_GROUPCHAT';
 export const SEND_LOCATION = 'SEND_LOCATION';
 export const SEND_IMAGE = 'SEND_IMAGE';
 export const SEND_TEXT = 'SEND_TEXT';
-
-
-
-
+export const SEND_CRYPTO_TO_HUB = 'SEND_CRYPTO_TO_HUB';

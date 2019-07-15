@@ -15,7 +15,7 @@ class SignUpForm extends Component {
         this.state = {
             fname: "",
             lname: "",
-            email: "",
+            phone: "",
             password: ""
         };
     }
@@ -26,13 +26,18 @@ class SignUpForm extends Component {
 
     onSubmit() {
         // const { cookies } = this.props;
-        let {fname, lname, email, password} = this.state;
+        let {fname, lname, phone, password} = this.state;
         signUpUser({
-            fname, lname, email, password
-        }).then((result)=>{
-            // const {userId} = result;
-            // cookies.set('userId', userId, { path: '/' });
+            fname, lname, phone, password
+        }).then((walletObj)=>{
             this.props.logInCurrentUser();
+            let wallet = walletObj.wallet;
+            wallet.save().then(() => {
+                console.log("wallet saved. please keep mnemonic in somewhere safe: ", walletObj.mnemonic);
+                
+            }, (e) => {
+                console.log("database saved error: ", e);
+            });
         }, (error)=>{
             console.log("signed up error", error);
         });
@@ -63,9 +68,9 @@ class SignUpForm extends Component {
                     </div>
 
                     <div className="form-row">
-                        <input type="text" className="text-input--underbar width-full" placeholder="Email" onChange={(ev)=>this.setState({
+                        <input type="text" className="text-input--underbar width-full" placeholder="Phone" onChange={(ev)=>this.setState({
                             ...this.state,
-                            email: ev.target.value
+                            phone: ev.target.value
                         })}/>
                     </div>
 

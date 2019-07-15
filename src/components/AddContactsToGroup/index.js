@@ -47,6 +47,7 @@ class AddContactsToGroup extends React.Component {
         //TODO: using latin letters. Other lang needs alphabet mapping like below:
         //const alphabetMapping = {'å':'a', 'ü':u ...}
         this.splitterSideItems = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S", "T","U","V","W","X","Y","Z"];
+        this._mounted = false;
     }
 
     componentDidMount() {
@@ -54,20 +55,29 @@ class AddContactsToGroup extends React.Component {
             ...this.state,
             lastNameAlphabet: 'A'
         })
+        this._mounted = true;
     }
-
+    
+    componentWillUnmount() {
+        this._mounted = false;
+    }
+    
     toggleSplitterSide() {
-        this.setState({
-            ...this.state,
-            collapsed: !this.state.collapsed
-        })
+        if  (this._mounted) {
+            this.setState({
+                ...this.state,
+                collapsed: !this.state.collapsed
+            })
+        }
     }
-
+    
     closeSplitterSide(){
-        this.setState({
-            ...this.state,
-            collapsed: true
-        })
+        if (this._mounted) {
+            this.setState({
+                ...this.state,
+                collapsed: true
+            })
+        }
     }
 
     getContactsByLastNameAlphabet(lastNameAlphabet) {

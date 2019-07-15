@@ -20,6 +20,7 @@ class Messenger extends Component {
         document.addEventListener("openSideMenu", (ev)=>{
             this.toggle();
         });
+        this._isMounted = false;
     }
 
     componentWillUpdate(nextProps, nextState, nextContext) {
@@ -30,14 +31,24 @@ class Messenger extends Component {
             this.backBtn.current.classList.add("hidden");
         }
     }
-
+    
+    componentDidMount() {
+        this._isMounted = true;
+    }
+    
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
+    
     toggle(){
-        this.setState({
-            isOpen: !(this.state.isOpen),
-            hidden: !(this.state.hidden),
-            hideStatus: this.state.hidden ? 'hidden' : '',
-        });
-        this.forceUpdate();
+        if  (this._isMounted) {
+            this.setState({
+                isOpen: !(this.state.isOpen),
+                hidden: !(this.state.hidden),
+                hideStatus: this.state.hidden ? 'hidden' : '',
+            });
+            this.forceUpdate();
+        }
     }
 
     updateSessionId(config) {

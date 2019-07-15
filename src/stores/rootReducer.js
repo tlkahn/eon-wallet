@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux';
-import { GOTO_CONVERSATION } from '../actions/actionTypes';
 import {goToConversation} from '../reducers/goToConversation';
 import {sendCryptos} from '../reducers/sendCrypto';
 import {selectEmoji} from '../reducers/selectEmoji';
@@ -8,6 +7,7 @@ import {logInCurrentUser} from '../reducers/logInCurrentUser';
 import {goToGroupChat} from '../reducers/goToGroupChat';
 import {sendLocation} from '../reducers/sendLocation';
 import {sendText} from '../reducers/sendText';
+import {sendCryptoToHub} from '../reducers/sendCryptoToHub';
 
 const appReducer = combineReducers({
   goToConversation,
@@ -17,7 +17,8 @@ const appReducer = combineReducers({
   logInCurrentUser,
   goToGroupChat,
   sendLocation,
-  sendText
+  sendText,
+  sendCryptoToHub
 });
 
 const rootReducer = (state, action) => {

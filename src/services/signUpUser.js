@@ -1,14 +1,23 @@
-import axios from 'axios/index';
+import Hasher from './hasher.util';
+import Wallet from './wallet.class';
 
-function signUpUser(userObj) {
-    //TODO: mock stub
+function signUpUser(usr) {
+    const {fname, lname, phone, password} = usr;
+    let pwdHash = '';
+    
     return new Promise(function(resolve, reject) {
-        setTimeout(function() {
+        Hasher.hash(password).then((hash) => {
+            pwdHash = hash;
+            const mnemonic = Wallet.generate();
+            const wallet = Wallet.create(usr.fname+'.'+usr.lname, mnemonic).encrypt(pwdHash);
             resolve({
-            status: 'ok',
-            userId: '12345'
+                wallet,
+                mnemonic
+                });
+        }, (e) => {
+            reject(e)
         });
-        }, 300);
+
     });
 }
 

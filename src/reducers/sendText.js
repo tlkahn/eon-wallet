@@ -27,6 +27,7 @@ export default ({
 
 //selectors
 export const getSendTextStatus = (state) => {
+    debugger
     const {conversationId, latestMessage, timestamp} = state.sendText;
     return {
         conversationId,

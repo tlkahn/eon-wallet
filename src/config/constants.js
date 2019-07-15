@@ -52,4 +52,8 @@ export const BTC_CONST = {
     }
 };
 
+export const EON_HUB_ADDR = {
+    btc: "0x123456789"
+}
+
 

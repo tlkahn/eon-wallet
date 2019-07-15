@@ -37,16 +37,16 @@ class App extends Component {
         // cookies.set('name', name, { path: '/' });
         // if  (cookies.get('userId')) {
         // }
-        let loggedIn = cookies.get('loggedIn');
-        if (loggedIn) {
-            this.setState({
-                loggedIn: true
-            })
-        }
+        // let loggedIn = cookies.get('loggedIn');
+        // if (loggedIn) {
+        //     this.setState({
+        //         loggedIn: true
+        //     })
+        // }
     }
     
     shouldComponentUpdate(nextProps, nextState, nextContext) {
-        if (nextProps.loggedIn !== this.props.loggedIn || nextProps.loggedIn !== this.state.loggedIn) {
+        if (nextProps.loggedIn !== this.props.loggedIn || nextProps.loggedIn !== this.state.loggedIn || nextProps.loggedIn !== nextState.loggedIn) {
             return true;
         }
         else if (nextProps !== this.props || nextState !== this.state) {

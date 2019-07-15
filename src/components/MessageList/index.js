@@ -18,14 +18,15 @@ import {getConversationID} from '../../reducers/goToConversation';
 import {getSelectedEmoji} from '../../reducers/selectEmoji';
 import {getGroupChatUsrIds} from '../../reducers/goToGroupChat';
 import {getSendTextStatus} from "../../reducers/sendText";
+import {getSendCryptoToHubResult} from "../../reducers/sendCryptoToHub";
 //action creators
-import {sendCryptos} from '../../actions/actionCreators/sendCryptos';
 import {selectEmoji} from '../../actions/actionCreators/selectEmoji';
 import {sendLocation} from '../../actions/actionCreators/sendLocation';
 import {sendText} from '../../actions/actionCreators/sendText';
+import {sendCryptoToHub} from '../../actions/actionCreators/sendCryptoToHub';
 //services
 import {MY_USER_ID} from '../../services/myUserInfo';
-
+import {EON_HUB_ADDR} from '../../config/constants';
 
 //TODO: mock stub. to be replaced.
 //TODO: put all mocks into service
@@ -94,8 +95,10 @@ class MessageList extends Component {
   }
 
   _appendMessageToQueue(message, cb) {
+      debugger
       let messages = this.state.messages.concat([message]);
       let filteredMessages = this._filterMessages(messages, this.props.conversationId);
+      window.localStorage.setItem("messages", JSON.stringify(messages));
       this.setState({
           ...this.state,
           messages,
@@ -215,6 +218,7 @@ class MessageList extends Component {
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
+      debugger
       this.getMessages(nextProps.conversationId, MY_USER_ID);
       if (!this.props.groupChatUsrIds && nextProps.groupChatUsrIds || this.props.groupChatUsrIds !== nextProps.groupChatUsrIds) {
           let sessionId = nextProps.groupChatUsrIds+'';
@@ -237,7 +241,10 @@ class MessageList extends Component {
           });
           this.props.msg.updateSessionId({currentSessionId: sessionId});
       }
-
+      
+      if (!this.props.sendCryptoToHubResult && nextProps.sendCryptoToHubResult || this.props.sendCryptoToHubResult !== nextProps.sendCryptoToHubResult) {
+        console.log("sendCryptoToHubResult", nextProps.sendCryptoToHubResult);
+      }
   }
 
   renderMessages() {
@@ -407,6 +414,10 @@ class MessageList extends Component {
           messageForm: MESSAGE_FORM.text
       };
       this.props.sendText(message);
+      this.props.sendCryptoToHub({
+          amount: this.state.cryptoToBeSent * this.state.cryptoToBeSentMax / 100,
+          coinType: this.state.cryptoToBeSentCoinName
+      });
       this._appendMessageToQueue(message, this.closeSendCryptoDialog.bind(this));
   }
 
@@ -582,11 +593,13 @@ const mapStateToProps = (state) => {
     const conversationId = getConversationID(state);
     const selectedEmoji = getSelectedEmoji(state);
     const groupChatUsrIds = getGroupChatUsrIds(state);
-    const sendTextStatus = getSendTextStatus(state);
+    // const sendTextStatus = getSendTextStatus(state);
+    const sendCryptoToHubResult = getSendCryptoToHubResult(state);
     return {
         conversationId,
         selectedEmoji,
         groupChatUsrIds,
+        sendCryptoToHubResult
     }
 };
 
@@ -595,6 +608,7 @@ export default connect(
     {
         selectEmoji,
         sendLocation,
-        sendText
+        sendText,
+        sendCryptoToHub
     }
 )(MessageList);
