@@ -44,17 +44,17 @@ class App extends Component {
             })
         }
     }
-
-    componentWillReceiveProps(nextProps, nextContext) {
-        if (nextProps.loggedIn !== this.props.loggedIn) {
+    
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevProps.loggedIn !== this.props.loggedIn) {
             const { cookies } = this.props;
             this.setState({
-                loggedIn: nextProps.loggedIn
+                loggedIn: this.props.loggedIn
             });
-            cookies.set('loggedIn', nextProps.loggedIn, { path: '/' });
+            cookies.set('loggedIn', this.props.loggedIn, { path: '/' });
         }
     }
-
+    
     render() {
         return (
             <Ons.Page>

@@ -215,7 +215,6 @@ class MessageList extends Component {
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
-      debugger
       this.getMessages(nextProps.conversationId, MY_USER_ID);
       if (!this.props.groupChatUsrIds && nextProps.groupChatUsrIds || this.props.groupChatUsrIds !== nextProps.groupChatUsrIds) {
           let sessionId = nextProps.groupChatUsrIds+'';

@@ -130,7 +130,6 @@ class ConversationList extends Component {
             timestamp
           }
         });
-        debugger
         let groupChatResults = groupChatSessionIds.map(g=>{
           //TODO: change
           let text = this._getLastMessageAndTimeStampBy(g)[0] || "";

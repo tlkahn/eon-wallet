@@ -56,5 +56,6 @@
   "devDependencies": {
     "random-words": "^1.1.0",
     "react-spinners": "^0.5.4"
-  }
+  },
+  "homepage": "./"
 }
