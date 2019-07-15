@@ -45,6 +45,17 @@ class App extends Component {
         }
     }
     
+    shouldComponentUpdate(nextProps, nextState, nextContext) {
+        if (nextProps.loggedIn !== this.props.loggedIn || nextProps.loggedIn !== this.state.loggedIn) {
+            return true;
+        }
+        else if (nextProps !== this.props || nextState !== this.state) {
+            return true;
+        }
+        return false;
+    }
+    
+    
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevProps.loggedIn !== this.props.loggedIn) {
             const { cookies } = this.props;

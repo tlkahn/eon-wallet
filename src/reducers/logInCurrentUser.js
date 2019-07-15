@@ -7,6 +7,7 @@ const initialState = {
 };
 
 export const logInCurrentUser = (state = initialState, action) => {
+    console.log("logInCurrentUser", state);
   switch (action.type) {
       case LOG_IN_CURRENT_USER:
         return {
