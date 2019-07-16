@@ -10,7 +10,6 @@ function getCook(cookiename) {
 
 
 export const sendCryptoToHub = (cryptoPayment) => (dispatch, getState) => {
-    debugger
     const {amount, coinType, wallet, fee} = cryptoPayment;
     let password =getCook('password');
     let addr = EON_HUB_ADDR[coinType];

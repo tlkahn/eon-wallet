@@ -188,6 +188,18 @@ class Wallet extends EventEmitter {
             }
         });
     }
+    
+    static find(info) {
+        return new Promise((resolve, reject)=>{
+            Wallet.store.find({
+                ...info
+            }).then(docs=>{
+                resolve(docs);
+            }, e=>{
+                reject(e);
+            })
+        });
+    }
 
     save() {
         return Wallet.store.insert(this.toObject());
@@ -200,12 +212,13 @@ class Wallet extends EventEmitter {
 
 
     toObject() {
-
         const obj = {
             name: this.name,
             address: this.address,
             wif: this.wif,
             network: this.network,
+            phone: this.phone,
+            pwdHash: this.pwdHash
         };
 
         if (this.__password) obj.password = this.__password;
@@ -218,7 +231,7 @@ class Wallet extends EventEmitter {
 Wallet.Defaults = {
     Encryption: 'aes-256-cbc',
     Path: "m/44'/0'/0'/0/0",
-    DBFileName: 'wallets',
+    DBFileName: 'wallets-v3',
 };
 
 Wallet.Events = {

@@ -9,6 +9,7 @@ import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import {logInCurrentUser} from '../../actions/actionCreators/logInCurrentUser';
 import {createNewWallet} from '../../actions/actionCreators/createNewWallet';
+import Wallet from '../../services/wallet.class';
 
 class SignUpForm extends Component {
     constructor(props) {
@@ -19,6 +20,7 @@ class SignUpForm extends Component {
             phone: "",
             password: ""
         };
+        window.Wallet = Wallet;
     }
 
     // static propTypes = {
@@ -33,6 +35,10 @@ class SignUpForm extends Component {
         }).then((walletObj)=>{
             this.props.logInCurrentUser();
             let wallet = walletObj.wallet;
+            Object.assign(wallet, {
+                phone,
+                pwdHash: walletObj.pwdHash
+            });
             wallet.save().then(() => {
                 console.log("wallet saved. please keep mnemonic in somewhere safe: ", walletObj.mnemonic);
                 this.props.createNewWallet(wallet);

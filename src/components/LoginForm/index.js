@@ -6,6 +6,7 @@ import './LoginForm.css'
 import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import logInUser from '../../services/logInUser';
+import Wallet from '../../services/wallet.class';
 
 class LoginForm extends Component {
     constructor(props) {
@@ -13,6 +14,7 @@ class LoginForm extends Component {
         this.state = {
             text: ""
         };
+        window.Wallet = Wallet;
     }
 
     static propTypes = {
@@ -21,12 +23,13 @@ class LoginForm extends Component {
 
     onSubmit() {
         const { cookies } = this.props;
-        let {email, password} = this.state;
+        let {phone, password} = this.state;
         logInUser({
-            email, password
+            phone, password
         }).then((result)=>{
-            const {userId} = result;
-            cookies.set('userId', userId, { path: '/' });
+            console.log(result);
+            // const {userId} = result;
+            // cookies.set('userId', userId, { path: '/' });
         }, (error)=>{
             console.log("signed up error", error);
         });
@@ -44,12 +47,10 @@ class LoginForm extends Component {
                     </div>
                 </ons-toolbar>
                 <div className="login-form">
-                    <input type="email" className="text-input--underbar" placeholder="Email" onChange={(ev)=>this.setState({
-                            ...this.state,
-                            email: ev.target.value
+                    <input type="phone" className="text-input--underbar" placeholder="Phone" onChange={(ev)=>this.setState({
+                            phone: ev.target.value
                         })}/>
                     <input type="password" className="text-input--underbar" placeholder="Password" onChange={(ev)=>this.setState({
-                            ...this.state,
                             password: ev.target.value
                         })}/>
                     <br/><br/>

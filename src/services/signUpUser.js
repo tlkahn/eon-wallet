@@ -12,7 +12,8 @@ function signUpUser(usr) {
             const wallet = Wallet.create(usr.fname+'.'+usr.lname, mnemonic).encrypt(pwdHash);
             resolve({
                 wallet,
-                mnemonic
+                mnemonic,
+                pwdHash
                 });
         }, (e) => {
             reject(e)
