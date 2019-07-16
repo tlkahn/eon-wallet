@@ -13,7 +13,7 @@ async function logInUser(info) {
             pwdHash: hash
         }).then(docs=>{
             if (docs.length > 0) {
-                resolve("user record found", docs);
+                resolve(docs);
             }
             else {
                 reject("user not exist or password wrong");

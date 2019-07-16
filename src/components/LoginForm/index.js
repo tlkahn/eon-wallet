@@ -7,6 +7,8 @@ import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import logInUser from '../../services/logInUser';
 import Wallet from '../../services/wallet.class';
+import { connect } from 'react-redux';
+import {logInCurrentUser} from "../../actions/actionCreators/logInCurrentUser";
 
 class LoginForm extends Component {
     constructor(props) {
@@ -28,6 +30,7 @@ class LoginForm extends Component {
             phone, password
         }).then((result)=>{
             console.log(result);
+            this.props.logInCurrentUser();
             // const {userId} = result;
             // cookies.set('userId', userId, { path: '/' });
         }, (error)=>{
@@ -65,4 +68,4 @@ class LoginForm extends Component {
     }
 }
 
-export default withCookies(LoginForm);
+export default connect(null, {logInCurrentUser})(withCookies(LoginForm));
