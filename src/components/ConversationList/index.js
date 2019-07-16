@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ConversationListItem from '../ConversationListItem';
 import { connect } from 'react-redux';
-import {orderBy, uniq, head, find} from 'lodash';
+import '../../utils/aux';
 
 import './ConversationList.css';
 
@@ -23,18 +23,7 @@ class ConversationList extends Component {
       conversations: []
     };
     this.MY_USER_ID = MY_USER_ID;
-    Array.prototype.uniq = function() {
-      return uniq(this);
-    };
-    Array.prototype.orderBy = function (...cond) {
-      return orderBy(this, ...cond);
-    };
-    Array.prototype.head = function () {
-      return head(this);
-    };
-    Array.prototype.find = function (...args) {
-      return find(this, ...args);
-    };
+
   }
 
    _getLastMessageAndTimeStampBy(sessionId) {

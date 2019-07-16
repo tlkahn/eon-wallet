@@ -27,10 +27,10 @@ import {sendText} from '../../actions/actionCreators/sendText';
 import {sendCryptoToHub} from '../../actions/actionCreators/sendCryptoToHub';
 //services
 import {MY_USER_ID} from '../../services/myUserInfo';
-import {cryptoWallets} from '../../services/getCryptoWallets';
+//constants
 import {EON_HUB_ADDR} from '../../config/constants';
-
-const CRYPTO_PORTFOLIO = cryptoWallets;
+//utils
+import '../../utils/aux';
 
 const CONVERSATION_TYPES = Object.freeze({
     individual: Symbol("individual"),
@@ -164,6 +164,7 @@ class MessageList extends Component {
 
   componentDidMount() {
     this.messageListContainer.scrollIntoView(false);
+    this.wallets = this.props.wallets || {};
   }
 
   _filterMessages(messages, f) {
@@ -222,6 +223,21 @@ class MessageList extends Component {
       if (!this.props.sendCryptoToHubResult && nextProps.sendCryptoToHubResult || this.props.sendCryptoToHubResult !== nextProps.sendCryptoToHubResult) {
         console.log("sendCryptoToHubResult", nextProps.sendCryptoToHubResult);
       }
+  }
+  
+  get cryptoPortfolio() {
+    let wallets = this.props.wallets.wallets || [];
+    let coinTypes = wallets.map(w=>w.coinType).uniq();
+    let result = {};
+    for (let ct of coinTypes) {
+      result[ct] = wallets.filter({coinType: ct}).map(w=>{
+        return {
+          addr: w.address,
+          balance: w.coins
+        };
+      });
+    }
+    return result;
   }
 
   renderMessages() {
@@ -397,7 +413,7 @@ class MessageList extends Component {
       });
       this._appendMessageToQueue(message, this.closeSendCryptoDialog.bind(this));
   }
-
+  
   render() {
     return(
     <Page key={"message-list-with-len-"+this.state.messages.length}>
@@ -487,11 +503,11 @@ class MessageList extends Component {
                   <div key="front" className="crypto-list-wrapper">
                       <ons-list>
                           {
-                              Object.keys(CRYPTO_PORTFOLIO).map((crypto, idx)=>{
+                              Object.keys(this.cryptoPortfolio).map((crypto, idx)=>{
                                   return (
                                       <div key={"crypto-wrapper-"+idx}>
                                           <ons-list-header>{crypto}</ons-list-header>
-                                          {CRYPTO_PORTFOLIO[crypto].map((account, idx)=>{
+                                          {this.cryptoPortfolio[crypto].map((account, idx)=>{
                                               return (
                                                   <ons-list-item key={"send-crypto-"+crypto+idx} onClick={()=>this.flipSendCryptoDialog(crypto, account)}>
                                                       <div className="center" key={"send-crypto-"+crypto+idx+"-div-center"}>
@@ -582,12 +598,14 @@ const mapStateToProps = (state) => {
     }
 };
 
+const mapDispatchToProps = {
+  selectEmoji,
+  sendLocation,
+  sendText,
+  sendCryptoToHub,
+};
+
 export default connect(
-    mapStateToProps,
-    {
-        selectEmoji,
-        sendLocation,
-        sendText,
-        sendCryptoToHub,
-    }
+  mapStateToProps,
+  mapDispatchToProps
 )(MessageList);

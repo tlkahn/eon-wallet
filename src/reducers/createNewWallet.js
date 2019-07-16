@@ -7,7 +7,6 @@ const initialState = {
 };
 
 export const createNewWallet = (state = initialState, action) => {
-    debugger
   switch (action.type) {
       case CREATE_NEW_WALLET:
         return {
@@ -25,7 +24,6 @@ export default ({
 
 //selectors
 export const getWallets = (state) => {
-    debugger
     const {wallets, } = state.createNewWallet;
     return {
         wallets

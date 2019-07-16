@@ -19,6 +19,11 @@ class Wallet extends EventEmitter {
         this.__network = info.network;
         this.__password = info.password || undefined;
         this.__utxos = [];
+        this.__coinType = info.coinType;
+    }
+    
+    get coinType() {
+        return this.__coinType;
     }
 
     /**
@@ -157,6 +162,7 @@ class Wallet extends EventEmitter {
         const wif = derived.keyPair.toWIF();
 
         return new Wallet({
+            coinType: 'BTC',
             name: name,
             address: address,
             wif: wif,
