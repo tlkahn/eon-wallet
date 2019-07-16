@@ -28,9 +28,9 @@ import {sendCryptoToHub} from '../../actions/actionCreators/sendCryptoToHub';
 //services
 import {MY_USER_ID} from '../../services/myUserInfo';
 //constants
-import {EON_HUB_ADDR} from '../../config/constants';
 //utils
 import '../../utils/aux';
+import bnet from '../../services/network';
 
 const CONVERSATION_TYPES = Object.freeze({
     individual: Symbol("individual"),
@@ -54,6 +54,7 @@ class MessageList extends Component {
           cryptoToBeSentFromAddr: 0,
           cryptoToBeSentMax: 0,
           cryptoToBeSent: 0,
+          currentWalletIdx: null,
           cryptoToBeSentRecipient: null,
           sendCryptoDialogFlipped: false,
           conversationType: CONVERSATION_TYPES.individual,
@@ -226,7 +227,7 @@ class MessageList extends Component {
   }
   
   get cryptoPortfolio() {
-    let wallets = this.props.wallets.wallets || [];
+    let wallets = this.props.wallets || [];
     let coinTypes = wallets.map(w=>w.coinType).uniq();
     let result = {};
     for (let ct of coinTypes) {
@@ -331,13 +332,13 @@ class MessageList extends Component {
       });
   }
 
-  flipSendCryptoDialog(crypto, account) {
+  flipSendCryptoDialog(crypto, account, idx) {
       this.setState({
-          ...this.state,
           sendCryptoDialogFlipped: !this.state.sendCryptoDialogFlipped,
           cryptoToBeSentMax: account.balance,
           cryptoToBeSentCoinName: crypto,
           cryptoToBeSentFromAddr: account.addr,
+          currentWalletIdx: idx
       });
   }
 
@@ -395,8 +396,23 @@ class MessageList extends Component {
       });
       this.imageInput.click();
   }
+  
+  getCryptoSendingFee(coinType) {
+    switch (coinType) {
+      case 'BTC':
+        return new Promise((resolve, reject)=> {
+          bnet.api.getFee().then((fee) => {
+            resolve(fee);
+          }).catch((e) => {
+            reject(e);
+          });
+      });
+      default:
+        break
+    }
+  }
 
-  sendCrypto() {
+  async sendCrypto() {
       const message = {
           id: this.state.messages.length + 1,
           author: MY_USER_ID,
@@ -407,10 +423,15 @@ class MessageList extends Component {
           messageForm: MESSAGE_FORM.text
       };
       this.props.sendText(message);
+      let fee = await this.getCryptoSendingFee(this.state.cryptoToBeSentCoinName);
+      debugger
       this.props.sendCryptoToHub({
-          amount: this.state.cryptoToBeSent * this.state.cryptoToBeSentMax / 100,
-          coinType: this.state.cryptoToBeSentCoinName
+        amount: this.state.cryptoToBeSent * this.state.cryptoToBeSentMax / 100,
+        coinType: this.state.cryptoToBeSentCoinName,
+        wallet: this.props.wallets[this.state.currentWalletIdx],
+        fee
       });
+      
       this._appendMessageToQueue(message, this.closeSendCryptoDialog.bind(this));
   }
   
@@ -509,7 +530,7 @@ class MessageList extends Component {
                                           <ons-list-header>{crypto}</ons-list-header>
                                           {this.cryptoPortfolio[crypto].map((account, idx)=>{
                                               return (
-                                                  <ons-list-item key={"send-crypto-"+crypto+idx} onClick={()=>this.flipSendCryptoDialog(crypto, account)}>
+                                                  <ons-list-item key={"send-crypto-"+crypto+idx} onClick={()=>this.flipSendCryptoDialog(crypto, account, idx)}>
                                                       <div className="center" key={"send-crypto-"+crypto+idx+"-div-center"}>
                                                           {account.addr}
                                                       </div>
@@ -588,7 +609,7 @@ const mapStateToProps = (state) => {
     const groupChatUsrIds = getGroupChatUsrIds(state);
     // const sendTextStatus = getSendTextStatus(state);
     const sendCryptoToHubResult = getSendCryptoToHubResult(state);
-    const wallets = getWallets(state);
+    const wallets = getWallets(state).wallets;
     return {
         conversationId,
         selectedEmoji,

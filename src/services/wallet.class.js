@@ -101,7 +101,7 @@ class Wallet extends EventEmitter {
 
 
     send(btc, address, fee, password) {
-
+        
         const satoshis = Math.round(btc * BTC_CONST.Bitcoin.Satoshis);
         const satoshis_fee = Math.round(fee * BTC_CONST.Bitcoin.Satoshis);
 
@@ -117,21 +117,26 @@ class Wallet extends EventEmitter {
             current += utx.value;
             if (current >= (satoshis + satoshis_fee)) break;
         }
+        
+        debugger
 
         txb.addOutput(address, satoshis);
 
         const change = current - (satoshis + satoshis_fee);
-        if (change) txb.addOutput(this.address, change);
-
-
-        const wif = this.__password ? this.readDecrypted(password) : this.wif;
-        const key = bitcoin.ECPair.fromWIF(wif, network);
-
-        txb.sign(0, key);
-
-        const raw = txb.build().toHex();
-
-        return bnet.api.broadcast(raw);
+        if (change >= 0) {
+            txb.addOutput(this.address, change)
+            const wif = this.__password ? this.readDecrypted(password) : this.wif;
+            const key = bitcoin.ECPair.fromWIF(wif, network);
+        
+            txb.sign(0, key);
+        
+            const raw = txb.build().toHex();
+        
+            return bnet.api.broadcast(raw);
+        }
+        else {
+            throw("insufficient funds");
+        }
     }
 
 

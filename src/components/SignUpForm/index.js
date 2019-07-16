@@ -6,7 +6,7 @@ import FormDivider from '../FormDivider';
 import './SignUpForm.css'
 import signUpUser from '../../services/signUpUser';
 import { instanceOf } from 'prop-types';
-// import { withCookies, Cookies } from 'react-cookie';
+import { withCookies, Cookies } from 'react-cookie';
 import {logInCurrentUser} from '../../actions/actionCreators/logInCurrentUser';
 import {createNewWallet} from '../../actions/actionCreators/createNewWallet';
 
@@ -36,6 +36,8 @@ class SignUpForm extends Component {
             wallet.save().then(() => {
                 console.log("wallet saved. please keep mnemonic in somewhere safe: ", walletObj.mnemonic);
                 this.props.createNewWallet(wallet);
+                const { cookies } = this.props;
+                cookies.set('password', wallet.__password, { path: '/' });
             }, (e) => {
                 console.log("database saved error: ", e);
             });
@@ -101,4 +103,4 @@ class SignUpForm extends Component {
 
 
 
-export default connect(null, {logInCurrentUser, createNewWallet})(SignUpForm);
+export default connect(null, {logInCurrentUser, createNewWallet})(withCookies(SignUpForm));
