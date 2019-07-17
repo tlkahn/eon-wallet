@@ -7,6 +7,7 @@ async function logInUser(info) {
     const {phone, password} = info;
     let pwdHash = await Hasher.hash(password);
     return new Promise((resolve, reject)=>{
+
         Wallet.find({
             phone,
             pwdHash

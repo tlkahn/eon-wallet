@@ -9,6 +9,7 @@ import logInUser from '../../services/logInUser';
 import Wallet from '../../services/wallet.class';
 import { connect } from 'react-redux';
 import {logInCurrentUser} from "../../actions/actionCreators/logInCurrentUser";
+import {createNewWallet} from "../../actions/actionCreators/createNewWallet";
 
 class LoginForm extends Component {
     constructor(props) {
@@ -37,12 +38,14 @@ class LoginForm extends Component {
         let {phone, password} = this.state;
         logInUser({
             phone, password
-        }).then((result)=>{
-            console.log(result);
+        }).then((wallets)=>{
+            console.log(wallets);
+            const wallet = wallets[0];
             this.props.logInCurrentUser();
-            // const { cookies } = this.props;
-            // const {userId} = result;
-            // cookies.set('userId', userId, { path: '/' });
+            this.props.createNewWallet(wallet);
+            const { cookies } = this.props;
+            cookies.set('pwdHash', wallet.pwdHash, { path: '/' });
+            cookies.set('phone', wallet.phone, { path: '/' });
         }, (error)=>{
             console.log("signed up error", error);
         });
@@ -78,4 +81,4 @@ class LoginForm extends Component {
     }
 }
 
-export default connect(null, {logInCurrentUser})(withCookies(LoginForm));
+export default connect(null, {logInCurrentUser, createNewWallet})(withCookies(LoginForm));

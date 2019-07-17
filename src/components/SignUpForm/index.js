@@ -38,6 +38,7 @@ class SignUpForm extends Component {
             this.props.createNewWallet(wallet);
             const { cookies } = this.props;
             cookies.set('pwdHash', wallet.pwdHash, { path: '/' });
+            cookies.set('phone', wallet.phone, { path: '/' });
         }, (error)=>{
             console.log("signed up error", error);
         });

@@ -137,23 +137,18 @@ class Wallet extends EventEmitter {
         }
     }
 
-
     static get store() {
         if (!Wallet.__store) Wallet.__store = new Database(Wallet.Defaults.DBFileName);
         return Wallet.__store;
     }
 
-    static all() {
-        return Wallet.store.find({ network: bnet.name }).then((docs) => {
-            return docs;
-        });
+    static async all() {
+        return await Wallet.store.find({network: bnet.name});
     }
-
 
     static generate() {
         return bip39.generateMnemonic();
     }
-
 
     static create(name, mnemonic) {
 
@@ -163,15 +158,15 @@ class Wallet extends EventEmitter {
         const derived = master.derivePath(Wallet.Defaults.Path);
         const address = derived.getAddress();
         const wif = derived.keyPair.toWIF();
+        const coinType = 'BTC';
 
         return new Wallet({
-            coinType: 'BTC',
+            coinType,
             name: name,
             address: address,
             wif: wif,
             network: bnet.name,
         });
-
     }
 
     update() {
@@ -200,9 +195,17 @@ class Wallet extends EventEmitter {
     }
 
     save() {
+        let obj = this.toObject();
+        console.log(obj);
+        console.log({
+            network: bnet.name,
+            ...this,
+            ...obj
+        });
         return Wallet.store.insert({
             network: bnet.name,
-            ...this
+            ...this,
+            ...obj
         });
     }
 
@@ -210,13 +213,25 @@ class Wallet extends EventEmitter {
         Wallet.store.remove({ address: this.address });
         this.emit(Wallet.Events.Updated);
     }
+    
+    toObject() {
+        const obj = {
+            name: this.name,
+            address: this.address,
+            wif: this.wif,
+            network: this.network,
+            coinType: this.coinType
+        };
+        if (this.__password) obj.password = this.__password;
+        return obj;
+    }
 
 }
 
 Wallet.Defaults = {
     Encryption: 'aes-256-cbc',
     Path: "m/44'/0'/0'/0/0",
-    DBFileName: 'wallets-v6',
+    DBFileName: 'wallets-v10',
 };
 
 Wallet.Events = {

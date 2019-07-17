@@ -51,6 +51,7 @@
 
 .toolbar {
   height: 60px;
+  padding-top: 10px;
 }
 
 ons-splitter{

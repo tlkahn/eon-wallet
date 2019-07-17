@@ -238,6 +238,7 @@ class MessageList extends Component {
         };
       });
     }
+    console.log("result", result);
     return result;
   }
 
