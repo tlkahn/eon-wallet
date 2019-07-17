@@ -46,12 +46,17 @@ class LoginForm extends Component {
             this.props.createNewWallet(wallet);
             const { cookies } = this.props;
             cookies.set('pwdHash', wallet.pwdHash, { path: '/' });
-            cookies.set('phone', wallet.phone, { path: '/' });
+            cookies.set('phone', phone, { path: '/' });
         }, (error)=>{
             console.log("signed up error", error);
         });
     }
-
+    
+    componentDidMount() {
+        const { cookies } = this.props;
+        this.phoneInputEl.value = cookies.get('phone');
+    }
+    
     render() {
         return (
             <ons-page>
@@ -64,7 +69,7 @@ class LoginForm extends Component {
                     </div>
                 </ons-toolbar>
                 <div className="login-form">
-                    <input type="phone" className="text-input--underbar" placeholder="Phone" onChange={(ev)=>this.setState({
+                    <input type="phone" className="text-input--underbar" placeholder="Phone" ref={el=>this.phoneInputEl = el} onChange={(ev)=>this.setState({
                             phone: ev.target.value
                         })}/>
                     <input type="password" className="text-input--underbar" placeholder="Password" onChange={(ev)=>this.setState({
