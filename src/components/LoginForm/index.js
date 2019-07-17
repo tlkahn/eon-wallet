@@ -42,6 +42,7 @@ class LoginForm extends Component {
             console.log(wallets);
             const wallet = wallets[0];
             this.props.logInCurrentUser();
+            //TODO: should be a separate action like useExisitngWallets(wallets)
             this.props.createNewWallet(wallet);
             const { cookies } = this.props;
             cookies.set('pwdHash', wallet.pwdHash, { path: '/' });
@@ -63,7 +64,7 @@ class LoginForm extends Component {
                     </div>
                 </ons-toolbar>
                 <div className="login-form">
-                    <input type="phone" className="text-input--underbar" placeholder="Phone" value={this.props.phone} onChange={(ev)=>this.setState({
+                    <input type="phone" className="text-input--underbar" placeholder="Phone" onChange={(ev)=>this.setState({
                             phone: ev.target.value
                         })}/>
                     <input type="password" className="text-input--underbar" placeholder="Password" onChange={(ev)=>this.setState({

@@ -234,7 +234,7 @@ class MessageList extends Component {
       result[ct] = wallets.filter({coinType: ct}).map(w=>{
         return {
           addr: w.address,
-          balance: w.coins
+          balance: w.coins || 0
         };
       });
     }

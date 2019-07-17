@@ -9,6 +9,8 @@ import {BTC_CONST} from '../config/constants';
 import bnet from './network';
 import Database from './database';
 
+import '../utils/aux';
+
 class Wallet extends EventEmitter {
 
     constructor(info) {
@@ -99,7 +101,6 @@ class Wallet extends EventEmitter {
         return password === this.__password;
     }
 
-
     send(btc, address, fee, password) {
         
         const satoshis = Math.round(btc * BTC_CONST.Bitcoin.Satoshis);
@@ -153,7 +154,6 @@ class Wallet extends EventEmitter {
     static create(name, mnemonic) {
 
         const seed = bip39.mnemonicToSeed(mnemonic);
-
         const master = bitcoin.HDNode.fromSeedBuffer(seed, bnet.current);
         const derived = master.derivePath(Wallet.Defaults.Path);
         const address = derived.getAddress();
@@ -186,8 +186,11 @@ class Wallet extends EventEmitter {
         return new Promise((resolve, reject)=>{
             Wallet.store.find({
                 ...info
-            }).then(docs=>{
-                resolve(docs);
+            }).then(async docs=>{
+                let results = docs.map(d=>{
+                    return new Wallet(d);
+                });
+                resolve(results);
             }, e=>{
                 reject(e);
             })
@@ -231,7 +234,7 @@ class Wallet extends EventEmitter {
 Wallet.Defaults = {
     Encryption: 'aes-256-cbc',
     Path: "m/44'/0'/0'/0/0",
-    DBFileName: 'wallets-v10',
+    DBFileName: 'wallets-v11',
 };
 
 Wallet.Events = {

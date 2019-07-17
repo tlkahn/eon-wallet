@@ -11,9 +11,9 @@ async function logInUser(info) {
         Wallet.find({
             phone,
             pwdHash
-        }).then(docs=>{
-            if (docs.length > 0) {
-                resolve(docs);
+        }).then(wallets=>{
+            if (wallets.length > 0) {
+                resolve(wallets);
             }
             else {
                 reject("user not exist or password wrong");
