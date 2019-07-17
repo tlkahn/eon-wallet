@@ -5,12 +5,11 @@ import Wallet from './wallet.class';
 async function logInUser(info) {
     window.Wallet = Wallet;
     const {phone, password} = info;
-    let hash = await Hasher.hash(password);
+    let pwdHash = await Hasher.hash(password);
     return new Promise((resolve, reject)=>{
-            debugger
         Wallet.find({
             phone,
-            pwdHash: hash
+            pwdHash
         }).then(docs=>{
             if (docs.length > 0) {
                 resolve(docs);

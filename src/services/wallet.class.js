@@ -118,8 +118,6 @@ class Wallet extends EventEmitter {
             if (current >= (satoshis + satoshis_fee)) break;
         }
         
-        debugger
-
         txb.addOutput(address, satoshis);
 
         const change = current - (satoshis + satoshis_fee);
@@ -147,7 +145,7 @@ class Wallet extends EventEmitter {
 
     static all() {
         return Wallet.store.find({ network: bnet.name }).then((docs) => {
-            return docs.map(doc => new Wallet(doc));
+            return docs;
         });
     }
 
@@ -202,7 +200,10 @@ class Wallet extends EventEmitter {
     }
 
     save() {
-        return Wallet.store.insert(this.toObject());
+        return Wallet.store.insert({
+            network: bnet.name,
+            ...this
+        });
     }
 
     erase() {
@@ -210,28 +211,12 @@ class Wallet extends EventEmitter {
         this.emit(Wallet.Events.Updated);
     }
 
-
-    toObject() {
-        const obj = {
-            name: this.name,
-            address: this.address,
-            wif: this.wif,
-            network: this.network,
-            phone: this.phone,
-            pwdHash: this.pwdHash
-        };
-
-        if (this.__password) obj.password = this.__password;
-
-        return obj;
-    }
-
 }
 
 Wallet.Defaults = {
     Encryption: 'aes-256-cbc',
     Path: "m/44'/0'/0'/0/0",
-    DBFileName: 'wallets-v3',
+    DBFileName: 'wallets-v6',
 };
 
 Wallet.Events = {

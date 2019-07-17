@@ -14,23 +14,33 @@ class LoginForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            text: ""
+            phone: '',
+            password: ''
         };
+        //TODO: remove in production
         window.Wallet = Wallet;
     }
 
     static propTypes = {
         cookies: instanceOf(Cookies).isRequired
     };
-
+    
+    componentWillReceiveProps(nextProps, nextContext) {
+        if (nextProps.phone !== this.props.phone) {
+            this.setState({
+                phone: nextProps.phone
+            })
+        }
+    }
+    
     onSubmit() {
-        const { cookies } = this.props;
         let {phone, password} = this.state;
         logInUser({
             phone, password
         }).then((result)=>{
             console.log(result);
             this.props.logInCurrentUser();
+            // const { cookies } = this.props;
             // const {userId} = result;
             // cookies.set('userId', userId, { path: '/' });
         }, (error)=>{
@@ -50,7 +60,7 @@ class LoginForm extends Component {
                     </div>
                 </ons-toolbar>
                 <div className="login-form">
-                    <input type="phone" className="text-input--underbar" placeholder="Phone" onChange={(ev)=>this.setState({
+                    <input type="phone" className="text-input--underbar" placeholder="Phone" value={this.props.phone} onChange={(ev)=>this.setState({
                             phone: ev.target.value
                         })}/>
                     <input type="password" className="text-input--underbar" placeholder="Password" onChange={(ev)=>this.setState({

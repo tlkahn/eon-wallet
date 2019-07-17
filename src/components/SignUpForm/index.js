@@ -20,6 +20,7 @@ class SignUpForm extends Component {
             phone: "",
             password: ""
         };
+        //TODO: remove in production
         window.Wallet = Wallet;
     }
 
@@ -32,21 +33,11 @@ class SignUpForm extends Component {
         let {fname, lname, phone, password} = this.state;
         signUpUser({
             fname, lname, phone, password
-        }).then((walletObj)=>{
+        }).then((wallet)=>{
             this.props.logInCurrentUser();
-            let wallet = walletObj.wallet;
-            Object.assign(wallet, {
-                phone,
-                pwdHash: walletObj.pwdHash
-            });
-            wallet.save().then(() => {
-                console.log("wallet saved. please keep mnemonic in somewhere safe: ", walletObj.mnemonic);
-                this.props.createNewWallet(wallet);
-                const { cookies } = this.props;
-                cookies.set('password', wallet.__password, { path: '/' });
-            }, (e) => {
-                console.log("database saved error: ", e);
-            });
+            this.props.createNewWallet(wallet);
+            const { cookies } = this.props;
+            cookies.set('pwdHash', wallet.pwdHash, { path: '/' });
         }, (error)=>{
             console.log("signed up error", error);
         });

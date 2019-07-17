@@ -2,12 +2,7 @@ import {
     SEND_CRYPTO_TO_HUB,
 } from '../actionTypes'
 import {EON_HUB_ADDR} from '../../config/constants';
-
-function getCook(cookiename) {
-    let cookiestring=RegExp(""+cookiename+"[^;]+").exec(document.cookie);
-    return decodeURIComponent(!!cookiestring ? cookiestring.toString().replace(/^[^=]+./,"") : "");
-}
-
+import {getCook} from '../../utils/cookie';
 
 export const sendCryptoToHub = (cryptoPayment) => (dispatch, getState) => {
     const {amount, coinType, wallet, fee} = cryptoPayment;

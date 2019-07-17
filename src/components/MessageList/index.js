@@ -424,7 +424,6 @@ class MessageList extends Component {
       };
       this.props.sendText(message);
       let fee = await this.getCryptoSendingFee(this.state.cryptoToBeSentCoinName);
-      debugger
       this.props.sendCryptoToHub({
         amount: this.state.cryptoToBeSent * this.state.cryptoToBeSentMax / 100,
         coinType: this.state.cryptoToBeSentCoinName,
