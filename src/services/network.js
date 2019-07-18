@@ -47,7 +47,6 @@ const getUnspentOutputs = (address) => {
     });
 };
 
-
 const getTransactions = (addresses) => {
     return c_blockexplorer.getMultiAddress(addresses, {}).then((result) => {
         return Array.isArray(result.txs) ? result.txs : [];

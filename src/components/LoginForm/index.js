@@ -6,7 +6,7 @@ import './LoginForm.css'
 import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import logInUser from '../../services/logInUser';
-import Wallet from '../../services/wallet.class';
+import Wallet from '../../services/BitcoinWallet';
 import { connect } from 'react-redux';
 import {logInCurrentUser} from "../../actions/actionCreators/logInCurrentUser";
 import {createNewWallet} from "../../actions/actionCreators/createNewWallet";

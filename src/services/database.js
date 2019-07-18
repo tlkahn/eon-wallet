@@ -1,9 +1,6 @@
 import Datastore from 'nedb';
-import Wallet from './wallet.class';
-
 
 class Database {
-
     constructor(name) {
         this.db = new Datastore({ filename: `./db/${name}.db`, autoload: true });
     }

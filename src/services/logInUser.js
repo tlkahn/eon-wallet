@@ -1,6 +1,6 @@
 import axios from 'axios/index';
 import Hasher from './hasher.util';
-import Wallet from './wallet.class';
+import Wallet from './BitcoinWallet';
 
 async function logInUser(info) {
     window.Wallet = Wallet;

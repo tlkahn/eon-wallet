@@ -1,13 +1,11 @@
 import Hasher from './hasher.util';
-import Wallet from './wallet.class';
+import Wallet from './BitcoinWallet';
 
 function signUpUser(usr) {
     const {fname, lname, phone, password} = usr;
-    let pwdHash = '';
-    
     return new Promise(function(resolve, reject) {
         Hasher.hash(password).then((hash) => {
-            pwdHash = hash;
+            let pwdHash = hash;
             const mnemonic = Wallet.generate();
             const wallet = Wallet.create(usr.fname+'.'+usr.lname, mnemonic).encrypt(pwdHash);
             Object.assign(wallet, {
@@ -21,11 +19,9 @@ function signUpUser(usr) {
                 console.log("database saved error: ", e);
                 reject(e);
             });
-
         }, (e) => {
             reject(e)
         });
-
     });
 }
 
