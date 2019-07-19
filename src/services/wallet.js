@@ -37,6 +37,10 @@ export class BasicWallet {
     get wif() {
         return this.__wif;
     }
+    
+    get phone() {
+        return this.__phone;
+    }
 
     /**
      * This is irreversible as there is not way to decrypt the wallet for good.
@@ -95,7 +99,7 @@ export class BasicWallet {
     static find(info) {
         let self = this;
         return new Promise((resolve, reject)=>{
-            BasicWallet.store.find({
+            this.store.find({
                 ...info
             }).then(async docs=>{
                 let results = docs.map(d=>{
@@ -107,7 +111,7 @@ export class BasicWallet {
             })
         });
     }
-
+    
     static create(phone, name, mnemonic, privateKey, publicKey, address) {
         throw "needs implementation"
     }
@@ -125,6 +129,7 @@ export class BasicWallet {
             coinType: this.coinType
         };
         if (this.__password) obj.password = this.__password;
+        if (this.__pwdHash) obj.pwdHash = this.__pwdHash;
         if (this.__phone)  obj.phone = this.__phone;
         return obj;
     }
@@ -134,5 +139,5 @@ export class BasicWallet {
 BasicWallet.Defaults = {
     Encryption: 'aes-192-cbc',
     Path: "m/44'/0'/0'/0/0",
-    DBFileName: 'wallets-v30',
+    DBFileName: 'wallets-v31',
 };

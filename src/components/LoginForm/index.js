@@ -37,8 +37,10 @@ class LoginForm extends Component {
     
     onSubmit() {
         let {phone, password} = this.state;
+        debugger
         logInUser({
-            phone, password
+            phone,
+            password
         }).then((wallets)=>{
             console.log(wallets);
             const wallet = wallets[0];
@@ -55,7 +57,9 @@ class LoginForm extends Component {
     
     componentDidMount() {
         const { cookies } = this.props;
-        this.phoneInputEl.value = cookies.get('phone');
+        if (cookies.get('phone') !== 'undefined') {
+            this.phoneInputEl.value = cookies.get('phone');
+        }
     }
     
     render() {

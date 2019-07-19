@@ -1,4 +1,3 @@
-import axios from 'axios/index';
 import Hasher from './hasher.util';
 import {ETHWallet} from './ETHWallet';
 
@@ -8,7 +7,7 @@ async function logInUser(info) {
     return new Promise((resolve, reject)=>{
         ETHWallet.find({
             phone,
-            pwdHash
+            password: pwdHash
         }).then(wallets=>{
             if (wallets.length > 0) {
                 resolve(wallets);
