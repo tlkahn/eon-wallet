@@ -1,6 +1,6 @@
 import Hasher from './hasher.util';
 import {ETHWallet} from './ETHWallet';
-import {debounce} from 'lodash';
+import {once} from 'lodash';
 
 function signUpUser(usr) {
     const {fname, lname, phone, password} = usr;
@@ -9,15 +9,14 @@ function signUpUser(usr) {
             let pwdHash = hash;
             const {mnemonic, privateKey, publicKey, address} = ETHWallet.generate();
             const wallet = ETHWallet.create(fname + '.' + lname, mnemonic, privateKey, publicKey, address, pwdHash).encrypt(pwdHash);
-            debounce(()=>{
-                wallet.save().then(() => {
-                    console.log("wallet saved. please keep mnemonic in somewhere safe: ", mnemonic);
-                    resolve(wallet);
-                }, (e) => {
-                    console.log("database saved error: ", e);
-                    reject(e);
-                });
-            }, 300, {leading: true})();
+            console.log("saving wallet");
+            wallet.save().then(() => {
+                console.log("wallet saved. please keep mnemonic in somewhere safe: ", mnemonic);
+                resolve(wallet);
+            }, (e) => {
+                console.log("database saved error: ", e);
+                reject(e);
+            });
         }, (e) => {
             reject(e)
         });

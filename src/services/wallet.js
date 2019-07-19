@@ -59,7 +59,6 @@ export class BasicWallet {
      */
     async readDecrypted(password) {
         return new Promise(async (resolve, reject)=>{
-                    debugger
             if (password && (await this.matches(password))){
                 const iv = Buffer.alloc(16, 0); // Initialization vector.
                 const cipher = crypto.createDecipheriv(BasicWallet.Defaults.Encryption, this.__pwdHash.slice(0, 24), iv);
@@ -77,7 +76,6 @@ export class BasicWallet {
 
     async matches(password) {
         let hash = await this.hash(password);
-        debugger
         return (hash === this.__pwdHash) || hash === this.pwdHash;
     }
 
@@ -111,21 +109,6 @@ export class BasicWallet {
 
     static create(name, mnemonic, privateKey, publicKey, address) {
         throw "needs implementation"
-    }
-    
-    save() {
-        let self = this;
-        let obj = this.toObject();
-        console.log({
-            network: this.network,
-            ...this,
-            ...obj
-        });
-        return self.constructor.store.insert({
-            network: this.network,
-            ...this,
-            ...obj
-        });
     }
     
     erase() {

@@ -18,10 +18,7 @@ export class ETHWallet extends BasicWallet {
     this.__network = props.network;
     this.__wif = props.wif;
     this.__pwdHash = props.pwdHash;
-    const infuraEndPoint = ETH_CONFIG.INFURA_END_POINT;
-    const infuraAPIKey = ETH_CONFIG.INFURA_API_KEY;
     // const web3 = new Web3(infuraEndPoint + infuraAPIKey);
-    this.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
   }
   
   static generate() {
@@ -41,6 +38,21 @@ export class ETHWallet extends BasicWallet {
     });
   }
   
+  save() {
+    let self = this;
+    let obj = this.toObject();
+    console.log({
+      network: this.network,
+      ...this,
+      ...obj
+    });
+    return self.constructor.store.insert({
+      network: this.network,
+      ...this,
+      ...obj
+    });
+  }
+  
   getGasPrice(gasOption) {
     return new Promise((resolve, reject)=>{
       let speed = gasOption.speed || 'fast';
@@ -54,6 +66,10 @@ export class ETHWallet extends BasicWallet {
   
   getGasLimit(gasOption) {
     return gasOption.gasLimit || ETH_CONFIG.ETH_GAS_LIMIT;
+  }
+  
+  get web3() {
+    return new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
   }
   
   coins() {
