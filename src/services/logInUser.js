@@ -5,9 +5,9 @@ async function logInUser(info) {
     const {phone, password} = info;
     let pwdHash = await Hasher.hash(password);
     return new Promise((resolve, reject)=>{
-        ETHWallet.find({
+        ETHWallet.store.find({
             phone,
-            password: pwdHash
+            pwdHash
         }).then(wallets=>{
             if (wallets.length > 0) {
                 resolve(wallets);

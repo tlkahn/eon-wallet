@@ -6,7 +6,6 @@ import './LoginForm.css'
 import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import logInUser from '../../services/logInUser';
-// import Wallet from '../../services/BitcoinWallet';
 import {ETHWallet} from '../../services/ETHWallet';
 import { connect } from 'react-redux';
 import {logInCurrentUser} from "../../actions/actionCreators/logInCurrentUser";
@@ -37,7 +36,6 @@ class LoginForm extends Component {
     
     onSubmit() {
         let {phone, password} = this.state;
-        debugger
         logInUser({
             phone,
             password

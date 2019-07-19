@@ -11,7 +11,7 @@ export class BasicWallet {
         this.__password = '';
         this.__pwdHash = '';
         this.__phone = '';
-        BasicWallet.__store = new Database(BasicWallet.Defaults.DBFileName);
+        if (!BasicWallet.__store) BasicWallet.__store = new Database(BasicWallet.Defaults.DBFileName);
     }
     
     get coinType() {
@@ -93,6 +93,7 @@ export class BasicWallet {
     }
 
     static get store() {
+        if (!BasicWallet.__store) BasicWallet.__store = new Database(BasicWallet.Defaults.DBFileName);
         return this.__store;
     }
     
@@ -139,5 +140,5 @@ export class BasicWallet {
 BasicWallet.Defaults = {
     Encryption: 'aes-192-cbc',
     Path: "m/44'/0'/0'/0/0",
-    DBFileName: 'wallets-v31',
+    DBFileName: 'wallets-v32',
 };

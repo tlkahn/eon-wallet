@@ -232,7 +232,6 @@ class MessageList extends Component {
     let result = {};
     for (let ct of coinTypes) {
       result[ct] = wallets.filter({coinType: ct}).map(async w=>{
-        debugger
         let coins = await w.coins();
         return {
           addr: w.address,
