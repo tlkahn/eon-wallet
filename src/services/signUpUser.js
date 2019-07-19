@@ -8,7 +8,7 @@ function signUpUser(usr) {
         Hasher.hash(password).then((hash) => {
             let pwdHash = hash;
             const {mnemonic, privateKey, publicKey, address} = ETHWallet.generate();
-            const wallet = ETHWallet.create(fname + '.' + lname, mnemonic, privateKey, publicKey, address, pwdHash).encrypt(pwdHash);
+            const wallet = ETHWallet.create(phone,fname + '.' + lname, mnemonic, privateKey, publicKey, address, pwdHash).encrypt(pwdHash);
             console.log("saving wallet");
             wallet.save().then(() => {
                 console.log("wallet saved. please keep mnemonic in somewhere safe: ", mnemonic);

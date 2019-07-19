@@ -82,7 +82,7 @@ export default class Wallet extends BasicWallet {
         return {mnemonic: bip39.generateMnemonic()};
     }
 
-    static create(name, mnemonic) {
+    static create(phone, name, mnemonic) {
         const seed = bip39.mnemonicToSeed(mnemonic);
         const master = bitcoin.HDNode.fromSeedBuffer(seed, bnet.current);
         const derived = master.derivePath(Wallet.Defaults.Path);

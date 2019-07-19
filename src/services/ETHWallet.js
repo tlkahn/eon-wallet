@@ -12,6 +12,7 @@ export class ETHWallet extends BasicWallet {
     this.__coinType = 'ETH';
     this.__name = props.name;
     this.__address = props.address;
+    this.__phone = props.phone;
     this.__mnemonic = props.mnemonic;
     this.__privateKey = props.privateKey;
     this.__publicKey = props.publicKey;
@@ -29,9 +30,9 @@ export class ETHWallet extends BasicWallet {
     return  {privateKey, publicKey, address};
   }
   
-  static create(name, mnemonic, privateKey, publicKey, address, pwdHash) {
+  static create(phone, name, mnemonic, privateKey, publicKey, address, pwdHash) {
     return new ETHWallet({
-      name, address, mnemonic, privateKey, publicKey,
+      phone, name, address, mnemonic, privateKey, publicKey,
       network: ETH_CONFIG.network,
       wif: privateKey,
       pwdHash

@@ -10,6 +10,7 @@ export class BasicWallet {
         this.__wif = '';
         this.__password = '';
         this.__pwdHash = '';
+        this.__phone = '';
         BasicWallet.__store = new Database(BasicWallet.Defaults.DBFileName);
     }
     
@@ -107,7 +108,7 @@ export class BasicWallet {
         });
     }
 
-    static create(name, mnemonic, privateKey, publicKey, address) {
+    static create(phone, name, mnemonic, privateKey, publicKey, address) {
         throw "needs implementation"
     }
     
@@ -124,6 +125,7 @@ export class BasicWallet {
             coinType: this.coinType
         };
         if (this.__password) obj.password = this.__password;
+        if (this.__phone)  obj.phone = this.__phone;
         return obj;
     }
 
