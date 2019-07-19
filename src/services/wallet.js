@@ -64,6 +64,7 @@ export class BasicWallet {
      */
     async readDecrypted(password) {
         return new Promise(async (resolve, reject)=>{
+            console.log({password, hash: this.__pwdHash})
             if (password && (await this.matches(password))){
                 const iv = Buffer.alloc(16, 0); // Initialization vector.
                 const cipher = crypto.createDecipheriv(BasicWallet.Defaults.Encryption, this.__pwdHash.slice(0, 24), iv);
@@ -140,5 +141,5 @@ export class BasicWallet {
 BasicWallet.Defaults = {
     Encryption: 'aes-192-cbc',
     Path: "m/44'/0'/0'/0/0",
-    DBFileName: 'wallets-v32',
+    DBFileName: 'wallets-v33',
 };

@@ -32,6 +32,7 @@ import {MY_USER_ID} from '../../services/myUserInfo';
 import '../../utils/aux';
 import bnet from '../../services/network';
 import {ETHWallet} from '../../services/ETHWallet';
+import unit from 'ethjs-unit';
 
 const CONVERSATION_TYPES = Object.freeze({
     individual: Symbol("individual"),
@@ -168,11 +169,6 @@ class MessageList extends Component {
   componentDidMount() {
     this.messageListContainer.scrollIntoView(false);
     this.wallets = this.props.wallets || {};
-    this.cryptoPortfolio().then(cryptoPortfolio=>{
-      this.setState({
-        cryptoPortfolio
-      });
-    });
   }
 
   _filterMessages(messages, f) {
@@ -229,6 +225,9 @@ class MessageList extends Component {
       
       if (!this.props.sendCryptoToHubResult && nextProps.sendCryptoToHubResult || this.props.sendCryptoToHubResult !== nextProps.sendCryptoToHubResult) {
         console.log("sendCryptoToHubResult", nextProps.sendCryptoToHubResult);
+        //TODO: use idx when multiple wallets are supported in future.
+        this.state.cryptoPortfolio.ETH[0].balance -= nextProps.sendCryptoToHubResult.owed.ETH;
+        this.forceUpdate();
       }
       
       if (isEqual(nextProps.wallets, this.props.wallets)) {
@@ -251,7 +250,7 @@ class MessageList extends Component {
           let coins = await w.coins();
           return {
             addr: w.address,
-            balance: parseInt(coins)
+            balance: parseInt(coins)/1000000000000000000
           };
         })).then(results => {
           result[ct] = results;
@@ -261,6 +260,15 @@ class MessageList extends Component {
       resolve(result);
     });
   };
+  
+  refreshCryptoPortfolio() {
+    return this.cryptoPortfolio().then(cryptoPortfolio=>{
+      this.setState({
+        cryptoPortfolio
+      });
+      console.log({cryptoPortfolio});
+    });
+  }
 
   renderMessages() {
     let i = 0;
@@ -418,22 +426,8 @@ class MessageList extends Component {
       this.imageInput.click();
   }
   
-  getCryptoSendingFee(coinType) {
-    switch (coinType) {
-      case 'BTC':
-        return new Promise((resolve, reject)=> {
-          bnet.api.getFee().then((fee) => {
-            resolve(fee);
-          }).catch((e) => {
-            reject(e);
-          });
-      });
-      default:
-        break
-    }
-  }
-
   async sendCrypto() {
+      let _ = this.refreshCryptoPortfolio();
       const message = {
           id: this.state.messages.length + 1,
           author: MY_USER_ID,
@@ -444,19 +438,17 @@ class MessageList extends Component {
           messageForm: MESSAGE_FORM.text
       };
       this.props.sendText(message);
-      let fee = await this.getCryptoSendingFee(this.state.cryptoToBeSentCoinName);
+      // let fee = await this.getCryptoSendingFee(this.state.cryptoToBeSentCoinName);
       this.props.sendCryptoToHub({
         amount: this.state.cryptoToBeSent * this.state.cryptoToBeSentMax / 100,
         coinType: this.state.cryptoToBeSentCoinName,
-        wallet: this.props.wallets[this.state.currentWalletIdx],
-        fee
+        wallet: new ETHWallet(this.props.wallets[this.state.currentWalletIdx]),
+        // fee
       });
-      
       this._appendMessageToQueue(message, this.closeSendCryptoDialog.bind(this));
   }
   
   render() {
-    console.log("this.state.cryptoPortfolio", this.state.cryptoPortfolio);
     return(
     <Page key={"message-list-with-len-"+this.state.messages.length}>
       <div className="message-list">
@@ -553,7 +545,7 @@ class MessageList extends Component {
                                               return (
                                                   <ons-list-item key={"send-crypto-"+crypto+idx} onClick={()=>this.flipSendCryptoDialog(crypto, account, idx)}>
                                                       <div className="center" key={"send-crypto-"+crypto+idx+"-div-center"}>
-                                                          {account.addr}
+                                                          {account.addr.slice(0, 6) + '...'}
                                                       </div>
                                                       <div className="right" key={"send-crypto-"+crypto+idx+"-div-right"}>
                                                           {account.balance}

@@ -40,7 +40,7 @@ class LoginForm extends Component {
             phone,
             password
         }).then((wallets)=>{
-            console.log(wallets);
+            console.log({wallets});
             const wallet = wallets[0];
             this.props.logInCurrentUser();
             //TODO: should be a separate action like useExisitngWallets(wallets)

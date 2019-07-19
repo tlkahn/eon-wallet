@@ -18,7 +18,8 @@ export class ETHWallet extends BasicWallet {
     this.__publicKey = props.publicKey;
     this.__network = props.network;
     this.__wif = props.wif;
-    this.__pwdHash = props.pwdHash;
+    this.__pwdHash = props.__pwdHash;
+    this.pwdHash = props.pwdHash;
     // const web3 = new Web3(infuraEndPoint + infuraAPIKey);
   }
   
@@ -100,6 +101,8 @@ export class ETHWallet extends BasicWallet {
       let senderPrivateKey = this.getPrivateKey();
       let recipientAddress = address;
       let value = unit.toWei(eth, 'ether');
+      
+      console.log({senderAddress, senderPrivateKey, recipientAddress, value});
   
       let gasPrice = this.getGasPrice(gasOption);
       let gasLimit = this.getGasLimit(gasOption);
@@ -133,7 +136,7 @@ export class ETHWallet extends BasicWallet {
                 reject(err);
               } else {
                 console.log({success: true, message: 'Transaction was sent successfully. Transaction hash: ' + result + '.', data: null});
-                resolve({success: true, message: 'Transaction was sent successfully. Transaction hash: ' + result + '.', data: null, result})
+                resolve({success: true, message: 'Transaction was sent successfully. Transaction hash: ' + result + '.', data: {rawTransaction}, result})
               }
             });
           }
@@ -142,8 +145,8 @@ export class ETHWallet extends BasicWallet {
     });
   }
   
-  update() {
-  
+  async update() {
+    let _ = await this.coins()
   }
 
 }

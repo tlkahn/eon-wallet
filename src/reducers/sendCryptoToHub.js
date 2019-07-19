@@ -8,6 +8,8 @@ const initialState = {
         'ETH': 0,
         'EOS': 0
     },
+    status: null,
+    result: {}
 };
 
 export const sendCryptoToHub = (state = initialState, action) => {
@@ -20,7 +22,9 @@ export const sendCryptoToHub = (state = initialState, action) => {
                 owed: {
                     ...state.owed,
                     [coinType]: state.owed[coinType] + amount
-                }
+                },
+                status: action.payload.status,
+                result: action.payload.result
             };
         default:
             return state;
@@ -33,6 +37,5 @@ export default ({
 
 //selectors
 export const getSendCryptoToHubResult = (state) => {
-    const {owed,} = state.sendCryptoToHub;
-    return {owed};
+    return state.sendCryptoToHub;
 };
