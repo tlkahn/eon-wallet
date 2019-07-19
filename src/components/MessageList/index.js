@@ -228,13 +228,14 @@ class MessageList extends Component {
   
   get cryptoPortfolio() {
     let wallets = this.props.wallets || [];
-    let coinTypes = wallets.map(w=>w.coinType).uniq();
+    let coinTypes = wallets.map(w=>w.__coinType).uniq();
     let result = {};
     for (let ct of coinTypes) {
-      result[ct] = wallets.filter({coinType: ct}).map(w=>{
+      result[ct] = wallets.filter({coinType: ct}).map(async w=>{
+        let coins = await w.coins();
         return {
           addr: w.address,
-          balance: w.coins || 0
+          balance: coins
         };
       });
     }

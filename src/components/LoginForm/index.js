@@ -6,7 +6,8 @@ import './LoginForm.css'
 import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import logInUser from '../../services/logInUser';
-import Wallet from '../../services/BitcoinWallet';
+// import Wallet from '../../services/BitcoinWallet';
+import {ETHWallet} from '../../services/ETHWallet';
 import { connect } from 'react-redux';
 import {logInCurrentUser} from "../../actions/actionCreators/logInCurrentUser";
 import {createNewWallet} from "../../actions/actionCreators/createNewWallet";
@@ -19,7 +20,7 @@ class LoginForm extends Component {
             password: ''
         };
         //TODO: remove in production
-        window.Wallet = Wallet;
+        window.Wallet = ETHWallet;
     }
 
     static propTypes = {

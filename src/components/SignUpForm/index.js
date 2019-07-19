@@ -5,11 +5,10 @@ import FacebookLoginButton from '../FacebookLoginButton';
 import FormDivider from '../FormDivider';
 import './SignUpForm.css'
 import signUpUser from '../../services/signUpUser';
-import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import {logInCurrentUser} from '../../actions/actionCreators/logInCurrentUser';
 import {createNewWallet} from '../../actions/actionCreators/createNewWallet';
-import Wallet from '../../services/BitcoinWallet';
+import {ETHWallet} from '../../services/ETHWallet';
 
 class SignUpForm extends Component {
     constructor(props) {
@@ -21,12 +20,8 @@ class SignUpForm extends Component {
             password: ""
         };
         //TODO: remove in production
-        window.Wallet = Wallet;
+        window.Wallet = ETHWallet;
     }
-
-    // static propTypes = {
-    //     cookies: instanceOf(Cookies).isRequired
-    // };
 
     onSubmit() {
         let {fname, lname, phone, password} = this.state;

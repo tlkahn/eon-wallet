@@ -1,13 +1,16 @@
 import '../utils/aux';
 import crypto from 'crypto';
 import Database from './database';
+import Hasher from './hasher.util';
 
 export class BasicWallet {
     constructor(info) {
         this.__address = info.address;
         this.__network = info.network;
-        this.__coinType = info.coinType;
         this.__wif = '';
+        this.__password = '';
+        this.__pwdHash = '';
+        BasicWallet.__store = new Database(BasicWallet.Defaults.DBFileName);
     }
     
     get coinType() {
@@ -34,7 +37,6 @@ export class BasicWallet {
         return this.__wif;
     }
 
-
     /**
      * This is irreversible as there is not way to decrypt the wallet for good.
      * The only way to read the key is with the readDecrypted function
@@ -42,10 +44,9 @@ export class BasicWallet {
      * @returns {BasicWallet} It returns itself
      * @code const wallet = Wallet.create(name, mnemonic).encrypt(password);
      */
-    encrypt(password) {
-        if (this.__password) throw new Error('Cannot re-encrypt an encrypted key');
-        this.__password = password;
-        const cipher = crypto.createCipher(BasicWallet.Defaults.Encryption, password);
+    encrypt(pwdHash) {
+        const iv = Buffer.alloc(16, 0);
+        const cipher = crypto.createCipheriv(BasicWallet.Defaults.Encryption, pwdHash.slice(0, 24), iv);
         this.__wif = cipher.update(this.__wif, 'utf8', 'hex') + cipher.final('hex');
         return this;
     }
@@ -56,15 +57,28 @@ export class BasicWallet {
      * @param password Hashed or not it will be used, it only needs to match the one used in encryption
      * @returns {string} It will not return the wallet itself like the encrypt
      */
-    readDecrypted(password) {
-        if (!this.__password) throw new Error('Cannot de-encrypt an key that was not encrypted');
-        if (!password || !this.matches(password)) throw new Error('Passwords do not match');
-        const cipher = crypto.createDecipher(BasicWallet.Defaults.Encryption, password);
-        return cipher.update(this.__wif, 'hex', 'utf8') + cipher.final('utf8');
+    async readDecrypted(password) {
+        return new Promise(async (resolve, reject)=>{
+                    debugger
+            if (password && (await this.matches(password))){
+                const iv = Buffer.alloc(16, 0); // Initialization vector.
+                const cipher = crypto.createDecipheriv(BasicWallet.Defaults.Encryption, this.__pwdHash.slice(0, 24), iv);
+                resolve(cipher.update(this.__wif, 'hex', 'utf8') + cipher.final('utf8'));
+            }
+            else {
+                reject({error: "password not match"});
+            }
+        })
+    }
+    
+    async hash(str) {
+        return await Hasher.hash(str);
     }
 
-    matches(password) {
-        return password === this.__password;
+    async matches(password) {
+        let hash = await this.hash(password);
+        debugger
+        return (hash === this.__pwdHash) || hash === this.pwdHash;
     }
 
     send(amount, address, fee, password) {
@@ -76,8 +90,7 @@ export class BasicWallet {
     }
 
     static get store() {
-        if (!BasicWallet.__store) BasicWallet.__store = new Database(BasicWallet.Defaults.DBFileName);
-        return BasicWallet.__store;
+        return this.__store;
     }
     
     static find(info) {
@@ -96,7 +109,7 @@ export class BasicWallet {
         });
     }
 
-    static create(name, mnemonic) {
+    static create(name, mnemonic, privateKey, publicKey, address) {
         throw "needs implementation"
     }
     
@@ -134,7 +147,7 @@ export class BasicWallet {
 }
 
 BasicWallet.Defaults = {
-    Encryption: 'aes-256-cbc',
+    Encryption: 'aes-192-cbc',
     Path: "m/44'/0'/0'/0/0",
-    DBFileName: 'wallets-v11',
+    DBFileName: 'wallets-v30',
 };

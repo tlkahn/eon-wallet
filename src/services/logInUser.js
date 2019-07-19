@@ -1,14 +1,12 @@
 import axios from 'axios/index';
 import Hasher from './hasher.util';
-import Wallet from './BitcoinWallet';
+import {ETHWallet} from './ETHWallet';
 
 async function logInUser(info) {
-    window.Wallet = Wallet;
     const {phone, password} = info;
     let pwdHash = await Hasher.hash(password);
     return new Promise((resolve, reject)=>{
-
-        Wallet.find({
+        ETHWallet.find({
             phone,
             pwdHash
         }).then(wallets=>{

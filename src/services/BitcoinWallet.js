@@ -1,11 +1,11 @@
 import bip39 from 'bip39';
 import bitcoin from 'bitcoinjs-lib';
-import {BTC_CONST} from '../config/constants';
+import {BTC_CONFIG} from '../config/constants';
 import bnet from './network';
 import '../utils/aux';
 import {BasicWallet} from "./wallet";
 
-class Wallet extends BasicWallet {
+export default class Wallet extends BasicWallet {
     constructor(info) {
         super(info);
         this.__name = info.name;
@@ -35,7 +35,7 @@ class Wallet extends BasicWallet {
      * @returns {number|*}
      */
     get coins() {
-        return this.utxos.reduce((a, c) => a + c.value, 0) / BTC_CONST.Bitcoin.Satoshis;
+        return this.utxos.reduce((a, c) => a + c.value, 0) / BTC_CONFIG.Bitcoin.Satoshis;
     }
 
     get name() {
@@ -43,8 +43,8 @@ class Wallet extends BasicWallet {
     }
 
     send(btc, address, fee, password) {
-        const satoshis = Math.round(btc * BTC_CONST.Bitcoin.Satoshis);
-        const satoshis_fee = Math.round(fee * BTC_CONST.Bitcoin.Satoshis);
+        const satoshis = Math.round(btc * BTC_CONFIG.Bitcoin.Satoshis);
+        const satoshis_fee = Math.round(fee * BTC_CONFIG.Bitcoin.Satoshis);
 
         const network = bnet.current;
 
@@ -79,7 +79,7 @@ class Wallet extends BasicWallet {
     }
     
     static generate() {
-        return bip39.generateMnemonic();
+        return {mnemonic: bip39.generateMnemonic()};
     }
 
     static create(name, mnemonic) {
@@ -91,9 +91,9 @@ class Wallet extends BasicWallet {
         const coinType = 'BTC';
         return new Wallet({
             coinType,
-            name: name,
-            address: address,
-            wif: wif,
+            name,
+            address,
+            wif,
             network: bnet.name,
         });
     }
@@ -103,11 +103,9 @@ class Wallet extends BasicWallet {
             this.utxos = result.utxos;
             return true;
         }, (e) => {
-            if (e.toString() === BTC_CONST.ReturnValues.NoFreeOutputs) {
+            if (e.toString() === BTC_CONFIG.ReturnValues.NoFreeOutputs) {
             }
         });
     }
     
 }
-
-export default Wallet;
