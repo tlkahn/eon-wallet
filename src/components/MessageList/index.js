@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {debounce, throttle} from 'lodash';
+import {debounce, isEqual} from 'lodash';
 import { connect } from 'react-redux';
 //components
 import Compose from '../Compose';
@@ -31,6 +31,7 @@ import {MY_USER_ID} from '../../services/myUserInfo';
 //utils
 import '../../utils/aux';
 import bnet from '../../services/network';
+import {ETHWallet} from '../../services/ETHWallet';
 
 const CONVERSATION_TYPES = Object.freeze({
     individual: Symbol("individual"),
@@ -58,7 +59,8 @@ class MessageList extends Component {
           cryptoToBeSentRecipient: null,
           sendCryptoDialogFlipped: false,
           conversationType: CONVERSATION_TYPES.individual,
-          infoDialogOpen: false
+          infoDialogOpen: false,
+          cryptoPortfolio: {}
       };
       window.addEventListener('message', (event)=> {
           var loc = event.data;
@@ -166,6 +168,11 @@ class MessageList extends Component {
   componentDidMount() {
     this.messageListContainer.scrollIntoView(false);
     this.wallets = this.props.wallets || {};
+    this.cryptoPortfolio().then(cryptoPortfolio=>{
+      this.setState({
+        cryptoPortfolio
+      });
+    });
   }
 
   _filterMessages(messages, f) {
@@ -194,9 +201,8 @@ class MessageList extends Component {
   componentDidUpdate() {
     this.messageListContainer.scrollIntoView(false);
     window.localStorage.setItem('messages', JSON.stringify(this.state.messages));
-    console.log("this.props.wallets", this.props.wallets);
   }
-
+  
   componentWillReceiveProps(nextProps, nextContext) {
       this.getMessages(nextProps.conversationId, MY_USER_ID);
       if (!this.props.groupChatUsrIds && nextProps.groupChatUsrIds || this.props.groupChatUsrIds !== nextProps.groupChatUsrIds) {
@@ -224,23 +230,37 @@ class MessageList extends Component {
       if (!this.props.sendCryptoToHubResult && nextProps.sendCryptoToHubResult || this.props.sendCryptoToHubResult !== nextProps.sendCryptoToHubResult) {
         console.log("sendCryptoToHubResult", nextProps.sendCryptoToHubResult);
       }
+      
+      if (isEqual(nextProps.wallets, this.props.wallets)) {
+        this.cryptoPortfolio().then(cryptoPortfolio=>{
+          this.setState({
+            cryptoPortfolio
+          });
+        });
+      }
   }
   
-  get cryptoPortfolio() {
-    let wallets = this.props.wallets || [];
-    let coinTypes = wallets.map(w=>w.__coinType).uniq();
-    let result = {};
-    for (let ct of coinTypes) {
-      result[ct] = wallets.filter({coinType: ct}).map(async w=>{
-        let coins = await w.coins();
-        return {
-          addr: w.address,
-          balance: coins
-        };
-      });
-    }
-    return result;
-  }
+  cryptoPortfolio = () => {
+    return new Promise((resolve, reject) => {
+      let wallets = this.props.wallets;
+      let coinTypes = wallets.map(w => w.__coinType).uniq();
+      let result = {};
+      for (let ct of coinTypes) {
+        Promise.all(wallets.filter({coinType: ct}).map(async wlt => {
+          let w = new ETHWallet(wlt);
+          let coins = await w.coins();
+          return {
+            addr: w.address,
+            balance: parseInt(coins)
+          };
+        })).then(results => {
+          result[ct] = results;
+        });
+      }
+      console.log({result});
+      resolve(result);
+    });
+  };
 
   renderMessages() {
     let i = 0;
@@ -436,6 +456,7 @@ class MessageList extends Component {
   }
   
   render() {
+    console.log("this.state.cryptoPortfolio", this.state.cryptoPortfolio);
     return(
     <Page key={"message-list-with-len-"+this.state.messages.length}>
       <div className="message-list">
@@ -524,11 +545,11 @@ class MessageList extends Component {
                   <div key="front" className="crypto-list-wrapper">
                       <ons-list>
                           {
-                              Object.keys(this.cryptoPortfolio).map((crypto, idx)=>{
+                              Object.keys(this.state.cryptoPortfolio).map((crypto, idx)=>{
                                   return (
                                       <div key={"crypto-wrapper-"+idx}>
                                           <ons-list-header>{crypto}</ons-list-header>
-                                          {this.cryptoPortfolio[crypto].map((account, idx)=>{
+                                          {this.state.cryptoPortfolio[crypto].map((account, idx)=>{
                                               return (
                                                   <ons-list-item key={"send-crypto-"+crypto+idx} onClick={()=>this.flipSendCryptoDialog(crypto, account, idx)}>
                                                       <div className="center" key={"send-crypto-"+crypto+idx+"-div-center"}>
