@@ -1,68 +1,85 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Purpose
 
-## Available Scripts
+Neon Chain is a next generation groupware on blockchain which enables companies to transform into digital communities. EON Wallet is a wallet/browser/IM which brings blockchain to mainstream users, fully compatible with *EOS* series blockchain including *EON/BOS/everiToken* etc.
 
-In the project directory, you can run:
+# Product
 
-### `npm start`
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Core features
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+-   Intra-organization and cross-organization collaboration and communication with features providing bots and open API for 3rd party dapps/apps, compatible with all mainstream public protocols such as IRC, WebRTC, XMPP as well as proprietary ones Slack, Telegram, WeChat etc.
+-   Existing blockchain as a replacement to cloud services, typically focusing on data. McKinsey report <sup><a id="fnr.2" class="footref" href="#fn.2">2</a></sup> conceptualized those into 6 categories:
 
-### `npm test`
+-   Tokenization
+    There are two types of tokenization: utility tokens and security tokens. A token backed by asset is typically defined as security token. Public offering of utility tokens often take the path of ICO/IEO/etc, security tokens do STO. For example, A standard security token is decribed as:
+    
+        interface IERCST is IERCPFT {
+        
+          // Document Management
+          function getDocument(bytes32 _name) 
+                               external view returns (string, bytes32);
+          function setDocument(bytes32 _name, 
+                               string _uri, 
+                               bytes32 _documentHash) external;
+        
+          // Controller Operation
+          function isControllable() external view returns (bool);
+        
+          // Token Issuance
+          function isIssuable() external view returns (bool);
+          function issueByTranche(bytes32 _tranche, 
+                                  address _tokenHolder, 
+                                  uint256 _amount, 
+                                  bytes _data) external;
+          event IssuedByTranche(bytes32 indexed tranche, 
+                                address indexed operator, 
+                                address indexed to, 
+                                uint256 amount, 
+                                bytes data, 
+                                bytes operatorData);
+        
+          // Token Redemption
+          function redeemByTranche(bytes32 _tranche, 
+                                   uint256 _amount, 
+                                   bytes _data) external;
+          function operatorRedeemByTranche(bytes32 _tranche, 
+                                           address _tokenHolder, 
+                                           uint256 _amount, 
+                                           bytes _operatorData) external;
+          event RedeemedByTranche(bytes32 indexed tranche, 
+                                  address indexed operator, 
+                                  address indexed from, 
+                                  uint256 amount, 
+                                  bytes operatorData);
+        
+          // Transfer Validity
+          function canSend(address _from, 
+                           address _to, 
+                           bytes32 _tranche, 
+                           uint256 _amount, 
+                           bytes _data) 
+                           external view returns (byte, bytes32, bytes32);
+        
+        }
+    
+    A new model propsed by Neon Chain is so called **mini-tokenization**. Users can create and retire tokens on the fly. Anyone can create and circulate a token just like send a message. The lifetime of a token can lowered to minutes, days from today's years. Retirement of tokens can be redemption, burning, or consumption etc. Thus users can use tokens for various purposes rather than just financing. For example, a mini-tokenization for staff trip expense reimbursement:
+    
+        interface ticketStub is AccountingItems {
+          function buy(float32 price) external returns (bool);
+          function reimbursement() external returns (bool);
+        }
+    
+    Tokens can even be created by AI agents during the process of cross-orgnization collaboration, e.g. conversation logs between robots of different organizations, thus avoiding data loss and potential abuse. Thus maximal mutual trust is estalished. Users can create asset-backed tokens or utility tokens for fast cross-organization or cross-border transactions and accelerate flow of data and exchange of values.
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+-   Neon Chain's tokenization templates and development framework cover most typical scenarios in industries. Based on our rich experience as blockchain consultant specializing in implementation, we provide typical tokenization templates based on tech and industry standards. This one-stop service offers a standardized consulting service with immediate impact. Minimum tech knowledge is required. Only some public parameters and Neon Chain's smart contract framework will do the rest.
 
-### `npm run build`
+-   Drag-n-drop style 3rd party extensions. Neon Chain offers rich features comparable to current mainstream cloud service. (Actually we expect with advent of 5G and IoT, those services based on blockchain will soon be defined as fog computing service). Users can cherrypick services such as tokenization, messaging, privacy preserving, data storage etc., into their own application with ease. Thus transforming legacy business systems such as membership, loyalty program, customer support apps into a community-facing blockchain service app become unprecedentedly easy. To put it another way, We enable SMEs to have their own WeChat, in their own terms.
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+-   Neon Chain is based on Polkadot, a recent cross-chain infrastructure led by Ethereum's pervious co-founder Gavin Wood. Such infrastructure is created with cross chain in mind. Neon Chain will act as the middle layer and scaffold to use features from multiple blockchains.
+    
+    For example, an automobile company can finance its new venture in hydrogen battery cars by issuing a mix of asset backed tokens and equity token. Everyone who is authorized to participate can join and subscribe with their chosen method to pay. The proceeds will be a mix of various fiat money, BTC, ETH, even tokens the company claims to accept. Public chain TPS will become less of an issue since majority of workload are processed on the highly performant Neon Chain. 
+    
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+-   Privacy preserving unlimited history data storage.
+    
+    Collaboration happens in groups like Slack's channels or Telegram's groups. All conversation records will be kept in Neon Chain (to be specific, the hash digest of messages saved as index, due to performance concerns). All data on chain and offchain will be encrypted with privilege hierarchies. Without user's consent, those contents are unreadable avoiding data leak and abuse.
