@@ -7,10 +7,7 @@ import "slick-carousel/slick/slick-theme.css";
 import "./DappStore.css";
 import DappStoreComponent from './DappStoreComponent';
 
-
 export default class DappStore extends React.Component {
-
-
   static renderPage(route, navigator) {
     route.props = route.props || {};
     route.props.navigator = navigator;
