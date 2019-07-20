@@ -29,13 +29,22 @@ export const sendCryptoToHub = (cryptoPayment) => (dispatch, getState) => {
             });
         });
     }, (e) => {
-        console.log("error in send crypto to hub", e);
+        console.log("error in send crypto to hub", {e});
+        dispatch({
+            type: 'SEND_CRYPTO_TO_HUB',
+            payload: {
+                ...cryptoPayment,
+                status: 'failure',
+                reason: e.error,
+            }
+        });
+        throw(e);
     });
     
-    dispatch({
-        type: 'SEND_CRYPTO_TO_HUB',
-        payload: {
-            ...cryptoPayment,
-        }
-    });
+    // dispatch({
+    //     type: 'SEND_CRYPTO_TO_HUB',
+    //     payload: {
+    //         ...cryptoPayment,
+    //     }
+    // });
 };

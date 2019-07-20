@@ -115,6 +115,7 @@ export class ETHWallet extends BasicWallet {
           if (err) {
             console.log("error when sending eth: ", err);
             reject(err);
+            throw(err);
           } else {
             const rawTransaction = {
               from: senderAddress,
@@ -134,6 +135,7 @@ export class ETHWallet extends BasicWallet {
               if (err) {
                 console.log({success: false, message: err.toString(), data: null});
                 reject(err);
+                throw(err);
               } else {
                 console.log({success: true, message: 'Transaction was sent successfully. Transaction hash: ' + result + '.', data: null});
                 resolve({success: true, message: 'Transaction was sent successfully. Transaction hash: ' + result + '.', data: {rawTransaction}, result})
@@ -141,6 +143,8 @@ export class ETHWallet extends BasicWallet {
             });
           }
         });
+      }, (e)=>{
+        reject(e);
       });
     });
   }

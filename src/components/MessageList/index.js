@@ -225,8 +225,26 @@ class MessageList extends Component {
       
       if (!this.props.sendCryptoToHubResult && nextProps.sendCryptoToHubResult || this.props.sendCryptoToHubResult !== nextProps.sendCryptoToHubResult) {
         console.log("sendCryptoToHubResult", nextProps.sendCryptoToHubResult);
+        if (nextProps.sendCryptoToHubResult.status === 'failure') {
+          this.setState({
+            sendCryptoToHubStatus: 'failure',
+            sendCryptoToHubFailureReason: nextProps.sendCryptoToHubResult.reason
+          });
+          return;
+        }
         //TODO: use idx when multiple wallets are supported in future.
         this.state.cryptoPortfolio.ETH[0].balance -= nextProps.sendCryptoToHubResult.owed.ETH;
+        const message = {
+          id: this.state.messages.length + 1,
+          author: MY_USER_ID,
+          recipient: this.props.conversationId,
+          conversationId: this.props.conversationId,
+          message: `You sent ${this.state.cryptoToBeSent * this.state.cryptoToBeSentMax / 100} ${this.state.cryptoToBeSentCoinName} to ${this.props.conversationId}`,
+          timestamp: new Date().getTime(),
+          messageForm: MESSAGE_FORM.text
+        };
+        this.props.sendText(message);
+        this._appendMessageToQueue(message, this.closeSendCryptoDialog.bind(this));
         this.forceUpdate();
       }
       
@@ -428,27 +446,23 @@ class MessageList extends Component {
   
   async sendCrypto() {
       let _ = this.refreshCryptoPortfolio();
-      const message = {
-          id: this.state.messages.length + 1,
-          author: MY_USER_ID,
-          recipient: this.props.conversationId,
-          conversationId: this.props.conversationId,
-          message: `You sent ${this.state.cryptoToBeSent * this.state.cryptoToBeSentMax / 100} ${this.state.cryptoToBeSentCoinName} to ${this.props.conversationId}`,
-          timestamp: new Date().getTime(),
-          messageForm: MESSAGE_FORM.text
-      };
-      this.props.sendText(message);
-      // let fee = await this.getCryptoSendingFee(this.state.cryptoToBeSentCoinName);
       this.props.sendCryptoToHub({
         amount: this.state.cryptoToBeSent * this.state.cryptoToBeSentMax / 100,
         coinType: this.state.cryptoToBeSentCoinName,
         wallet: new ETHWallet(this.props.wallets[this.state.currentWalletIdx]),
-        // fee
       });
-      this._appendMessageToQueue(message, this.closeSendCryptoDialog.bind(this));
   }
   
   render() {
+    let sendCryptoToHubStatus = '';
+    if (this.state.sendCryptoToHubStatus === 'failure') {
+      sendCryptoToHubStatus = (
+        <div className="crypto-send-status" >
+          Failure because {this.state.sendCryptoToHubFailureReason}
+        </div>
+      );
+    }
+    
     return(
     <Page key={"message-list-with-len-"+this.state.messages.length}>
       <div className="message-list">
@@ -590,8 +604,8 @@ class MessageList extends Component {
                               <ons-icon
                                   icon="ion-ios-refresh" spin />
                           </div>
-
                       </div>
+                      {sendCryptoToHubStatus}
                   </div>
               </ReactCardFlip>
           </Dialog>
