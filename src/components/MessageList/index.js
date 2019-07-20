@@ -30,9 +30,7 @@ import {MY_USER_ID} from '../../services/myUserInfo';
 //constants
 //utils
 import '../../utils/aux';
-import bnet from '../../services/network';
 import {ETHWallet} from '../../services/ETHWallet';
-import unit from 'ethjs-unit';
 
 const CONVERSATION_TYPES = Object.freeze({
     individual: Symbol("individual"),

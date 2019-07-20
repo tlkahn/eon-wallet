@@ -30,6 +30,7 @@ export const sendCryptoToHub = (state = initialState, action) => {
             }
             else {
                 return {
+                    ...state,
                     status: 'failure',
                     reason: action.payload.reason
                 }

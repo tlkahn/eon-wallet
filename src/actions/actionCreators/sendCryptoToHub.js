@@ -7,6 +7,15 @@ import {ETHWallet} from '../../services/ETHWallet';
 
 const EON_HUB_ADDR = ETH_CONFIG.EON_HUB_ADDR;
 
+function getErrorMessage(e) {
+    const MAXLEN = 100;
+    let message = e.error || e.message;
+    if  (message.length > MAXLEN) {
+        return message.slice(0, MAXLEN) + "...";
+    }
+    return message;
+}
+
 export const sendCryptoToHub = (cryptoPayment) => (dispatch, getState) => {
     const {amount, coinType, wallet, fee} = cryptoPayment;
     let password =getCook('password');
@@ -35,7 +44,7 @@ export const sendCryptoToHub = (cryptoPayment) => (dispatch, getState) => {
             payload: {
                 ...cryptoPayment,
                 status: 'failure',
-                reason: e.error,
+                reason: getErrorMessage(e),
             }
         });
         throw(e);
