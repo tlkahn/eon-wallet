@@ -69,7 +69,7 @@ class ProfilePage extends React.Component {
                 />
                 <div className="splitter"/>
                 <List>
-                    <ListItem onClick={this.onLogOut.bind(this)}>
+                    <ListItem onClick={this.onLogOut.bind(this)} key={Math.random()*100}>
                         <div className="left">
                             <ons-icon icon="ion-ios-log-out" class="list-item__icon"/>
                         </div>

@@ -86,7 +86,6 @@ class SignUpForm extends Component {
 
                 <FormDivider />
                 <FacebookLoginButton />
-
             </ons-page>
         );
     }

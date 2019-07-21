@@ -50,6 +50,7 @@
     "shave": "^2.5.3",
     "slick-carousel": "^1.8.1",
     "typescript": "^3.5.3",
+    "uid-generator": "^2.0.0",
     "web3": "^1.0.0-beta.55"
   },
   "scripts": {

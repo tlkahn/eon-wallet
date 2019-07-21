@@ -13,37 +13,36 @@ import {
     Icon
 } from 'react-onsenui';
 import './styles/NotificationList.css'
+import {getWallets} from "../reducers/createNewWallet";
+import { connect } from 'react-redux';
 
-export default class AddressBook extends React.Component {
+class AddressBook extends React.Component {
     constructor(props){
         super(props);
         this.state = {
             collapsed: true,
         };
-        //TODO: stub here. to be replaced with real feed (through mapStateToProps).
-        this.notifications = [
-            {category: "BTC", address: "1MaJwAyMFS3wq3hpXrpxnRvYSJGiP7aipy"},
-            {category: "BTC", address: "1MaJwAyMFS3wq3hpXrpxnRvYSJGiP7aipy"},
-            {category: "BTC", address: "1MaJwAyMFS3wq3hpXrpxnRvYSJGiP7aipy"},
-            {category: "ETH", address: "1MaJwAyMFS3wq3hpXrpxnRvYSJGiP7aipy"},
-            {category: "ETH", address: "1MaJwAyMFS3wq3hpXrpxnRvYSJGiP7aipy"},
-            {category: "ETH", address: "1MaJwAyMFS3wq3hpXrpxnRvYSJGiP7aipy"},
-            {category: "ETH", address: "1MaJwAyMFS3wq3hpXrpxnRvYSJGiP7aipy"},
-            {category: "EOS", address: "1MaJwAyMFS3wq3hpXrpxnRvYSJGiP7aipy"},
-            {category: "EOS", address: "1MaJwAyMFS3wq3hpXrpxnRvYSJGiP7aipy"},
-        ];
-        this.splitterSideItems = this.notifications.reduce((result, n)=>{
+        
+        this.wallets = this._transform(this.props.wallets);
+        this.splitterSideItems = this.wallets.reduce((result, n)=>{
             if (result.indexOf(n.category) === -1) {
                 result.push(n.category)
             }
             return result;
         }, []);
     }
+    
+    _transform = wallets => wallets.map(w => {
+        return {
+            category: w.coinType,
+            address: w.address
+        }
+    });
 
     componentDidMount() {
         this.setState({
             ...this.state,
-            notificationCategory: this.notifications[0].category
+            notificationCategory: this.wallets[0].category
         })
     }
 
@@ -63,7 +62,7 @@ export default class AddressBook extends React.Component {
 
     getNotificationsByCategory(category) {
         if (typeof category !== 'undefined') {
-            return this.notifications.filter((obj)=>{
+            return this.wallets.filter((obj)=>{
             if (obj.category === category) {
                 return obj;
             }
@@ -132,4 +131,16 @@ export default class AddressBook extends React.Component {
             )
     }
 }
+
+const mapStateToProps = (state) => {
+    const wallets = getWallets(state).wallets;
+    return {
+        wallets
+    }
+};
+
+export default connect(
+  mapStateToProps,
+  null
+)(AddressBook);
 
