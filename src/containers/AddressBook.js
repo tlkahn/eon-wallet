@@ -22,7 +22,6 @@ class AddressBook extends React.Component {
         this.state = {
             collapsed: true,
         };
-        
         this.wallets = this._transform(this.props.wallets);
         this.splitterSideItems = this.wallets.reduce((result, n)=>{
             if (result.indexOf(n.category) === -1) {

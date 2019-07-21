@@ -141,5 +141,5 @@ export class BasicWallet {
 BasicWallet.Defaults = {
     Encryption: 'aes-192-cbc',
     Path: "m/44'/0'/0'/0/0",
-    DBFileName: 'wallets-v33',
+    DBFileName: 'wallets-v37',
 };
