@@ -9,11 +9,10 @@ import {
 import ProfileHead from '../components/ProfileHead';
 import NotificationList from './NotificationList';
 import AddressBook from './AddressBook';
-import ContactList from './ContactList';
 import './styles/Profile.css';
-import { instanceOf } from 'prop-types';
 // import { withCookies, Cookies } from 'react-cookie';
 // import {signOutCurrentUser} from '../actions/actionCreators/signOutCurrentUser';
+
 import {signOutCurrentUser} from '../actions/actionCreators/signOutCurrentUser';
 import { withCookies, Cookies } from 'react-cookie';
 
@@ -25,7 +24,6 @@ class ProfilePage extends React.Component {
             username: 'toeinriver',
             avatarUrl: 'https://via.placeholder.com/150/'
         };
-        //TODO: hard coding. refactor this into config-based or read from db
         this.pageItems = ["Notifications", "Wallet", "Settings", "Feedback"];
         this.pageItemsIcons = ["ion-ios-notifications", "ion-ios-wallet", "ion-ios-settings", "ion-ios-happy"];
     }
