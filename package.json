@@ -24,7 +24,7 @@
     "ethers": "^4.0.33",
     "ethjs-unit": "^0.1.6",
     "ionicons": "^4.5.8",
-    "lodash": "^4.17.13",
+    "lodash": "^4.17.19",
     "lodash.template": "^4.5.0",
     "moment": "^2.24.0",
     "nedb": "^1.8.0",
